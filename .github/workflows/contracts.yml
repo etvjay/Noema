@@ -16,7 +16,7 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@v1
         with:
           version: stable
-      - run: forge install foundry-rs/forge-std --no-commit
+      - run: forge install foundry-rs/forge-std
       - run: forge fmt --check
       - run: forge build
       - run: forge test -vv
