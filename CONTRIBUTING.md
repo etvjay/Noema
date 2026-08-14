@@ -1,27 +1,14 @@
-# Noema agent rules
+# Contributing to Noema
 
-## Authority
-
-Read PRODUCT_TRUTH.md, HASHING_SPEC.md, and the reference documents under
-docs/reference/ before changing domain behavior. Product invariants outrank
-implementation convenience.
-
-Evidence classes:
-
-- E2: verified against current first-party documentation or an observable
-  deployment/receipt.
-- E1: a selected implementation design that is plausible but not yet proven in
-  this repository.
-- E0: an implementation claim that is not complete until tests, receipts, or
-  operational evidence exist.
+Read PRODUCT_TRUTH.md and HASHING_SPEC.md before changing domain behavior.
+Product invariants outrank implementation convenience.
 
 ## Non-negotiables
 
 - Model economic objects, not just tokens.
 - Preserve evidence, provenance, uncertainty, conflicts, staleness, and
   revocation.
-- AI may propose semantic interpretations; deterministic code decides verified
-  state.
+- Deterministic code decides verified state.
 - Similar exposure never implies economic equivalence.
 - Technical representations remain distinct from economic identity.
 - Historical object versions are immutable.
@@ -37,9 +24,9 @@ Keep the golden path small and inspectable:
 resolve -> evidence -> verify -> interpret -> evaluate -> commit -> watch ->
 re-evaluate -> notify
 
-The first milestone is the economic kernel, schemas, three semantic fixtures,
-canonical hashing, and deterministic verification. Do not start with UI,
-execution, Truss, Corridor, or Gaia.
+The current milestone is the economic kernel, schemas, semantic fixtures,
+canonical hashing, and deterministic verification. Defer UI, execution, Truss,
+Corridor, and Gaia until that foundation is green.
 
 ## Change discipline
 
