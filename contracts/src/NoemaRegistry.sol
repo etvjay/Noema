@@ -28,33 +28,14 @@ contract NoemaRegistry {
     mapping(bytes32 => mapping(bytes32 => mapping(bytes32 => bool))) public revokedAttestations;
     mapping(bytes32 => mapping(bytes32 => bytes32)) public representations;
 
-    event ObjectRegistered(
-        bytes32 indexed objectId,
-        uint64 version,
-        bytes32 objectRoot,
-        bytes32 evidenceRoot
-    );
+    event ObjectRegistered(bytes32 indexed objectId, uint64 version, bytes32 objectRoot, bytes32 evidenceRoot);
     event ObjectUpdated(
-        bytes32 indexed objectId,
-        uint64 previousVersion,
-        uint64 newVersion,
-        bytes32 objectRoot,
-        bytes32 evidenceRoot
+        bytes32 indexed objectId, uint64 previousVersion, uint64 newVersion, bytes32 objectRoot, bytes32 evidenceRoot
     );
-    event ClaimAttested(
-        bytes32 indexed objectId,
-        bytes32 indexed claimId,
-        bytes32 attestationHash
-    );
-    event AttestationRevoked(
-        bytes32 indexed objectId,
-        bytes32 indexed claimId,
-        bytes32 attestationHash
-    );
+    event ClaimAttested(bytes32 indexed objectId, bytes32 indexed claimId, bytes32 attestationHash);
+    event AttestationRevoked(bytes32 indexed objectId, bytes32 indexed claimId, bytes32 attestationHash);
     event RepresentationRegistered(
-        bytes32 indexed objectId,
-        bytes32 indexed representationId,
-        bytes32 relationshipHash
+        bytes32 indexed objectId, bytes32 indexed representationId, bytes32 relationshipHash
     );
 
     modifier onlyAdmin() {
@@ -99,11 +80,11 @@ contract NoemaRegistry {
         paused = false;
     }
 
-    function registerObject(
-        bytes32 objectId,
-        bytes32 objectRoot,
-        bytes32 evidenceRoot
-    ) external onlyPublisher whenNotPaused {
+    function registerObject(bytes32 objectId, bytes32 objectRoot, bytes32 evidenceRoot)
+        external
+        onlyPublisher
+        whenNotPaused
+    {
         if (objectRoot == bytes32(0) || evidenceRoot == bytes32(0)) {
             revert InvalidRoot();
         }
@@ -122,12 +103,11 @@ contract NoemaRegistry {
         emit ObjectRegistered(objectId, 1, objectRoot, evidenceRoot);
     }
 
-    function updateObject(
-        bytes32 objectId,
-        uint64 expectedVersion,
-        bytes32 newObjectRoot,
-        bytes32 newEvidenceRoot
-    ) external onlyPublisher whenNotPaused {
+    function updateObject(bytes32 objectId, uint64 expectedVersion, bytes32 newObjectRoot, bytes32 newEvidenceRoot)
+        external
+        onlyPublisher
+        whenNotPaused
+    {
         if (newObjectRoot == bytes32(0) || newEvidenceRoot == bytes32(0)) {
             revert InvalidRoot();
         }
@@ -142,20 +122,14 @@ contract NoemaRegistry {
         current.updatedAt = uint64(block.timestamp);
         current.active = true;
 
-        emit ObjectUpdated(
-            objectId,
-            previousVersion,
-            current.version,
-            newObjectRoot,
-            newEvidenceRoot
-        );
+        emit ObjectUpdated(objectId, previousVersion, current.version, newObjectRoot, newEvidenceRoot);
     }
 
-    function attestClaim(
-        bytes32 objectId,
-        bytes32 claimId,
-        bytes32 attestationHash
-    ) external onlyAttestor whenNotPaused {
+    function attestClaim(bytes32 objectId, bytes32 claimId, bytes32 attestationHash)
+        external
+        onlyAttestor
+        whenNotPaused
+    {
         if (objects[objectId].version == 0) revert ObjectNotFound();
         if (attestationHash == bytes32(0)) revert InvalidRoot();
         claimAttestations[objectId][claimId] = attestationHash;
@@ -163,11 +137,11 @@ contract NoemaRegistry {
         emit ClaimAttested(objectId, claimId, attestationHash);
     }
 
-    function revokeAttestation(
-        bytes32 objectId,
-        bytes32 claimId,
-        bytes32 attestationHash
-    ) external onlyAttestor whenNotPaused {
+    function revokeAttestation(bytes32 objectId, bytes32 claimId, bytes32 attestationHash)
+        external
+        onlyAttestor
+        whenNotPaused
+    {
         if (claimAttestations[objectId][claimId] != attestationHash) {
             revert AttestationNotFound();
         }
@@ -175,18 +149,14 @@ contract NoemaRegistry {
         emit AttestationRevoked(objectId, claimId, attestationHash);
     }
 
-    function registerRepresentation(
-        bytes32 objectId,
-        bytes32 representationId,
-        bytes32 relationshipHash
-    ) external onlyPublisher whenNotPaused {
+    function registerRepresentation(bytes32 objectId, bytes32 representationId, bytes32 relationshipHash)
+        external
+        onlyPublisher
+        whenNotPaused
+    {
         if (objects[objectId].version == 0) revert ObjectNotFound();
         if (relationshipHash == bytes32(0)) revert InvalidRoot();
         representations[objectId][representationId] = relationshipHash;
-        emit RepresentationRegistered(
-            objectId,
-            representationId,
-            relationshipHash
-        );
+        emit RepresentationRegistered(objectId, representationId, relationshipHash);
     }
 }

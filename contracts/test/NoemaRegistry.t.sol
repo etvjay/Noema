@@ -17,26 +17,16 @@ contract NoemaRegistryTest is Test {
         bytes32 evidenceRoot = keccak256("evidence-v1");
 
         registry.registerObject(objectId, objectRoot, evidenceRoot);
-        (
-            bytes32 storedObjectRoot,
-            bytes32 storedEvidenceRoot,
-            uint64 version,
-            ,
-            bool active
-        ) = registry.objects(objectId);
+        (bytes32 storedObjectRoot, bytes32 storedEvidenceRoot, uint64 version,, bool active) =
+            registry.objects(objectId);
 
         assertEq(storedObjectRoot, objectRoot);
         assertEq(storedEvidenceRoot, evidenceRoot);
         assertEq(version, 1);
         assertTrue(active);
 
-        registry.updateObject(
-            objectId,
-            1,
-            keccak256("root-v2"),
-            keccak256("evidence-v2")
-        );
-        (, , uint64 nextVersion, , ) = registry.objects(objectId);
+        registry.updateObject(objectId, 1, keccak256("root-v2"), keccak256("evidence-v2"));
+        (,, uint64 nextVersion,,) = registry.objects(objectId);
         assertEq(nextVersion, 2);
     }
 
@@ -45,12 +35,7 @@ contract NoemaRegistryTest is Test {
         registry.registerObject(objectId, keccak256("root"), keccak256("evidence"));
 
         vm.expectRevert(NoemaRegistry.InvalidExpectedVersion.selector);
-        registry.updateObject(
-            objectId,
-            0,
-            keccak256("root-v2"),
-            keccak256("evidence-v2")
-        );
+        registry.updateObject(objectId, 0, keccak256("root-v2"), keccak256("evidence-v2"));
     }
 
     function testAttestationCanBeRevoked() public {
@@ -62,8 +47,6 @@ contract NoemaRegistryTest is Test {
         registry.attestClaim(objectId, claimId, attestationHash);
         assertEq(registry.claimAttestations(objectId, claimId), attestationHash);
         registry.revokeAttestation(objectId, claimId, attestationHash);
-        assertTrue(
-            registry.revokedAttestations(objectId, claimId, attestationHash)
-        );
+        assertTrue(registry.revokedAttestations(objectId, claimId, attestationHash));
     }
 }
