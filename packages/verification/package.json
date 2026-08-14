@@ -1,0 +1,13 @@
+{
+  "name": "@noema/verification",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@noema/canonicalization": "workspace:*",
+    "@noema/economic-kernel": "workspace:*"
+  }
+}

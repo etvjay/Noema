@@ -1,0 +1,24 @@
+{
+  "caseId": "semantic-case-b-similar-non-equivalent",
+  "fixtureStatus": "DEMO_FIXTURE",
+  "description": "Two Treasury-like exposures look similar but differ in economic rights and holder restrictions.",
+  "representations": [
+    {
+      "id": "representation:b:one",
+      "environment": "EVM",
+      "network": "xlayer-testnet",
+      "contract": "0x00000000000000000000000000000000000000b1",
+      "shareClass": "institutional"
+    },
+    {
+      "id": "representation:b:two",
+      "environment": "EVM",
+      "network": "xlayer-testnet",
+      "contract": "0x00000000000000000000000000000000000000b2",
+      "shareClass": "retail"
+    }
+  ],
+  "relationshipExpectation": "SIMILAR_EXPOSURE_TO",
+  "equivalenceExpectation": "NOT_EQUIVALENT",
+  "reason": "Similar exposure is insufficient when issuer, share class, redemption, eligibility, or rights differ."
+}

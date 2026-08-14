@@ -1,0 +1,24 @@
+{
+  "caseId": "semantic-case-c-evidence-failure",
+  "fixtureStatus": "DEMO_FIXTURE",
+  "description": "An otherwise eligible object has a stale valuation observation.",
+  "claim": {
+    "id": "claim:c:nav",
+    "property": "nav",
+    "state": "STALE",
+    "evidenceRefs": [
+      "evidence:c:nav"
+    ]
+  },
+  "evidence": {
+    "id": "evidence:c:nav",
+    "freshness": "STALE",
+    "authority": "DEMO_FIXTURE"
+  },
+  "exception": {
+    "type": "EVIDENCE_STALE",
+    "severity": "BLOCKING"
+  },
+  "expectedObjectState": "STALE",
+  "expectedMandateDecision": "BLOCK"
+}

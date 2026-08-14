@@ -1,0 +1,24 @@
+{
+  "caseId": "semantic-case-a-equivalence",
+  "fixtureStatus": "DEMO_FIXTURE",
+  "description": "Two representations are explicitly linked to the same economic claim.",
+  "representations": [
+    {
+      "id": "representation:a:primary",
+      "environment": "EVM",
+      "network": "xlayer-testnet",
+      "contract": "0x00000000000000000000000000000000000000a1",
+      "relationship": "REPRESENTS"
+    },
+    {
+      "id": "representation:a:bridged",
+      "environment": "EVM",
+      "network": "xlayer-testnet",
+      "contract": "0x00000000000000000000000000000000000000a2",
+      "relationship": "BRIDGED_REPRESENTATION_OF",
+      "parent": "representation:a:primary"
+    }
+  ],
+  "relationshipExpectation": "ECONOMICALLY_EQUIVALENT_TO",
+  "reason": "Same issuer claim, share class, rights, backing, and conversion relationship are present in the fixture evidence."
+}

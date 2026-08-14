@@ -1,0 +1,28 @@
+{
+  "name": "noema",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Evidence-bounded economic intelligence for agent-native RWA finance.",
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=24.19.0 <25"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:semantic": "vitest run tests/semantic",
+    "contracts:build": "cd contracts && forge build",
+    "contracts:test": "cd contracts && forge test"
+  },
+  "devDependencies": {
+    "@noema/canonicalization": "workspace:*",
+    "@noema/economic-kernel": "workspace:*",
+    "@noema/noema-core": "workspace:*",
+    "@noema/schemas": "workspace:*",
+    "@noema/verification": "workspace:*",
+    "@types/node": "^24.3.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
