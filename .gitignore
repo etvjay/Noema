@@ -17,6 +17,7 @@ contracts/broadcast/
 contracts/lib/
 
 artifacts/qa/
+.tools/
 
 *.log
 .DS_Store
