@@ -112,6 +112,7 @@ async function main() {
   const contract = JSON.parse(await fs.readFile(CONTRACT_PATH, 'utf8'));
   const startedAt = new Date().toISOString();
   const results = [];
+  const mode = flags.live ? 'live' : 'core';
 
   for (const gate of contract.coreGates) {
     const outcome = await runGate(gate, contract);
@@ -125,19 +126,11 @@ async function main() {
       results.push({ ...gate, ...outcome, live: true });
       printGate(gate.id, outcome.status);
     }
-  } else {
-    for (const gate of contract.liveGates || []) {
-      results.push({ ...gate, status: 'BLOCKED', live: true, details: { reason: 'Live gates require --live' } });
-      printGate(gate.id, 'BLOCKED');
-    }
   }
 
   for (const claim of contract.ecosystemClaims || []) {
     const claimed = String(process.env[claim.envClaim] || '').toLowerCase() === 'true';
-    if (!claimed) {
-      results.push({ ...claim, status: 'PASS', optionalClaim: true, details: { claimed: false, note: 'Not part of the current Noema claim surface.' } });
-      continue;
-    }
+    if (!claimed) continue;
     if (claim.requires && !existsAll(claim.requires)) {
       const outcome = { status: 'NOT_IMPLEMENTED', details: { claimed: true, missing: claim.requires.filter((p) => !fsSync.existsSync(path.resolve(p))) } };
       results.push({ ...claim, ...outcome, optionalClaim: true });
@@ -150,12 +143,12 @@ async function main() {
   }
 
   const counts = Object.fromEntries(['PASS','FAIL','NOT_IMPLEMENTED','BLOCKED'].map((s) => [s, results.filter((r) => r.status === s).length]));
-  const required = results.filter((r) => !(r.optionalClaim && r.details?.claimed === false));
-  const overall = required.every((r) => r.status === 'PASS') ? 'PASS' : 'INCOMPLETE';
+  const overall = results.every((r) => r.status === 'PASS') ? 'PASS' : 'INCOMPLETE';
   const git = run('git', ['rev-parse', 'HEAD']);
   const receipt = {
     kind: 'noema-integrity',
     contractVersion: contract.version,
+    mode,
     startedAt,
     completedAt: new Date().toISOString(),
     gitCommit: git.status === 0 ? git.stdout : null,
@@ -163,6 +156,8 @@ async function main() {
     counts,
     goldenPath: contract.goldenPath,
     results,
+    omittedLiveGates: flags.live ? [] : (contract.liveGates || []).map((gate) => gate.id),
+    law: 'Unrequested live gates are omitted, not treated as passing. --live makes them mandatory. Claimed optional integrations become mandatory claim gates.',
   };
 
   await fs.mkdir(OUT_ROOT, { recursive: true });
@@ -170,8 +165,9 @@ async function main() {
   const file = path.join(OUT_ROOT, `${stamp}.json`);
   await fs.writeFile(file, `${JSON.stringify(receipt, null, 2)}\n`);
 
-  console.log(`\nNoema integrity: ${overall}`);
+  console.log(`\nNoema integrity (${mode}): ${overall}`);
   console.log(`PASS ${counts.PASS} | FAIL ${counts.FAIL} | NOT_IMPLEMENTED ${counts.NOT_IMPLEMENTED} | BLOCKED ${counts.BLOCKED}`);
+  if (!flags.live && (contract.liveGates || []).length) console.log(`live gates omitted: ${(contract.liveGates || []).map((gate) => gate.id).join(', ')} (run with --live)`);
   console.log(`receipt: ${file}`);
 
   if (flags.json) console.log(JSON.stringify(receipt));
