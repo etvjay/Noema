@@ -1,0 +1,16 @@
+{
+  "fixtureKind": "DEMO_FIXTURE",
+  "sourceId": "rpc:xlayer:testnet",
+  "rpcUri": "https://rpc.example",
+  "chainId": 1952,
+  "blockNumber": "123456",
+  "blockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+  "address": "0x2222222222222222222222222222222222222222",
+  "locator": "eth_call:totalSupply()",
+  "value": "0x01",
+  "observedAt": 1700000001000,
+  "fetchedAt": 1700000001000,
+  "metadata": {
+    "method": "eth_call"
+  }
+}
