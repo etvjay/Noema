@@ -146,3 +146,7 @@ export * from "./ingestion.js";
 export * from "./mandate.js";
 export * from "./versioning.js";
 export * from "./watch.js";
+export * from "./surfaces.js";
+export * from "./viewmodel.js";
+export * from "./semantic-resolution.js";
+export * from "./registry-client.js";
