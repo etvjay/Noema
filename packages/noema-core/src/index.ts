@@ -159,8 +159,12 @@ export interface LineageIssue {
 
 export interface ClaimLineageEvidencePath {
   evidenceId: Ref;
+  evidenceType?: Evidence["type"];
+  contentHash?: Evidence["contentHash"];
   sourceSnapshotId?: Ref;
   sourceId?: Ref;
+  sourceUri?: string;
+  bodyStorageRef?: Ref;
   authority?: Evidence["authority"];
   freshness?: Evidence["freshness"];
   provenanceEdgeRefs: Ref[];
@@ -172,11 +176,14 @@ export interface ClaimLineageAttestationPath {
   schema?: string;
   state?: Attestation["state"];
   evidenceRoot?: string;
+  revokedAt?: UnixMillis;
 }
 
 export interface ClaimLineageTrace {
   claimId: Ref;
+  claimState?: Claim["state"];
   explicitInference: boolean;
+  sourceRefs: Ref[];
   paths: ClaimLineageEvidencePath[];
   attestations: ClaimLineageAttestationPath[];
   issues: LineageIssue[];
@@ -208,6 +215,7 @@ export function traceClaimLineage(
     return {
       claimId,
       explicitInference: false,
+      sourceRefs: [],
       paths: [],
       attestations: [],
       issues: [issue],
@@ -286,6 +294,8 @@ export function traceClaimLineage(
       });
       paths.push({
         evidenceId: evidence.id,
+        evidenceType: evidence.type,
+        contentHash: evidence.contentHash,
         authority: evidence.authority,
         freshness: evidence.freshness,
         provenanceEdgeRefs: provenanceEdges.map((edge) => edge.id).sort()
@@ -319,8 +329,12 @@ export function traceClaimLineage(
 
     paths.push({
       evidenceId: evidence.id,
+      evidenceType: evidence.type,
+      contentHash: evidence.contentHash,
       sourceSnapshotId: sourceSnapshot.id,
       sourceId: sourceSnapshot.sourceId,
+      sourceUri: sourceSnapshot.uri,
+      bodyStorageRef: sourceSnapshot.bodyStorageRef,
       authority: evidence.authority,
       freshness: evidence.freshness,
       provenanceEdgeRefs: provenanceEdges.map((edge) => edge.id).sort()
@@ -336,6 +350,7 @@ export function traceClaimLineage(
         attestationId,
         message: `Attestation reference ${attestationId} does not resolve`
       });
+      attestations.push({ attestationId });
       continue;
     }
 
@@ -344,7 +359,8 @@ export function traceClaimLineage(
       attestor: attestation.attestor,
       schema: attestation.schema,
       state: attestation.state,
-      ...(attestation.evidenceRoot === undefined ? {} : { evidenceRoot: attestation.evidenceRoot })
+      ...(attestation.evidenceRoot === undefined ? {} : { evidenceRoot: attestation.evidenceRoot }),
+      ...(attestation.revokedAt === undefined ? {} : { revokedAt: attestation.revokedAt })
     });
 
     if (attestation.state === "REVOKED" || attestation.revokedAt !== undefined) {
@@ -359,7 +375,9 @@ export function traceClaimLineage(
 
   return {
     claimId: claim.id,
+    claimState: claim.state,
     explicitInference,
+    sourceRefs: [...claim.sourceRefs].sort(),
     paths,
     attestations,
     issues,
