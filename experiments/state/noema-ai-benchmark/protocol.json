@@ -1,0 +1,23 @@
+{
+  "experimentId": "noema-ai-benchmark",
+  "version": "1.0.0",
+  "hypothesis": "Noema AI deterministic benchmark suite achieves >= 95% accuracy across claim extraction, rights interpretation, relationship classification, and conflict detection with 0% false equivalence and 0% false allow rate",
+  "status": "protocol-committed",
+  "metrics": {
+    "claimExtractionAccuracy": { "threshold": 0.95, "direction": "gte" },
+    "rightsInterpretationAccuracy": { "threshold": 0.95, "direction": "gte" },
+    "relationshipClassificationAccuracy": { "threshold": 0.95, "direction": "gte" },
+    "conflictDetectionRecall": { "threshold": 0.95, "direction": "gte" },
+    "falseEquivalenceRate": { "threshold": 0, "direction": "eq" },
+    "falseAllowRate": { "threshold": 0, "direction": "eq" },
+    "unsupportedInferenceRate": { "threshold": 0, "direction": "eq" }
+  },
+  "fixtureVersion": "noema-ai-benchmark-v1",
+  "modelVersion": "deterministic-v1",
+  "limitations": [
+    "Experiment Foundry canonical runtime not available in this environment",
+    "Benchmark uses deterministic extraction logic, not live LLM inference",
+    "Protocol and raw observations committed for later replay with canonical Experiment Foundry runtime"
+  ],
+  "createdAt": "2026-08-15T22:00:00Z"
+}
