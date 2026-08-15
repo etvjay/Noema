@@ -1,4 +1,4 @@
-name: TypeScript CI
+name: TypeScript & Integrity CI
 
 on:
   push:
@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+      - run: cd contracts && forge install foundry-rs/forge-std
       - uses: pnpm/action-setup@v4
         with:
           version: 11.19.0
@@ -20,3 +24,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm test
+      - name: Run Noema Integrity Runner
+        run: pnpm qa || true
+      - name: Upload Integrity Receipt Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: noema-integrity-receipt
+          path: artifacts/qa/integrity/

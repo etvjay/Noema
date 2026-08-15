@@ -13,7 +13,10 @@
     "test:watch": "vitest",
     "test:semantic": "vitest run tests/semantic",
     "contracts:build": "cd contracts && forge build",
-    "contracts:test": "cd contracts && forge test"
+    "contracts:test": "cd contracts && forge test",
+    "qa": "node tools/noema-integrity.mjs",
+    "qa:probe": "node tools/noema-qa.mjs",
+    "experiment": "node tools/noema-experiment.mjs"
   },
   "devDependencies": {
     "@noema/canonicalization": "workspace:*",
