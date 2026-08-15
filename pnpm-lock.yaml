@@ -14,6 +14,9 @@ importers:
       '@noema/economic-kernel':
         specifier: workspace:*
         version: link:packages/economic-kernel
+      '@noema/noema-ai':
+        specifier: workspace:*
+        version: link:packages/noema-ai
       '@noema/noema-core':
         specifier: workspace:*
         version: link:packages/noema-core
@@ -49,6 +52,27 @@ importers:
         version: 2.55.13(typescript@5.9.3)(zod@4.4.3)
 
   packages/economic-kernel: {}
+
+  packages/noema-ai:
+    dependencies:
+      '@noema/canonicalization':
+        specifier: workspace:*
+        version: link:../canonicalization
+      '@noema/economic-kernel':
+        specifier: workspace:*
+        version: link:../economic-kernel
+      '@noema/noema-core':
+        specifier: workspace:*
+        version: link:../noema-core
+      '@noema/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+      '@noema/verification':
+        specifier: workspace:*
+        version: link:../verification
+      zod:
+        specifier: ^3.24.2
+        version: 3.25.76
 
   packages/noema-core:
     dependencies:
@@ -722,6 +746,9 @@ packages:
       utf-8-validate:
         optional: true
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
@@ -1241,5 +1268,7 @@ snapshots:
       stackback: 0.0.2
 
   ws@8.21.0: {}
+
+  zod@3.25.76: {}
 
   zod@4.4.3: {}

@@ -21,6 +21,7 @@
   "devDependencies": {
     "@noema/canonicalization": "workspace:*",
     "@noema/economic-kernel": "workspace:*",
+    "@noema/noema-ai": "workspace:*",
     "@noema/noema-core": "workspace:*",
     "@noema/schemas": "workspace:*",
     "@noema/verification": "workspace:*",
