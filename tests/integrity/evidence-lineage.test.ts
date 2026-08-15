@@ -55,13 +55,19 @@ describe("Noema evidence lineage integrity", () => {
 
     expect(trace.valid).toBe(true);
     expect(trace.explicitInference).toBe(false);
+    expect(trace.claimState).toBe("SOURCED");
+    expect(trace.sourceRefs).toEqual(["source:fixture:primary"]);
     expect(trace.issues).toEqual([]);
     expect(trace.attestations).toEqual([]);
     expect(trace.paths).toEqual([
       {
         evidenceId: object.evidence[0]!.id,
+        evidenceType: object.evidence[0]!.type,
+        contentHash: object.evidence[0]!.contentHash,
         sourceSnapshotId: snapshot.id,
         sourceId: snapshot.sourceId,
+        sourceUri: snapshot.uri,
+        bodyStorageRef: snapshot.bodyStorageRef,
         authority: object.evidence[0]!.authority,
         freshness: "FRESH",
         provenanceEdgeRefs: ["edge:fixture:claim-evidence"]
@@ -82,16 +88,28 @@ describe("Noema evidence lineage integrity", () => {
       claims: [{ ...claim, attestationRefs: [attestation.id] }],
       attestations: [attestation]
     });
+    const snapshot = makeSourceSnapshot();
 
-    const trace = traceClaimLineage(object, [makeSourceSnapshot()], claim.id);
+    const trace = traceClaimLineage(object, [snapshot], claim.id);
 
     expect(trace.valid).toBe(true);
-    expect(trace.paths[0]).toMatchObject({
-      evidenceId: "evidence:fixture:primary",
-      sourceSnapshotId: "source:fixture:primary",
-      sourceId: "issuer:fixture",
-      authority: "DEMO_FIXTURE",
-      freshness: "FRESH"
+    expect(trace).toMatchObject({
+      claimId: claim.id,
+      claimState: "SOURCED",
+      sourceRefs: ["source:fixture:primary"],
+      paths: [
+        {
+          evidenceId: "evidence:fixture:primary",
+          contentHash: object.evidence[0]!.contentHash,
+          sourceSnapshotId: "source:fixture:primary",
+          sourceId: "issuer:fixture",
+          sourceUri: snapshot.uri,
+          bodyStorageRef: snapshot.bodyStorageRef,
+          authority: "DEMO_FIXTURE",
+          freshness: "FRESH",
+          provenanceEdgeRefs: ["edge:fixture:claim-evidence"]
+        }
+      ]
     });
     expect(trace.attestations).toEqual([
       {
@@ -118,6 +136,12 @@ describe("Noema evidence lineage integrity", () => {
 
     expect(report.valid).toBe(false);
     expect(report.issues.some((issue) => issue.code === "EVIDENCE_REFERENCE_MISSING")).toBe(true);
+  });
+
+  it("fails when an evidence source snapshot is missing", () => {
+    const report = validateEconomicObjectLineage(makeEconomicObject(), []);
+    expect(report.valid).toBe(false);
+    expect(report.issues.some((issue) => issue.code === "SOURCE_SNAPSHOT_MISSING")).toBe(true);
   });
 
   it("fails when source snapshot content does not match evidence content", () => {
@@ -179,7 +203,10 @@ describe("Noema evidence lineage integrity", () => {
     });
     const revokedTrace = traceClaimLineage(revoked, [makeSourceSnapshot()], claim.id);
     expect(revokedTrace.valid).toBe(false);
-    expect(revokedTrace.attestations[0]?.state).toBe("REVOKED");
+    expect(revokedTrace.attestations[0]).toMatchObject({
+      state: "REVOKED",
+      revokedAt: revokedAttestation.revokedAt
+    });
     expect(revokedTrace.issues.some((issue) => issue.code === "ATTESTATION_REVOKED")).toBe(true);
   });
 
