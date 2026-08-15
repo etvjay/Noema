@@ -1,0 +1,11 @@
+{
+  "id": "snapshot:issuer:1",
+  "sourceId": "issuer:1",
+  "uri": "https://issuer.example/nav.json",
+  "contentType": "application/json",
+  "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+  "fetchedAt": 1700000000100,
+  "httpStatus": 200,
+  "bodyStorageRef": "storage:issuer:1:nav",
+  "extractionVersion": "source-ingestion-v1"
+}
