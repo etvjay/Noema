@@ -11,7 +11,6 @@ const foundryBin = path.join(os.homedir(), '.foundry', 'bin');
 if (fsSync.existsSync(foundryBin) && !process.env.PATH?.includes(foundryBin)) {
   process.env.PATH = `${foundryBin}:${process.env.PATH || ''}`;
 }
-
 const CONTRACT_PATH = path.resolve('qa/noema-integrity.json');
 const OUT_ROOT = process.env.NOEMA_QA_OUT || 'artifacts/qa/integrity';
 const args = process.argv.slice(2);
@@ -194,7 +193,6 @@ async function main() {
     ];
     await fs.appendFile(process.env.GITHUB_STEP_SUMMARY, summaryLines.join('\n') + '\n');
   }
-
   console.log(`\nNoema integrity (${mode}): ${overall}`);
   console.log(`PASS ${counts.PASS} | FAIL ${counts.FAIL} | NOT_IMPLEMENTED ${counts.NOT_IMPLEMENTED} | BLOCKED ${counts.BLOCKED}`);
   if (!flags.live && (contract.liveGates || []).length) console.log(`live gates omitted: ${(contract.liveGates || []).map((gate) => gate.id).join(', ')} (run with --live)`);

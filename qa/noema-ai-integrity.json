@@ -1,0 +1,75 @@
+{
+  "version": "1.0.0",
+  "name": "Noema AI Integrity Contract",
+  "statusSemantics": {
+    "PASS": "The required AI integrity behavior is implemented and the declared check passed.",
+    "FAIL": "The required AI integrity behavior is implemented/asserted but the check failed.",
+    "NOT_IMPLEMENTED": "The required AI integrity behavior or executable proof is missing. Never green.",
+    "BLOCKED": "A required runtime/environment/dependency prevents execution. Never green."
+  },
+  "gates": [
+    {
+      "id": "ai-proposal-contract",
+      "issue": 24,
+      "requires": ["tests/integrity/ai-proposal-contract.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ai-proposal-contract.test.ts"]
+    },
+    {
+      "id": "ai-claim-extraction",
+      "issue": 25,
+      "requires": ["tests/integrity/ai-claim-extraction.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ai-claim-extraction.test.ts"]
+    },
+    {
+      "id": "ai-rights-restrictions",
+      "issue": 26,
+      "requires": ["tests/integrity/ai-rights-restrictions.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ai-rights-restrictions.test.ts"]
+    },
+    {
+      "id": "ai-relationship-interpretation",
+      "issue": 27,
+      "requires": ["tests/integrity/ai-relationship-interpretation.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ai-relationship-interpretation.test.ts"]
+    },
+    {
+      "id": "ai-conflict-analysis",
+      "issue": 28,
+      "requires": ["tests/integrity/ai-conflict-analysis.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ai-conflict-analysis.test.ts"]
+    },
+    {
+      "id": "ai-tool-security-boundary",
+      "issue": 29,
+      "requires": ["tests/integrity/ai-tool-security.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ai-tool-security.test.ts"]
+    },
+    {
+      "id": "ai-deterministic-promotion",
+      "issue": 30,
+      "requires": ["tests/integrity/ai-promotion-boundary.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ai-promotion-boundary.test.ts"]
+    },
+    {
+      "id": "ai-benchmark-promotion",
+      "issue": 31,
+      "requires": ["tests/integrity/ai-benchmark.test.ts", "experiments/state/noema-ai-benchmark"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ai-benchmark.test.ts"]
+    },
+    {
+      "id": "ai-semantic-cases",
+      "issue": 3,
+      "requires": ["tests/integrity/semantic-resolution.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/semantic-resolution.test.ts"]
+    }
+  ]
+}
