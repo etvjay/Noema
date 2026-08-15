@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import type { SourceSnapshot } from "@noema/economic-kernel";
 import { ingestSourceSnapshot } from "@noema/noema-core/evidence";
@@ -15,6 +17,13 @@ function snapshot(overrides: Partial<SourceSnapshot> = {}): SourceSnapshot {
     extractionVersion: "source-ingestion-v1",
     ...overrides
   };
+}
+
+function replayFixture(): SourceSnapshot {
+  const path = fileURLToPath(
+    new URL("../../fixtures/evidence/source-snapshot-primary.json", import.meta.url)
+  );
+  return JSON.parse(readFileSync(path, "utf8")) as SourceSnapshot;
 }
 
 describe("Noema source ingestion foundation", () => {
@@ -40,6 +49,25 @@ describe("Noema source ingestion foundation", () => {
     expect(result.evidence.contentHash).toBe(result.snapshot.contentHash);
     expect(result.evidence.freshness).toBe("FRESH");
     expect(result.evidence.metadata.bodyStorageRef).toBe(result.snapshot.bodyStorageRef);
+  });
+
+  it("replays a committed source snapshot fixture deterministically", () => {
+    const input = {
+      snapshot: replayFixture(),
+      evidenceId: "evidence:issuer:1:nav",
+      type: "API_RESPONSE" as const,
+      authority: "PRIMARY_SOURCE" as const,
+      observedAt: 1_700_000_000_000,
+      nowMs: 1_700_000_001_000,
+      maxAgeMs: 60_000,
+      locator: "$.nav"
+    };
+
+    const first = ingestSourceSnapshot(input);
+    const second = ingestSourceSnapshot(input);
+
+    expect(first).toEqual(second);
+    expect(first.status).toBe("INGESTED");
   });
 
   it("preserves stale evidence explicitly", () => {
