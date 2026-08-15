@@ -1,0 +1,176 @@
+{
+  "version": "1.0.0",
+  "name": "Noema Full-System Integrity Contract",
+  "productTruth": "PRODUCT_TRUTH.md",
+  "goldenPath": ["resolve", "evidence", "verify", "interpret", "evaluate", "commit", "watch", "re-evaluate", "notify"],
+  "statusSemantics": {
+    "PASS": "The required integrity contract is implemented and the check passed.",
+    "FAIL": "The integrity contract is implemented or asserted, but the check failed.",
+    "NOT_IMPLEMENTED": "The required integrity contract has not yet been implemented. This is never green.",
+    "BLOCKED": "The check cannot currently run because a required environment, credential, runtime, or live dependency is unavailable. This is never green."
+  },
+  "coreGates": [
+    {
+      "id": "product-truth",
+      "phase": "constitutional",
+      "description": "Product Truth, invariants, negative boundary, and golden path remain present and explicit.",
+      "kind": "product-truth"
+    },
+    {
+      "id": "repository-health",
+      "phase": "foundation",
+      "description": "TypeScript compiles and current deterministic tests pass.",
+      "kind": "command",
+      "command": "pnpm",
+      "args": ["typecheck"]
+    },
+    {
+      "id": "current-test-suite",
+      "phase": "foundation",
+      "description": "All currently implemented TypeScript tests pass.",
+      "kind": "command",
+      "command": "pnpm",
+      "args": ["test"]
+    },
+    {
+      "id": "economic-object-schema",
+      "phase": "domain",
+      "description": "Strict runtime schemas reject invalid nested economic semantics.",
+      "kind": "command",
+      "requires": ["packages/schemas/src/index.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "packages/schemas/src/index.test.ts"]
+    },
+    {
+      "id": "semantic-resolution",
+      "phase": "interpret",
+      "description": "Semantic outcomes are derived from evidence, not asserted by fixture labels; equivalence remains stricter than similar exposure.",
+      "kind": "command",
+      "requires": ["tests/integrity/semantic-resolution.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/semantic-resolution.test.ts"]
+    },
+    {
+      "id": "evidence-lineage",
+      "phase": "evidence",
+      "description": "Every actionable non-inferred conclusion can be traversed Claim -> Evidence -> SourceSnapshot -> authority/provenance.",
+      "kind": "command",
+      "requires": ["tests/integrity/evidence-lineage.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/evidence-lineage.test.ts"]
+    },
+    {
+      "id": "canonical-root-replay",
+      "phase": "verify",
+      "description": "Identical canonical inputs reproduce identical roots and material evidence changes alter the expected root.",
+      "kind": "command",
+      "requires": ["tests/integrity/root-replay.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/root-replay.test.ts"]
+    },
+    {
+      "id": "verification-boundary",
+      "phase": "verify",
+      "description": "INFERRED never silently becomes VERIFIED; stale/conflicting/revoked evidence changes verification state deterministically.",
+      "kind": "command",
+      "requires": ["tests/integrity/verification-boundary.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/verification-boundary.test.ts"]
+    },
+    {
+      "id": "mandate-determinism",
+      "phase": "evaluate",
+      "description": "The same EconomicObject + VerificationReceipt + Mandate produces the same ALLOW/CONDITIONAL/BLOCK DecisionReceipt with explicit policy checks.",
+      "kind": "command",
+      "requires": ["tests/integrity/mandate-determinism.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/mandate-determinism.test.ts"]
+    },
+    {
+      "id": "version-history",
+      "phase": "watch",
+      "description": "Material change creates vN+1 and never silently overwrites historical canonical versions.",
+      "kind": "command",
+      "requires": ["tests/integrity/version-history.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/version-history.test.ts"]
+    },
+    {
+      "id": "registry-contract",
+      "phase": "commit",
+      "description": "NoemaRegistry contract behavior passes its deterministic Foundry tests.",
+      "kind": "command",
+      "requires": ["contracts/test/NoemaRegistry.t.sol"],
+      "command": "pnpm",
+      "args": ["contracts:test"]
+    },
+    {
+      "id": "watch-reevaluation",
+      "phase": "watch",
+      "description": "Revocation/staleness/material change triggers vN+1 -> re-verification -> mandate re-evaluation -> semantic event without mutating history.",
+      "kind": "command",
+      "requires": ["tests/integrity/watch-reevaluation.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/watch-reevaluation.test.ts"]
+    },
+    {
+      "id": "machine-surface-parity",
+      "phase": "serve",
+      "description": "REST/SDK/MCP expose canonical Noema semantics and preserve uncertainty/errors rather than inventing parallel models.",
+      "kind": "command",
+      "requires": ["tests/integrity/machine-surface-parity.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/machine-surface-parity.test.ts"]
+    },
+    {
+      "id": "ui-semantic-parity",
+      "phase": "product",
+      "description": "The product UI renders canonical decisions, evidence, uncertainty, lineage, and version state without implementing independent business logic.",
+      "kind": "command",
+      "requires": ["tests/integrity/ui-semantic-parity.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ui-semantic-parity.test.ts"]
+    },
+    {
+      "id": "golden-path-e2e",
+      "phase": "system",
+      "description": "A single inspectable trace proves resolve -> evidence -> verify -> interpret -> evaluate -> commit -> watch -> re-evaluate -> notify and DecisionReceipt -> Claim -> Evidence -> Source -> commitment lineage.",
+      "kind": "command",
+      "requires": ["tests/integrity/golden-path.e2e.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/golden-path.e2e.test.ts"]
+    }
+  ],
+  "liveGates": [
+    {
+      "id": "xlayer-runtime",
+      "phase": "commit",
+      "description": "The selected live RPC is X Layer testnet chainId 1952 and required network surfaces are inspectable.",
+      "probe": "xlayer"
+    },
+    {
+      "id": "registry-live-trace",
+      "phase": "commit",
+      "description": "A real X Layer transaction can be traced tx -> event -> roots -> EconomicObject version -> offchain receipt.",
+      "kind": "command",
+      "requires": ["tests/integrity/registry-live-trace.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/registry-live-trace.test.ts"]
+    }
+  ],
+  "ecosystemClaims": [
+    {
+      "id": "okx-onchainos-mcp",
+      "description": "Only enforced when Noema claims the remote OKX MCP as an integration.",
+      "envClaim": "NOEMA_CLAIM_OKX_MCP",
+      "probe": "mcp"
+    },
+    {
+      "id": "xlayer-native-eas",
+      "description": "Only enforced when Noema claims native EAS attestation support.",
+      "envClaim": "NOEMA_CLAIM_EAS",
+      "probe": "eas",
+      "requires": ["tests/integrity/eas-roundtrip.test.ts"]
+    }
+  ]
+}
