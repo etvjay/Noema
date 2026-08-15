@@ -1,0 +1,23 @@
+{
+  "fixtureKind": "DEMO_FIXTURE",
+  "sourceId": "issuer:http:1",
+  "url": "https://issuer.example/nav.json",
+  "fetchedAt": 1700000001000,
+  "resolvedAddresses": ["93.184.216.34"],
+  "response": {
+    "status": 200,
+    "url": "https://issuer.example/nav.json",
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "\"fixture-v1\""
+    },
+    "bodyUtf8": "{\"nav\":\"1.0000\"}",
+    "redirects": []
+  },
+  "policy": {
+    "timeoutMs": 2000,
+    "maxResponseBytes": 64000,
+    "maxRedirects": 2,
+    "allowedContentTypes": ["application/json"]
+  }
+}
