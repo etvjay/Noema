@@ -1,332 +1,227 @@
-# Noema QA CLI Skill
+# Noema Integrity QA Skill
 
 ## Purpose
 
-Use this skill to iterate quickly on Noema integration experiments while preserving Research Foundry evidence discipline and Product Foundry product boundaries.
-
-The CLI is a probe-and-receipt harness, not an authority source and not a deployment oracle.
+Noema QA exists to measure the integrity of the **entire Noema system**, not merely its integrations.
 
 Primary command:
 
 ```bash
-pnpm qa -- <command>
+pnpm qa
 ```
 
-Direct fallback:
+Optional live gates:
 
 ```bash
-node tools/noema-qa.mjs <command>
+pnpm qa -- --live
 ```
 
-## Operating law
-
-1. Inspect before integrating.
-2. External documentation is feasibility evidence, not runtime proof.
-3. A successful HTTP response is not automatically semantically relevant to Noema.
-4. Every experiment emits a machine-readable receipt under `artifacts/qa/`.
-5. Secrets must never appear in receipts, stdout, screenshots, fixtures, issues, or commits.
-6. Read-only probes are the default.
-7. State-changing experiments require an explicit write gate in a later command version plus a dedicated signer.
-8. Product Truth cannot be changed by a successful sponsor/API experiment.
-
-## Fast loop
-
-Run:
+Subsystem probes remain available separately:
 
 ```bash
-pnpm qa -- suite
+pnpm qa:probe -- doctor
+pnpm qa:probe -- xlayer
+pnpm qa:probe -- eas
+pnpm qa:probe -- mcp
+pnpm qa:probe -- suite
 ```
 
-The suite executes:
+The integrity runner is governed by:
 
 ```text
-doctor
-  ↓
-xlayer
-  ↓
-eas
-  ↓
-mcp
+qa/noema-integrity.json
 ```
 
-Each command writes its own timestamped receipt.
+## Constitutional rule
 
-Use the suite for rapid environment checks. Use individual commands when investigating a failure or freezing a fixture.
+QA answers:
 
-## Commands
+> Does the current repository preserve Noema Product Truth and prove the required behavior of every implemented layer of the golden path?
 
-### `doctor`
+It does **not** answer only:
 
-```bash
-pnpm qa -- doctor
-```
+> Do the APIs and chain endpoints respond?
 
-Checks:
+External probes are subordinate integrity checks under the full system.
 
-- Node version
-- pnpm availability/version
-- Foundry availability/version
-- `cast` availability/version
-- git commit context
-- Viem/Ox package presence
-- presence only (never value) of relevant credentials/signers
+## Status model
 
-A missing tool is evidence that the environment is not ready for that experiment. Do not silently substitute another toolchain.
+Every gate returns exactly one of:
 
-### `xlayer`
+- `PASS` — implemented and proven by the declared check.
+- `FAIL` — implemented/asserted but the declared check failed.
+- `NOT_IMPLEMENTED` — required integrity behavior is not yet implemented. This is never green.
+- `BLOCKED` — required environment/runtime/credential/live dependency prevents execution. This is never green.
 
-```bash
-pnpm qa -- xlayer
-```
+Overall Noema integrity is `PASS` only when every required active gate is `PASS`.
 
-Or:
+A compiling repository is not equivalent to an integrity-pass.
 
-```bash
-pnpm qa -- xlayer --rpc "$XLAYER_TESTNET_RPC"
-```
+## Full integrity surface
 
-Checks:
+The QA contract covers:
 
-- `eth_chainId`
-- hard assertion that X Layer testnet is `1952`
-- latest block number
-- client version when exposed
-- bytecode presence for:
-  - `L1Block`
-  - `GasPriceOracle`
-  - `SchemaRegistry`
-  - `EAS`
+1. **Product Truth / constitutional integrity**
+   - Evidence-Bounded Economic Object remains the primitive.
+   - AI inference cannot silently become VERIFIED.
+   - similar exposure does not imply equivalence.
+   - historical versions are never silently overwritten.
+   - Noema does not claim universal truth.
+   - negative product boundaries remain intact.
 
-Failure rule:
+2. **Repository/foundation integrity**
+   - TypeScript typecheck.
+   - currently implemented deterministic tests.
+   - strict runtime schemas.
 
-If chain ID is anything other than `1952`, the command fails closed. The known documentation example containing `195` must never be treated as an alternative testnet configuration.
+3. **Evidence integrity**
+   - actionable conclusions traverse `Claim -> Evidence -> SourceSnapshot`.
+   - provenance and authority remain explicit.
+   - missing/stale/conflicting/revoked evidence remains visible.
 
-### `mcp`
+4. **Semantic integrity**
+   - relationship classifications are derived from evidence and rules.
+   - true equivalence, share-class relationships, similar exposure, and ambiguity are distinguishable.
+   - ticker/name equality is never sufficient.
+   - fixture expectation labels are not themselves semantic proof.
 
-```bash
-pnpm qa -- mcp
-```
+5. **Canonicalization / replay integrity**
+   - identical canonical inputs produce identical roots.
+   - material evidence changes produce the expected different root.
+   - hashing/version rules are explicit and reproducible.
 
-Default research endpoint:
+6. **Verification integrity**
+   - `INFERRED` cannot silently become `VERIFIED`.
+   - freshness, conflicts, revocation and source failures propagate deterministically.
+   - receipts preserve rule/evidence/version lineage.
+
+7. **Mandate integrity**
+   - identical object + verification + mandate inputs produce deterministic `ALLOW | CONDITIONAL | BLOCK` decisions.
+   - decisions expose the checks that produced them.
+
+8. **Versioning/watch integrity**
+   - material change creates `vN+1`.
+   - history is append-only from the semantic point of view.
+   - change triggers re-verification and mandate re-evaluation.
+
+9. **Commitment integrity**
+   - `NoemaRegistry` passes deterministic contract tests.
+   - live proof, when enabled, preserves transaction/event/root/object/receipt traceability.
+
+10. **Machine-interface integrity**
+    - REST, SDK and Noema MCP consume canonical domain semantics.
+    - interface errors preserve uncertainty rather than invent success.
+
+11. **UI semantic integrity**
+    - UI renders canonical decisions/evidence/uncertainty/version state.
+    - UI does not implement independent equivalence, verification or mandate logic.
+
+12. **Golden-path integrity**
+    - one end-to-end trace must eventually prove:
 
 ```text
-https://web3.okx.com/api/v1/onchainos-mcp
+resolve
+  -> evidence
+  -> verify
+  -> interpret
+  -> evaluate
+  -> commit
+  -> watch
+  -> re-evaluate
+  -> notify
 ```
 
-The command performs a real MCP transport sequence:
+and permit inspection from:
 
 ```text
-initialize
-  ↓
-notifications/initialized
-  ↓
-tools/list
+DecisionReceipt
+  -> Claim
+  -> Evidence
+  -> Source
+  -> hash/attestation/onchain commitment
 ```
 
-It records:
+## Current honesty rule
 
-- HTTP status
-- negotiated/returned initialization result
-- whether `Mcp-Session-Id` is present
-- complete returned tool catalog
-- descriptions
-- input schemas
+Missing integrity tests are intentionally represented as `NOT_IMPLEMENTED`.
 
-It deliberately does **not** infer the server's role before `tools/list` succeeds.
+For example, the legacy semantic fixture suite currently checks expected labels stored in fixture JSON. It does not execute a semantic resolver. Therefore the full QA contract requires a separate executable semantic integrity test before that layer can become `PASS`.
 
-Authentication can be supplied via:
+Do not weaken the integrity manifest merely to make the dashboard green.
+
+## Live and ecosystem checks
+
+Live network checks run only with:
 
 ```bash
-export OK_ACCESS_KEY='...'
-pnpm qa -- mcp
+pnpm qa -- --live
 ```
 
-or explicitly:
+External/sponsor integrations are conditional claim gates. They become required only when Noema actually claims the capability.
+
+Examples:
 
 ```bash
-pnpm qa -- mcp --header 'Header-Name:secret-value'
+NOEMA_CLAIM_OKX_MCP=true pnpm qa -- --live
+NOEMA_CLAIM_EAS=true pnpm qa -- --live
 ```
 
-Header values are never included in receipts.
+This prevents an optional sponsor integration from defining Noema integrity while also preventing us from claiming an unproven integration.
 
-The tool must keep these three research objects distinct:
+## Subsystem probes
 
-1. local `onchainos mcp` stdio server;
-2. Onchain OS generic A2MCP Streamable-HTTP client behavior;
-3. the supplied remote `web3.okx.com/api/v1/onchainos-mcp` server.
+`pnpm qa:probe` remains the fast instrumentation layer for Experiment Foundry and debugging.
 
-Do not claim equivalence without live evidence.
+Current probes:
 
-### `eas`
+- `doctor`
+- `xlayer`
+- `eas`
+- `mcp`
+- `suite`
 
-```bash
-pnpm qa -- eas
-```
+Probe receipts are raw observations under `artifacts/qa/`. They are not automatically system conclusions.
 
-Current v0.1 behavior is deliberately read-only. It checks bytecode presence for:
+## Relationship to Experiment Foundry
 
 ```text
-SchemaRegistry 0x4200000000000000000000000000000000000020
-EAS            0x4200000000000000000000000000000000000021
+Noema Integrity QA
+    measures system invariants and required behavior
+
+Noema subsystem probes
+    capture raw runtime observations
+
+Experiment Foundry
+    defines falsifiable claims, protocols, metrics, validity and evidence level
+
+Product Foundry
+    decides whether Product Truth / implementation state changes
 ```
 
-This is necessary but not sufficient proof that Noema can safely use the predeploys.
-
-Before promoting EAS support, a later write-gated experiment must prove:
+A typical loop is:
 
 ```text
-schema registration
-  ↓
-attestation
-  ↓
-readback
-  ↓
-revocation
-  ↓
-revocation readback
+implementation change
+  -> pnpm qa
+  -> inspect FAIL / NOT_IMPLEMENTED / BLOCKED gates
+  -> run focused pnpm qa:probe when needed
+  -> run corresponding Experiment Foundry protocol
+  -> implement or redesign
+  -> pnpm qa again
 ```
-
-and bind the attestation to canonical Noema identifiers/roots.
-
-## Receipt model
-
-Default output:
-
-```text
-artifacts/qa/
-  doctor/
-  xlayer/
-  eas/
-  mcp/
-  suite/
-  failures/
-```
-
-Each receipt must include at minimum:
-
-- experiment kind
-- QA CLI version
-- observation timestamp
-- target endpoint/RPC where non-secret
-- raw structural results necessary to reproduce the conclusion
-- explicit pass/failure state where applicable
-
-Receipts are evidence artifacts. They are not automatically canonical product fixtures.
-
-Promotion path:
-
-```text
-live QA receipt
-   ↓
-Research Foundry review
-   ↓
-source/authority classification
-   ↓
-normalized fixture or adapter contract
-   ↓
-deterministic test
-   ↓
-Product Foundry relevance check
-   ↓
-workstream implementation
-```
-
-## Experiment classification
-
-### Read-only / safe default
-
-Allowed without confirmation:
-
-- RPC chain identity
-- block/client version inspection
-- `eth_getCode`
-- MCP `initialize`
-- MCP `tools/list`
-- local toolchain checks
-- contract/source verification status reads
-
-### Non-destructive but externally billable
-
-Requires explicit operator awareness before enabling:
-
-- MCP `tools/call` where x402/payment may be triggered
-- paid API calls
-- high-volume polling
-
-### State-changing
-
-Must require an explicit `--write` gate and a signer in future versions:
-
-- EAS schema registration
-- EAS attestation/revocation
-- NoemaRegistry deployment
-- root commitments
-- Builder Code attributed transactions
-- token transfer/swap/DeFi operations
-
-No state-changing command should ever be included in `suite`.
-
-## Planned v0.2 commands
-
-Implement only after their exact contract/API shapes are frozen:
-
-```text
-mcp call-safe
-
-eas attest --write
-
-eas revoke --write
-
-registry deploy --write
-registry commit --write
-
-oklink verify
-
-builder-code simulate
-builder-code send --write
-
-fixture promote <receipt>
-receipt diff <a> <b>
-```
-
-The `fixture promote` command should copy a reviewed receipt into a versioned test fixture only after source authority and expected semantics are declared.
-
-## Team use
-
-Research Truth owner:
-
-- runs and reviews `mcp`, `xlayer`, and external-tool probes;
-- freezes observed tool/API contracts;
-- records contradictions.
-
-X Layer owner:
-
-- uses X Layer/EAS/registry receipts;
-- cannot redefine EconomicObject semantics.
-
-Verification owner:
-
-- consumes attestation evidence and defines what it means to Noema;
-- does not own transport/deployment mechanics.
-
-Evidence owner:
-
-- promotes accepted external responses into typed `SourceSnapshot` / `Evidence` fixtures.
-
-Integration owner:
-
-- rejects PRs whose claimed capability lacks an appropriate receipt and deterministic test.
 
 ## Failure policy
 
-Fail closed when:
+Never convert any of these into a pass by assumption:
 
-- X Layer chain ID differs from expected configuration;
-- MCP returns malformed JSON-RPC/SSE;
-- `tools/list` cannot be inspected;
-- required predeploy bytecode is absent;
-- a dependency/tool is missing;
-- authentication requirements are unknown;
-- a result cannot be classified without inference.
+- missing implementation;
+- missing executable semantic logic;
+- unavailable external dependency;
+- incomplete provenance;
+- inference represented as verification;
+- stale/revoked evidence ignored;
+- version history overwritten;
+- interface model divergence;
+- live integration not actually exercised.
 
-Do not replace a failed live experiment with a fabricated fixture.
+QA is allowed to stay red while Noema is under construction. That is the point: the integrity report is the honest map of what remains to be made true.
