@@ -1,3 +1,4 @@
+import { EVIDENCE_AUTHORITIES } from "@noema/economic-kernel";
 import type {
   Attestation,
   Claim,
@@ -138,16 +139,21 @@ export type LineageIssueCode =
   | "CLAIM_NOT_FOUND"
   | "CLAIM_EVIDENCE_MISSING"
   | "EVIDENCE_REFERENCE_MISSING"
+  | "EVIDENCE_STALE"
+  | "EVIDENCE_AUTHORITY_UNKNOWN"
   | "SOURCE_SNAPSHOT_MISSING"
   | "SOURCE_CONTENT_HASH_MISMATCH"
   | "CLAIM_SOURCE_REFERENCE_MISMATCH"
-  | "PROVENANCE_EDGE_MISSING";
+  | "PROVENANCE_EDGE_MISSING"
+  | "ATTESTATION_REFERENCE_MISSING"
+  | "ATTESTATION_REVOKED";
 
 export interface LineageIssue {
   code: LineageIssueCode;
   claimId: Ref;
   evidenceId?: Ref;
   sourceRef?: Ref;
+  attestationId?: Ref;
   message: string;
 }
 
@@ -156,13 +162,23 @@ export interface ClaimLineageEvidencePath {
   sourceSnapshotId?: Ref;
   sourceId?: Ref;
   authority?: Evidence["authority"];
+  freshness?: Evidence["freshness"];
   provenanceEdgeRefs: Ref[];
+}
+
+export interface ClaimLineageAttestationPath {
+  attestationId: Ref;
+  attestor?: Ref;
+  schema?: string;
+  state?: Attestation["state"];
+  evidenceRoot?: string;
 }
 
 export interface ClaimLineageTrace {
   claimId: Ref;
   explicitInference: boolean;
   paths: ClaimLineageEvidencePath[];
+  attestations: ClaimLineageAttestationPath[];
   issues: LineageIssue[];
   valid: boolean;
 }
@@ -174,6 +190,8 @@ export interface EconomicObjectLineageReport {
   issues: LineageIssue[];
   valid: boolean;
 }
+
+const evidenceAuthorities = new Set<string>(EVIDENCE_AUTHORITIES);
 
 export function traceClaimLineage(
   object: EconomicObject,
@@ -191,6 +209,7 @@ export function traceClaimLineage(
       claimId,
       explicitInference: false,
       paths: [],
+      attestations: [],
       issues: [issue],
       valid: false
     };
@@ -199,7 +218,9 @@ export function traceClaimLineage(
   const explicitInference = claim.state === "INFERRED";
   const evidenceById = new Map(object.evidence.map((item) => [item.id, item]));
   const snapshotsById = new Map(sourceSnapshots.map((item) => [item.id, item]));
+  const attestationsById = new Map(object.attestations.map((item) => [item.id, item]));
   const paths: ClaimLineageEvidencePath[] = [];
+  const attestations: ClaimLineageAttestationPath[] = [];
   const issues: LineageIssue[] = [];
 
   if (!explicitInference && claim.evidenceRefs.length === 0) {
@@ -234,6 +255,26 @@ export function traceClaimLineage(
       });
     }
 
+    if (evidence.freshness === "STALE") {
+      issues.push({
+        code: "EVIDENCE_STALE",
+        claimId: claim.id,
+        evidenceId: evidence.id,
+        sourceRef: evidence.source,
+        message: `Evidence ${evidence.id} is explicitly stale`
+      });
+    }
+
+    if (!evidenceAuthorities.has(evidence.authority as string)) {
+      issues.push({
+        code: "EVIDENCE_AUTHORITY_UNKNOWN",
+        claimId: claim.id,
+        evidenceId: evidence.id,
+        sourceRef: evidence.source,
+        message: `Evidence ${evidence.id} has unknown authority ${String(evidence.authority)}`
+      });
+    }
+
     const sourceSnapshot = snapshotsById.get(evidence.source);
     if (sourceSnapshot === undefined) {
       issues.push({
@@ -246,6 +287,7 @@ export function traceClaimLineage(
       paths.push({
         evidenceId: evidence.id,
         authority: evidence.authority,
+        freshness: evidence.freshness,
         provenanceEdgeRefs: provenanceEdges.map((edge) => edge.id).sort()
       });
       continue;
@@ -280,14 +322,46 @@ export function traceClaimLineage(
       sourceSnapshotId: sourceSnapshot.id,
       sourceId: sourceSnapshot.sourceId,
       authority: evidence.authority,
+      freshness: evidence.freshness,
       provenanceEdgeRefs: provenanceEdges.map((edge) => edge.id).sort()
     });
+  }
+
+  for (const attestationId of claim.attestationRefs) {
+    const attestation = attestationsById.get(attestationId);
+    if (attestation === undefined) {
+      issues.push({
+        code: "ATTESTATION_REFERENCE_MISSING",
+        claimId: claim.id,
+        attestationId,
+        message: `Attestation reference ${attestationId} does not resolve`
+      });
+      continue;
+    }
+
+    attestations.push({
+      attestationId: attestation.id,
+      attestor: attestation.attestor,
+      schema: attestation.schema,
+      state: attestation.state,
+      ...(attestation.evidenceRoot === undefined ? {} : { evidenceRoot: attestation.evidenceRoot })
+    });
+
+    if (attestation.state === "REVOKED" || attestation.revokedAt !== undefined) {
+      issues.push({
+        code: "ATTESTATION_REVOKED",
+        claimId: claim.id,
+        attestationId: attestation.id,
+        message: `Attestation ${attestation.id} is revoked`
+      });
+    }
   }
 
   return {
     claimId: claim.id,
     explicitInference,
     paths,
+    attestations,
     issues,
     valid: issues.length === 0
   };
