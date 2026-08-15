@@ -144,3 +144,5 @@ export function isValidXLayerChainId(chainId: number): boolean {
 export * from "./lineage.js";
 export * from "./ingestion.js";
 export * from "./mandate.js";
+export * from "./versioning.js";
+export * from "./watch.js";
