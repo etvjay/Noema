@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { makeEconomicObject } from "../../../tests/helpers.js";
-import { reduceEconomicObject } from "./index.js";
+import {
+  reduceEconomicObject,
+  XLAYER_TESTNET_CHAIN_ID,
+  XLAYER_MAINNET_CHAIN_ID,
+  XLAYER_LEGACY_UNSAFE_CHAIN_ID,
+  isValidXLayerChainId
+} from "./index.js";
 
 describe("economic object reducer", () => {
   it("normalizes versioned state without hiding exceptions", () => {
@@ -35,5 +41,15 @@ describe("economic object reducer", () => {
     expect(result.status).toBe("STALE");
     expect(result.claims.map((item) => item.id)).toEqual(["claim:a", "claim:z"]);
     expect(result.exceptions).toHaveLength(1);
+  });
+
+  it("validates canonical X Layer network chain IDs and rejects unsafe legacy 195", () => {
+    expect(XLAYER_TESTNET_CHAIN_ID).toBe(1952);
+    expect(XLAYER_MAINNET_CHAIN_ID).toBe(196);
+    expect(XLAYER_LEGACY_UNSAFE_CHAIN_ID).toBe(195);
+    expect(isValidXLayerChainId(1952)).toBe(true);
+    expect(isValidXLayerChainId(196)).toBe(true);
+    expect(isValidXLayerChainId(195)).toBe(false);
+    expect(isValidXLayerChainId(1)).toBe(false);
   });
 });

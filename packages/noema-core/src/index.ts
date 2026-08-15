@@ -132,3 +132,11 @@ export function reduceEconomicObject(
     updatedAt: input.updatedAt
   };
 }
+
+export const XLAYER_TESTNET_CHAIN_ID = 1952;
+export const XLAYER_MAINNET_CHAIN_ID = 196;
+export const XLAYER_LEGACY_UNSAFE_CHAIN_ID = 195;
+
+export function isValidXLayerChainId(chainId: number): boolean {
+  return chainId === XLAYER_TESTNET_CHAIN_ID || chainId === XLAYER_MAINNET_CHAIN_ID;
+}
