@@ -31,6 +31,7 @@ export function hashCanonical(value: JsonValue | Record<string, unknown>): Hex {
 export function toObjectHashProjection(object: EconomicObject): Record<string, unknown> {
   return {
     domain: OBJECT_DOMAIN,
+    hashingVersion: HASHING_VERSION,
     id: object.id,
     version: object.version,
     classification: object.classification,
@@ -51,7 +52,15 @@ export function toObjectHashProjection(object: EconomicObject): Record<string, u
     verification: {
       status: object.verification.status,
       verifierVersion: object.verification.verifierVersion,
-      checks: object.verification.checks
+      checks: object.verification.checks.map((check) => ({
+        id: check.id,
+        type: check.type,
+        subject: check.subject,
+        result: check.result,
+        evidence: check.evidence,
+        ruleVersion: check.ruleVersion,
+        ...(check.reason === undefined ? {} : { reason: check.reason })
+      }))
     }
   };
 }
@@ -59,6 +68,7 @@ export function toObjectHashProjection(object: EconomicObject): Record<string, u
 function evidenceLeafPayload(evidence: Evidence): Record<string, unknown> {
   return {
     domain: EVIDENCE_LEAF_DOMAIN,
+    hashingVersion: HASHING_VERSION,
     id: evidence.id,
     type: evidence.type,
     source: evidence.source,
@@ -83,7 +93,7 @@ export function evidenceLeaves(evidence: readonly Evidence[]): Hex[] {
 export function evidenceMerkleRoot(evidence: readonly Evidence[]): Hex {
   let layer = evidenceLeaves(evidence);
   if (layer.length === 0) {
-    return hashCanonical({ domain: MERKLE_DOMAIN, leaves: [] });
+    return hashCanonical({ domain: MERKLE_DOMAIN, hashingVersion: HASHING_VERSION, leaves: [] });
   }
 
   while (layer.length > 1) {
@@ -98,6 +108,7 @@ export function evidenceMerkleRoot(evidence: readonly Evidence[]): Hex {
       next.push(
         hashCanonical({
           domain: MERKLE_DOMAIN,
+          hashingVersion: HASHING_VERSION,
           left: ordered[0],
           right: ordered[1]
         })
