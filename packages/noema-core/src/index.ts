@@ -140,3 +140,6 @@ export const XLAYER_LEGACY_UNSAFE_CHAIN_ID = 195;
 export function isValidXLayerChainId(chainId: number): boolean {
   return chainId === XLAYER_TESTNET_CHAIN_ID || chainId === XLAYER_MAINNET_CHAIN_ID;
 }
+
+export * from "./lineage.js";
+export * from "./ingestion.js";
