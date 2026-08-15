@@ -139,6 +139,15 @@
       "requires": ["tests/integrity/golden-path.e2e.test.ts"],
       "command": "pnpm",
       "args": ["exec", "vitest", "run", "tests/integrity/golden-path.e2e.test.ts"]
+    },
+    {
+      "id": "ai-promotion-gate",
+      "phase": "interpret",
+      "description": "Noema AI benchmark suite passes with 0% false equivalence and meets Experiment Foundry release gates.",
+      "kind": "command",
+      "requires": ["tests/integrity/ai-promotion-gate.test.ts"],
+      "command": "pnpm",
+      "args": ["exec", "vitest", "run", "tests/integrity/ai-promotion-gate.test.ts"]
     }
   ],
   "liveGates": [
