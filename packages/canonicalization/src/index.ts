@@ -113,6 +113,8 @@ export function evidenceMerkleRoot(evidence: readonly Evidence[]): Hex {
   return root;
 }
 
+export const evidenceRoot = evidenceMerkleRoot;
+
 export function objectRoot(object: EconomicObject): Hex {
   return hashCanonical(toObjectHashProjection(object));
 }

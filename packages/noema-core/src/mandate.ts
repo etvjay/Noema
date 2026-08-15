@@ -244,6 +244,8 @@ export function evaluateMandate(
     decision = context.allowConditionalOnWarnings ? "CONDITIONAL" : "CONDITIONAL";
   }
 
+  const allReasonCodes = policyChecks.map((c) => c.reasonCode);
+
   return {
     id: `decision:${mandate.id}:${object.id}:v${object.version}`,
     objectId: object.id,
@@ -251,7 +253,7 @@ export function evaluateMandate(
     mandateId: mandate.id,
     mandateVersion: mandate.version,
     decision,
-    reasonCodes: Array.from(new Set(reasonCodes)),
+    reasonCodes: Array.from(new Set(allReasonCodes)),
     policyChecks,
     supportingClaims: Array.from(new Set(supportingClaims)),
     evidenceRoot: verification.evidenceRoot,

@@ -30,6 +30,7 @@ export type {
   ProvenanceEdge,
   ProvenanceGraph,
   Ref,
+  RelationshipType,
   Representation,
   ResolutionException,
   ResolutionExceptionType,
