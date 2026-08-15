@@ -11,8 +11,12 @@ const jsonValueSchema: z.ZodType<unknown> = z.lazy(() =>
   ])
 );
 
+const jsonObjectSchema = z.record(z.string(), jsonValueSchema);
 const refSchema = z.string().min(1);
-const claimStateSchema = z.enum([
+const hexSchema = z.string().regex(/^0x[0-9a-fA-F]+$/);
+const unixMillisSchema = z.number().int().nonnegative();
+
+export const claimStateSchema = z.enum([
   "UNKNOWN",
   "OBSERVED",
   "SOURCED",
@@ -23,7 +27,8 @@ const claimStateSchema = z.enum([
   "STALE",
   "REVOKED"
 ]);
-const evidenceTypeSchema = z.enum([
+
+export const evidenceTypeSchema = z.enum([
   "DOCUMENT",
   "ORACLE",
   "ONCHAIN_STATE",
@@ -33,7 +38,8 @@ const evidenceTypeSchema = z.enum([
   "PROOF",
   "OTHER"
 ]);
-const evidenceAuthoritySchema = z.enum([
+
+export const evidenceAuthoritySchema = z.enum([
   "PRIMARY_SOURCE",
   "AUTHORIZED_ATTESTOR",
   "ONCHAIN_STATE",
@@ -44,6 +50,100 @@ const evidenceAuthoritySchema = z.enum([
   "AI_INFERENCE",
   "DEMO_FIXTURE"
 ]);
+
+export const verificationOutcomeSchema = z.enum(["PASS", "FAIL", "UNRESOLVED"]);
+
+export const economicObjectStateSchema = z.enum([
+  "RESOLVED",
+  "PARTIALLY_RESOLVED",
+  "CONFLICTING",
+  "STALE",
+  "INSUFFICIENT_EVIDENCE",
+  "REVOKED",
+  "UNSUPPORTED"
+]);
+
+export const relationshipTypeSchema = z.enum([
+  "REPRESENTS",
+  "BRIDGED_REPRESENTATION_OF",
+  "WRAPPED_REPRESENTATION_OF",
+  "SHARE_CLASS_OF",
+  "CLAIM_ON",
+  "ISSUED_BY",
+  "BACKED_BY",
+  "CUSTODIED_BY",
+  "REDEEMABLE_FOR",
+  "DERIVATIVE_OF",
+  "COLLATERALIZED_BY",
+  "GUARANTEED_BY",
+  "FUNCTIONALLY_FUNGIBLE_WITH",
+  "ECONOMICALLY_EQUIVALENT_TO",
+  "SIMILAR_EXPOSURE_TO",
+  "SUPERSEDES"
+]);
+
+export const exceptionTypeSchema = z.enum([
+  "EVIDENCE_STALE",
+  "EVIDENCE_CONFLICT",
+  "EVIDENCE_MISSING",
+  "IDENTITY_AMBIGUOUS",
+  "RELATIONSHIP_AMBIGUOUS",
+  "ATTESTATION_REVOKED",
+  "SOURCE_FAILURE",
+  "VERIFICATION_FAILED",
+  "POLICY_AMBIGUOUS",
+  "UNSUPPORTED_REPRESENTATION"
+]);
+
+export const externalIdentifierSchema = z
+  .object({
+    scheme: z.enum(["CAIP19", "DTI", "ISIN", "CUSIP", "CONTRACT", "ISSUER", "CUSTOM"]),
+    value: z.string().min(1),
+    namespace: z.string().optional(),
+    source: refSchema,
+    status: claimStateSchema
+  })
+  .strict();
+
+export const economicClassificationSchema = z
+  .object({
+    primary: z.string().min(1),
+    secondary: z.array(z.string()),
+    confidence: z.number().min(0).max(1),
+    claimRef: refSchema
+  })
+  .strict();
+
+export const representationSchema = z
+  .object({
+    id: refSchema,
+    environment: z.enum(["EVM", "SOLANA", "CANTON", "OFFCHAIN", "OTHER"]),
+    network: z.string().optional(),
+    contract: z.string().optional(),
+    tokenStandard: z.string().optional(),
+    identifiers: z.array(externalIdentifierSchema),
+    relationshipToObject: refSchema,
+    status: z.enum(["ACTIVE", "SUSPENDED", "REVOKED", "UNKNOWN"]),
+    evidence: z.array(refSchema)
+  })
+  .strict();
+
+export const economicRelationshipSchema = z
+  .object({
+    id: refSchema,
+    subject: refSchema,
+    predicate: relationshipTypeSchema,
+    object: refSchema,
+    state: claimStateSchema,
+    evidence: z.array(refSchema),
+    attestations: z.array(refSchema),
+    inferredBy: refSchema.optional(),
+    confidence: z.number().min(0).max(1).optional(),
+    observedAt: unixMillisSchema.optional(),
+    validFrom: unixMillisSchema.optional(),
+    validUntil: unixMillisSchema.optional()
+  })
+  .strict();
 
 export const claimSchema = z
   .object({
@@ -57,11 +157,11 @@ export const claimSchema = z
     evidenceRefs: z.array(refSchema),
     attestationRefs: z.array(refSchema),
     confidence: z.number().min(0).max(1).optional(),
-    observedAt: z.number().int().nonnegative().optional(),
-    validFrom: z.number().int().nonnegative().optional(),
-    expiresAt: z.number().int().nonnegative().optional(),
+    observedAt: unixMillisSchema.optional(),
+    validFrom: unixMillisSchema.optional(),
+    expiresAt: unixMillisSchema.optional(),
     supersedes: refSchema.optional(),
-    createdAt: z.number().int().nonnegative()
+    createdAt: unixMillisSchema
   })
   .strict();
 
@@ -70,13 +170,129 @@ export const evidenceSchema = z
     id: refSchema,
     type: evidenceTypeSchema,
     source: refSchema,
-    contentHash: z.string().regex(/^0x[0-9a-fA-F]+$/),
+    contentHash: hexSchema,
     locator: z.string().optional(),
-    observedAt: z.number().int().nonnegative(),
-    fetchedAt: z.number().int().nonnegative(),
+    observedAt: unixMillisSchema,
+    fetchedAt: unixMillisSchema,
     authority: evidenceAuthoritySchema,
     freshness: z.enum(["FRESH", "STALE", "UNKNOWN"]).optional(),
-    metadata: z.record(z.string(), jsonValueSchema)
+    metadata: jsonObjectSchema
+  })
+  .strict();
+
+export const attestationSchema = z
+  .object({
+    id: refSchema,
+    subject: refSchema,
+    claimRef: refSchema,
+    schema: z.string().min(1),
+    attestor: refSchema,
+    evidenceRoot: hexSchema.optional(),
+    signature: hexSchema,
+    issuedAt: unixMillisSchema,
+    expiresAt: unixMillisSchema.optional(),
+    revokedAt: unixMillisSchema.optional(),
+    state: z.enum(["ACTIVE", "EXPIRED", "REVOKED"])
+  })
+  .strict();
+
+export const economicPartySchema = z
+  .object({
+    id: refSchema,
+    role: z.string().min(1),
+    name: z.string().min(1),
+    identifiers: z.array(externalIdentifierSchema),
+    claimRefs: z.array(refSchema)
+  })
+  .strict();
+
+export const economicRightSchema = z
+  .object({
+    id: refSchema,
+    type: z.string().min(1),
+    holder: refSchema.optional(),
+    terms: jsonObjectSchema,
+    claimRefs: z.array(refSchema)
+  })
+  .strict();
+
+export const economicObligationSchema = z
+  .object({
+    id: refSchema,
+    type: z.string().min(1),
+    obligor: refSchema.optional(),
+    terms: jsonObjectSchema,
+    claimRefs: z.array(refSchema)
+  })
+  .strict();
+
+export const restrictionSchema = z
+  .object({
+    id: refSchema,
+    type: z.string().min(1),
+    scope: z.string().min(1),
+    claimRefs: z.array(refSchema),
+    evidenceRefs: z.array(refSchema)
+  })
+  .strict();
+
+export const economicStateSchema = z
+  .object({
+    asOf: unixMillisSchema,
+    values: jsonObjectSchema,
+    claimRefs: z.array(refSchema)
+  })
+  .strict();
+
+export const provenanceEdgeSchema = z
+  .object({
+    id: refSchema,
+    from: refSchema,
+    to: refSchema,
+    relation: z.string().min(1)
+  })
+  .strict();
+
+export const provenanceGraphSchema = z
+  .object({
+    edges: z.array(provenanceEdgeSchema)
+  })
+  .strict();
+
+export const resolutionExceptionSchema = z
+  .object({
+    id: refSchema,
+    objectId: refSchema,
+    type: exceptionTypeSchema,
+    severity: z.enum(["INFO", "WARNING", "BLOCKING"]),
+    affectedClaims: z.array(refSchema),
+    evidence: z.array(refSchema),
+    detectedAt: unixMillisSchema,
+    status: z.enum(["OPEN", "RESOLVED", "SUPERSEDED", "WAIVED"]),
+    resolutionOptions: z.array(z.string()).optional()
+  })
+  .strict();
+
+export const verificationCheckSchema = z
+  .object({
+    id: refSchema,
+    type: z.string().min(1),
+    subject: refSchema,
+    result: verificationOutcomeSchema,
+    evidence: z.array(refSchema),
+    ruleVersion: z.string().min(1),
+    timestamp: unixMillisSchema,
+    reason: z.string().optional()
+  })
+  .strict();
+
+export const verificationSummarySchema = z
+  .object({
+    status: verificationOutcomeSchema,
+    verifierVersion: z.string().min(1),
+    checks: z.array(verificationCheckSchema),
+    objectRoot: hexSchema.optional(),
+    evidenceRoot: hexSchema.optional()
   })
   .strict();
 
@@ -84,22 +300,22 @@ export const economicObjectProjectionSchema = z
   .object({
     id: refSchema,
     version: z.number().int().positive(),
-    classification: z.record(z.string(), jsonValueSchema),
-    identifiers: z.array(z.record(z.string(), jsonValueSchema)),
-    representations: z.array(z.record(z.string(), jsonValueSchema)),
-    relationships: z.array(z.record(z.string(), jsonValueSchema)),
-    parties: z.array(z.record(z.string(), jsonValueSchema)),
-    rights: z.array(z.record(z.string(), jsonValueSchema)),
-    obligations: z.array(z.record(z.string(), jsonValueSchema)),
-    restrictions: z.array(z.record(z.string(), jsonValueSchema)),
-    economics: z.record(z.string(), jsonValueSchema),
-    claims: z.array(z.record(z.string(), jsonValueSchema)),
-    evidence: z.array(z.record(z.string(), jsonValueSchema)),
-    attestations: z.array(z.record(z.string(), jsonValueSchema)),
-    exceptions: z.array(z.record(z.string(), jsonValueSchema)),
-    provenance: z.record(z.string(), jsonValueSchema),
-    status: z.string(),
-    verification: z.record(z.string(), jsonValueSchema)
+    classification: economicClassificationSchema,
+    identifiers: z.array(externalIdentifierSchema),
+    representations: z.array(representationSchema),
+    relationships: z.array(economicRelationshipSchema),
+    parties: z.array(economicPartySchema),
+    rights: z.array(economicRightSchema),
+    obligations: z.array(economicObligationSchema),
+    restrictions: z.array(restrictionSchema),
+    economics: economicStateSchema,
+    claims: z.array(claimSchema),
+    evidence: z.array(evidenceSchema),
+    attestations: z.array(attestationSchema),
+    exceptions: z.array(resolutionExceptionSchema),
+    provenance: provenanceGraphSchema,
+    status: economicObjectStateSchema,
+    verification: verificationSummarySchema
   })
   .strict();
 
@@ -109,8 +325,8 @@ export const sourceSnapshotSchema = z
     sourceId: refSchema,
     uri: z.string().url(),
     contentType: z.string().min(1),
-    contentHash: z.string().regex(/^0x[0-9a-fA-F]+$/),
-    fetchedAt: z.number().int().nonnegative(),
+    contentHash: hexSchema,
+    fetchedAt: unixMillisSchema,
     httpStatus: z.number().int().optional(),
     etag: z.string().optional(),
     lastModified: z.string().optional(),
@@ -154,7 +370,7 @@ export const mandateSchema = z
         })
         .strict()
     ),
-    expiresAt: z.number().int().nonnegative().optional()
+    expiresAt: unixMillisSchema.optional()
   })
   .strict();
 
