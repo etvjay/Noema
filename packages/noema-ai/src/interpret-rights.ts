@@ -207,23 +207,25 @@ function interpretTextRights(
   restrictionsOut: ProposedRestriction[],
   _unresolvedOut: ProposedUnresolvedIssue[]
 ): void {
-  // 1. Redemption in prose
-  const redMatch = text.match(/redemption(?:\s+window|\s+frequency|\s+terms)?\s*(?:is|:)?\s*([A-Za-z0-9\+\s\-]+?(?:\.|\n|;|$))/i);
-  if (redMatch?.[1]) {
-    rightsOut.push({
-      id: `right:prop:${subject}:redemption:${source.id}`,
-      subject,
-      holderType: text.toLowerCase().includes("beneficial owner") ? "BENEFICIAL_OWNER" : "TOKEN_HOLDER",
-      rightType: "REDEMPTION",
-      terms: redMatch[1].trim(),
-      transferability: text.toLowerCase().includes("non-transferable") ? "NON_TRANSFERABLE" : "RESTRICTED",
-      redemptionWindow: redMatch[1].trim(),
-      claimRefs: [],
-      evidenceRefs: [evidence.id],
-      locator: "text:regex:redemption",
-      confidence: 0.88,
-      explanation: "Prose redemption clause"
-    });
+  // 1. Redemption in prose (avoid matching 'without redemption' or 'no redemption')
+  if (!text.toLowerCase().includes("without redemption") && !text.toLowerCase().includes("no redemption")) {
+    const redMatch = text.match(/redemption(?:\s+window|\s+frequency|\s+period)?\s*(?:is|:)\s*([A-Za-z0-9\+\s\-]+?(?:\.|\n|;|$))/i);
+    if (redMatch?.[1] && redMatch[1].trim().toLowerCase() !== "terms") {
+      rightsOut.push({
+        id: `right:prop:${subject}:redemption:${source.id}`,
+        subject,
+        holderType: text.toLowerCase().includes("beneficial owner") ? "BENEFICIAL_OWNER" : "TOKEN_HOLDER",
+        rightType: "REDEMPTION",
+        terms: redMatch[1].trim(),
+        transferability: text.toLowerCase().includes("non-transferable") ? "NON_TRANSFERABLE" : "RESTRICTED",
+        redemptionWindow: redMatch[1].trim(),
+        claimRefs: [],
+        evidenceRefs: [evidence.id],
+        locator: "text:regex:redemption",
+        confidence: 0.88,
+        explanation: "Prose redemption clause"
+      });
+    }
   }
 
   // 2. Eligibility / Transfer restriction in prose

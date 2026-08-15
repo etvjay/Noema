@@ -622,4 +622,32 @@ describe("Noema AI proposal contract and run provenance", () => {
     expect(unsupportedDecision?.outcome).toBe("REJECT_UNSUPPORTED");
     expect(unsupportedDecision?.reasonCode).toBe("REASON_SOURCE_SNAPSHOT_NOT_FOUND");
   });
+
+  it("executes the 22-case benchmark suite and evaluates Experiment Foundry promotion gate", async () => {
+    const { runNoemaAiBenchmark, evaluateExperimentFoundryGate } = await import("./benchmark.js");
+
+    const { receipt, gateResult } = await runNoemaAiBenchmark();
+
+    expect(receipt.caseResults.length).toBeGreaterThanOrEqual(20);
+    expect(receipt.metrics.passedCases).toBe(receipt.metrics.totalCases);
+    expect(receipt.metrics.falseEquivalenceRate).toBe(0);
+    expect(receipt.metrics.falseAllowRate).toBe(0);
+    expect(receipt.metrics.unsupportedInferenceRate).toBe(0);
+    expect(receipt.metrics.claimExtractionAccuracy).toBeGreaterThanOrEqual(0.95);
+    expect(receipt.metrics.rightsInterpretationAccuracy).toBeGreaterThanOrEqual(0.95);
+    expect(receipt.metrics.relationshipClassificationAccuracy).toBeGreaterThanOrEqual(0.95);
+    expect(receipt.metrics.conflictDetectionRecall).toBeGreaterThanOrEqual(0.95);
+
+    expect(gateResult.status).toBe("PASS");
+    expect(gateResult.gateScore).toBe(100);
+    expect(gateResult.violations.length).toBe(0);
+
+    // Adversarial metric check: If false equivalence > 0, gate must fail with REDESIGN_REQUIRED
+    const failedGate = evaluateExperimentFoundryGate({
+      ...receipt.metrics,
+      falseEquivalenceRate: 0.05
+    });
+    expect(failedGate.status).toBe("REDESIGN_REQUIRED");
+    expect(failedGate.violations.length).toBeGreaterThan(0);
+  });
 });
