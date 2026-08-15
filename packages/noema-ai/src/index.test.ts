@@ -296,4 +296,95 @@ describe("Noema AI proposal contract and run provenance", () => {
     const eligRest = result.proposedRestrictions.find((r) => r.restrictionType === "ELIGIBILITY");
     expect(eligRest?.eligibilityCriteria).toContain("Qualified Purchaser");
   });
+
+  it("classifies semantic relationships from evidence, refusing false equivalence", async () => {
+    const { classifyRelationships } = await import("./classify-relationships.js");
+
+    // Case A: 1:1 Bridged representation with matching CUSIP and issuer
+    const repEth = {
+      id: "rep:ousg:eth",
+      chainId: 1,
+      issuer: "Ondo Finance",
+      cusip: "68248X104",
+      assetClass: "US_TREASURY",
+      shareClass: "institutional",
+      ticker: "OUSG",
+      evidenceRefs: ["evidence:doc:ousg:eth"]
+    };
+
+    const repXLayer = {
+      id: "rep:ousg:xlayer",
+      chainId: 196,
+      issuer: "Ondo Finance",
+      cusip: "68248X104",
+      assetClass: "US_TREASURY",
+      shareClass: "institutional",
+      ticker: "OUSG",
+      bridgeMechanism: "Ondo Canonical Bridge",
+      evidenceRefs: ["evidence:doc:ousg:xlayer"]
+    };
+
+    const caseAResult = classifyRelationships({
+      representationA: repXLayer,
+      representationB: repEth
+    });
+
+    const isBridged = caseAResult.proposedRelationships.some(
+      (r) => r.predicate === "BRIDGED_REPRESENTATION_OF"
+    );
+    const isEquiv = caseAResult.proposedRelationships.some(
+      (r) => r.predicate === "ECONOMICALLY_EQUIVALENT_TO" && r.isEquivalent === true
+    );
+    expect(isBridged).toBe(true);
+    expect(isEquiv).toBe(true);
+
+    // Case B: Same issuer but different share classes (institutional vs retail)
+    const repRetail = {
+      id: "rep:ousg:retail",
+      chainId: 1,
+      issuer: "Ondo Finance",
+      cusip: "68248X104",
+      assetClass: "US_TREASURY",
+      shareClass: "retail",
+      ticker: "OUSG-R"
+    };
+
+    const caseBResult = classifyRelationships({
+      representationA: repRetail,
+      representationB: repEth
+    });
+
+    const hasShareClassRel = caseBResult.proposedRelationships.some(
+      (r) => r.predicate === "SHARE_CLASS_OF"
+    );
+    const hasFalseEquivB = caseBResult.proposedRelationships.some(
+      (r) => r.predicate === "ECONOMICALLY_EQUIVALENT_TO"
+    );
+    expect(hasShareClassRel).toBe(true);
+    expect(hasFalseEquivB).toBe(false);
+
+    // Case C: Different issuers providing US Treasury exposure (Ondo vs Matrixdock)
+    const repMatrixdock = {
+      id: "rep:matrixdock:stbt",
+      chainId: 1,
+      issuer: "Matrixdock",
+      assetClass: "US_TREASURY",
+      ticker: "STBT",
+      evidenceRefs: ["evidence:doc:stbt"]
+    };
+
+    const caseCResult = classifyRelationships({
+      representationA: repMatrixdock,
+      representationB: repEth
+    });
+
+    const isSimilar = caseCResult.proposedRelationships.some(
+      (r) => r.predicate === "SIMILAR_EXPOSURE_TO" && r.isEquivalent === false
+    );
+    const hasFalseEquivC = caseCResult.proposedRelationships.some(
+      (r) => r.predicate === "ECONOMICALLY_EQUIVALENT_TO"
+    );
+    expect(isSimilar).toBe(true);
+    expect(hasFalseEquivC).toBe(false);
+  });
 });
