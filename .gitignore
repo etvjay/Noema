@@ -16,5 +16,7 @@ contracts/out/
 contracts/broadcast/
 contracts/lib/
 
+artifacts/qa/
+
 *.log
 .DS_Store
