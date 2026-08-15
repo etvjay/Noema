@@ -29,6 +29,9 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.9.3
+      viem:
+        specifier: ^2.33.0
+        version: 2.55.13(typescript@5.9.3)(zod@4.4.3)
       vitest:
         specifier: ^3.2.4
         version: 3.2.7(@types/node@24.13.3)
@@ -71,6 +74,9 @@ importers:
       '@noema/economic-kernel':
         specifier: workspace:*
         version: link:../economic-kernel
+      viem:
+        specifier: ^2.33.0
+        version: 2.55.13(typescript@5.9.3)(zod@4.4.3)
 
 packages:
 

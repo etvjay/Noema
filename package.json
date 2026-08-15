@@ -26,6 +26,7 @@
     "@noema/verification": "workspace:*",
     "@types/node": "^24.3.0",
     "typescript": "^5.8.3",
+    "viem": "^2.33.0",
     "vitest": "^3.2.4"
   }
 }
