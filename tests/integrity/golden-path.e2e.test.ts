@@ -233,7 +233,7 @@ describe("Noema complete golden path", () => {
     const mandate = treasuryMandate();
     const verification = verifyEconomicObject(interpreted, {
       nowMs: NOW,
-      maxEvidenceAgeMs: mandate.maxEvidenceAgeMs
+      maxEvidenceAgeMs: mandate.maxEvidenceAgeMs!
     });
     const decision = evaluateMandate(interpreted, verification, mandate, { nowMs: NOW });
     const replayDecision = evaluateMandate(interpreted, verification, mandate, { nowMs: NOW });
@@ -305,7 +305,7 @@ describe("Noema complete golden path", () => {
       evaluate: (object) => {
         const nextVerification = verifyEconomicObject(object, {
           nowMs: NOW + 1_000,
-          maxEvidenceAgeMs: mandate.maxEvidenceAgeMs
+          maxEvidenceAgeMs: mandate.maxEvidenceAgeMs!
         });
         return {
           verification: nextVerification,
