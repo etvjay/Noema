@@ -1,0 +1,13 @@
+{
+  "runId":"noema-ai-benchmark-candidate-v1",
+  "subject":{"model":"fixture-candidate","modelVersion":"v1","promptVersion":"noema-ai-prompt-v1","proposalSchemaVersion":"noema-ai-proposal-v1","toolContractVersion":"noema-ai-tools-v1","promotionPolicyVersion":"noema-ai-promotion-v1"},
+  "scope":"offline deterministic fixture replay; not a live-model claim",
+  "outputs":[
+    ["B01","ISSUER:Arcadia Treasury SPV I"],["B02","REDEMPTION:1_BUSINESS_DAY"],["B03","UNKNOWN"],["B04","REJECT_UNSUPPORTED"],
+    ["B05","REDEMPTION_RIGHT"],["B06","QUALIFIED_INVESTOR_ONLY"],["B07","UNKNOWN"],["B08","CLASS_B_DIFFERENT_RIGHTS"],
+    ["B09","SIMILAR_EXPOSURE_TO"],["B10","WRAPPED_REPRESENTATION_OF"],["B11","BRIDGED_REPRESENTATION_OF"],["B12","ECONOMICALLY_EQUIVALENT_TO"],
+    ["B13","SIMILAR_EXPOSURE_TO"],["B14","REQUIRE_REVIEW"],["B15","CONFLICT"],["B16","CONFLICT"],
+    ["B17","NO_CONFLICT"],["B18","CONFLICT"],["B19","IGNORE_INSTRUCTION"],["B20","REJECT_MALFORMED"],
+    ["B21","REJECT_UNSUPPORTED"],["B22","REQUIRE_REVIEW"],["B23","BLOCK"],["B24","ALLOW"]
+  ]
+}
