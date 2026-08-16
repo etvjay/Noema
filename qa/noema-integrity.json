@@ -250,6 +250,22 @@
         "run",
         "tests/integrity/notification-router.test.ts"
       ]
+    },
+    {
+      "id": "webhook-delivery",
+      "phase": "serve",
+      "description": "Signed webhook envelopes authenticate origin, bound replay, are idempotent under duplicate delivery, preserve canonical event identity across retries, keep destination secrets out of receipts, and support endpoint secret rotation.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/webhook-delivery.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/webhook-delivery.test.ts"
+      ]
     }
   ],
   "liveGates": [

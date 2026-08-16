@@ -70,6 +70,8 @@ export interface Transport {
     subscriptionId: string;
     channel: DeliveryChannel;
     destination: string;
+    deliveryId: string;
+    attempt: number;
   }): TransportResult;
 }
 
@@ -197,7 +199,9 @@ function advance(
     event,
     subscriptionId,
     channel: delivery.channel,
-    destination: delivery.destination
+    destination: delivery.destination,
+    deliveryId: delivery.deliveryId,
+    attempt: latest.attempt
   });
 
   const attempts = delivery.attempts.slice(0, -1);

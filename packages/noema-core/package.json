@@ -13,7 +13,8 @@
     "./surfaces": "./src/surfaces.ts",
     "./ui": "./src/ui.ts",
     "./commitment": "./src/commitment.ts",
-    "./notification": "./src/notification.ts"
+    "./notification": "./src/notification.ts",
+    "./webhook": "./src/webhook.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*",
