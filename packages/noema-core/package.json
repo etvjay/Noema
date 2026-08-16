@@ -11,7 +11,8 @@
     "./versioning": "./src/versioning.ts",
     "./watch": "./src/watch.ts",
     "./surfaces": "./src/surfaces.ts",
-    "./ui": "./src/ui.ts"
+    "./ui": "./src/ui.ts",
+    "./commitment": "./src/commitment.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*"
