@@ -4,12 +4,36 @@ import { describe, expect, it } from "vitest";
 type Case = { id: string; task: string; expected: string; risk: string };
 type Corpus = { fixtureVersion: string; cases: Case[] };
 type Run = { runId: string; subject: Record<string, string>; scope: string; outputs: [string, string][] };
+type DerivedMetrics = {
+  caseCount: number;
+  exactAccuracy: number;
+  claimExtractionAccuracy: number;
+  rightsRestrictionsAccuracy: number;
+  relationshipAccuracy: number;
+  conflictPrecision: number;
+  conflictRecall: number;
+  unsupportedInferenceRate: number;
+  falseEquivalenceRate: number;
+  falseAllowRate: number;
+};
+type PromotionThresholds = {
+  caseCountMin: number;
+  exactAccuracyMin: number;
+  claimExtractionAccuracyMin: number;
+  rightsRestrictionsAccuracyMin: number;
+  relationshipAccuracyMin: number;
+  conflictPrecisionMin: number;
+  conflictRecallMin: number;
+  unsupportedInferenceRateMax: number;
+  falseEquivalenceRateMax: number;
+  falseAllowRateMax: number;
+};
 type Result = {
   experimentId: string;
   protocolVersion: string;
   fixtureVersion: string;
-  derivedMetrics: Record<string, number>;
-  promotionThresholds: Record<string, number>;
+  derivedMetrics: DerivedMetrics;
+  promotionThresholds: PromotionThresholds;
   result: string;
   validity: { level: string; limitations: string[] };
 };
@@ -20,7 +44,7 @@ const baseline = load<Run>("experiments/state/noema-ai-benchmark/raw-baseline.js
 const candidate = load<Run>("experiments/state/noema-ai-benchmark/raw-candidate.json");
 const recorded = load<Result>("experiments/state/noema-ai-benchmark/result.json");
 
-function metrics(run: Run) {
+function metrics(run: Run): DerivedMetrics {
   const output = new Map(run.outputs);
   const exact = (cases: Case[]) => cases.filter((c) => output.get(c.id) === c.expected).length / cases.length;
   const byTask = (task: string) => corpus.cases.filter((c) => c.task === task);
@@ -95,16 +119,22 @@ describe("Noema AI benchmark promotion gate", () => {
 
   it("matches the recorded Experiment Foundry PASS and cannot promote below thresholds", () => {
     const next = metrics(candidate);
+    const thresholds = recorded.promotionThresholds;
     expect(recorded.result).toBe("PASS");
     expect(recorded.validity.level).toBe("X1_OFFLINE_FIXTURE");
     expect(recorded.validity.limitations.some((x) => x.includes("not a live probabilistic model"))).toBe(true);
-    for (const [name, value] of Object.entries(recorded.derivedMetrics)) {
-      expect(next[name as keyof typeof next]).toBe(value);
+    for (const name of Object.keys(recorded.derivedMetrics) as Array<keyof DerivedMetrics>) {
+      expect(next[name]).toBe(recorded.derivedMetrics[name]);
     }
-    expect(next.caseCount).toBeGreaterThanOrEqual(recorded.promotionThresholds.caseCountMin);
-    expect(next.exactAccuracy).toBeGreaterThanOrEqual(recorded.promotionThresholds.exactAccuracyMin);
-    expect(next.falseEquivalenceRate).toBeLessThanOrEqual(recorded.promotionThresholds.falseEquivalenceRateMax);
-    expect(next.falseAllowRate).toBeLessThanOrEqual(recorded.promotionThresholds.falseAllowRateMax);
-    expect(next.unsupportedInferenceRate).toBeLessThanOrEqual(recorded.promotionThresholds.unsupportedInferenceRateMax);
+    expect(next.caseCount).toBeGreaterThanOrEqual(thresholds.caseCountMin);
+    expect(next.exactAccuracy).toBeGreaterThanOrEqual(thresholds.exactAccuracyMin);
+    expect(next.claimExtractionAccuracy).toBeGreaterThanOrEqual(thresholds.claimExtractionAccuracyMin);
+    expect(next.rightsRestrictionsAccuracy).toBeGreaterThanOrEqual(thresholds.rightsRestrictionsAccuracyMin);
+    expect(next.relationshipAccuracy).toBeGreaterThanOrEqual(thresholds.relationshipAccuracyMin);
+    expect(next.conflictPrecision).toBeGreaterThanOrEqual(thresholds.conflictPrecisionMin);
+    expect(next.conflictRecall).toBeGreaterThanOrEqual(thresholds.conflictRecallMin);
+    expect(next.falseEquivalenceRate).toBeLessThanOrEqual(thresholds.falseEquivalenceRateMax);
+    expect(next.falseAllowRate).toBeLessThanOrEqual(thresholds.falseAllowRateMax);
+    expect(next.unsupportedInferenceRate).toBeLessThanOrEqual(thresholds.unsupportedInferenceRateMax);
   });
 });
