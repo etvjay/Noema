@@ -1,5 +1,9 @@
 import { privateKeyToAccount } from "viem/accounts";
 
+export function eip712TestSignerAddress(privateKey: `0x${string}`): `0x${string}` {
+  return privateKeyToAccount(privateKey).address;
+}
+
 export async function signEip712TestVector(input: {
   privateKey: `0x${string}`;
   domain: {
