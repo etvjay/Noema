@@ -34,6 +34,8 @@ export type {
   ResolutionException,
   ResolutionExceptionType,
   Restriction,
+  SchemaId,
+  SchemaVersion,
   SourceSnapshot,
   UnixMillis,
   VerificationCheck,

@@ -1,6 +1,8 @@
 export type Ref = string;
 export type Hex = string;
 export type UnixMillis = number;
+export type SchemaId = string;
+export type SchemaVersion = number;
 
 export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue =
@@ -167,6 +169,8 @@ export interface Claim<T = JsonValue> {
 
 export interface Evidence {
   id: Ref;
+  schemaId: SchemaId;
+  schemaVersion: SchemaVersion;
   type: EvidenceType;
   source: Ref;
   contentHash: Hex;
@@ -180,6 +184,8 @@ export interface Evidence {
 
 export interface Attestation {
   id: Ref;
+  schemaId: SchemaId;
+  schemaVersion: SchemaVersion;
   subject: Ref;
   claimRef: Ref;
   schema: string;
@@ -275,6 +281,8 @@ export interface VerificationSummary {
 export interface EconomicObject {
   id: Ref;
   version: number;
+  schemaId: SchemaId;
+  schemaVersion: SchemaVersion;
   classification: EconomicClassification;
   identifiers: ExternalIdentifier[];
   representations: Representation[];
@@ -297,6 +305,8 @@ export interface EconomicObject {
 
 export interface SourceSnapshot {
   id: Ref;
+  schemaId: SchemaId;
+  schemaVersion: SchemaVersion;
   sourceId: Ref;
   uri: string;
   contentType: string;
@@ -353,6 +363,8 @@ export type MandateDecision = "ALLOW" | "BLOCK" | "CONDITIONAL";
 
 export interface VerificationReceipt {
   id: Ref;
+  schemaId: SchemaId;
+  schemaVersion: SchemaVersion;
   objectId: Ref;
   objectVersion: number;
   verifierVersion: string;
@@ -366,6 +378,8 @@ export interface VerificationReceipt {
 
 export interface DecisionReceipt {
   id: Ref;
+  schemaId: SchemaId;
+  schemaVersion: SchemaVersion;
   objectId: Ref;
   objectVersion: number;
   mandateId: Ref;

@@ -17,10 +17,13 @@ import type {
   Representation,
   ResolutionException,
   Restriction,
+  SchemaId,
+  SchemaVersion,
   SourceSnapshot,
   VerificationSummary,
   UnixMillis
 } from "@noema/economic-kernel";
+import { SCHEMA_IDS, SCHEMA_VERSIONS } from "@noema/schemas";
 
 export interface ReduceEconomicObjectInput {
   id: Ref;
@@ -42,6 +45,8 @@ export interface ReduceEconomicObjectInput {
   createdAt: UnixMillis;
   updatedAt: UnixMillis;
   verification?: VerificationSummary;
+  schemaId?: SchemaId;
+  schemaVersion?: SchemaVersion;
 }
 
 function byId<T extends { id: string }>(items: readonly T[]): T[] {
@@ -114,6 +119,8 @@ export function reduceEconomicObject(
   return {
     id: input.id,
     version: input.version,
+    schemaId: input.schemaId ?? SCHEMA_IDS.ECONOMIC_OBJECT,
+    schemaVersion: input.schemaVersion ?? SCHEMA_VERSIONS.ECONOMIC_OBJECT,
     classification: input.classification,
     identifiers: input.identifiers,
     representations,

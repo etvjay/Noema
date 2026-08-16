@@ -7,6 +7,8 @@ import { ingestSourceSnapshot } from "@noema/noema-core/evidence";
 function snapshot(overrides: Partial<SourceSnapshot> = {}): SourceSnapshot {
   return {
     id: "snapshot:issuer:1",
+    schemaId: "noema:source-snapshot",
+    schemaVersion: 1,
     sourceId: "issuer:1",
     uri: "https://issuer.example/nav.json",
     contentType: "application/json",
