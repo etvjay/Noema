@@ -298,6 +298,22 @@
         "run",
         "tests/integrity/typed-sdk.test.ts"
       ]
+    },
+    {
+      "id": "mcp-surface",
+      "phase": "serve",
+      "description": "Agent-native MCP surface over canonical state: target official MCP spec revision with documented support policy, latest matches REST/SDK exactly, tool results preserve exact IDs and canonical roots, no VERIFIED/version/asset mutation, independent read/watch/evaluate permissions, auditable trace with no hidden chain-of-thought, and prompt injection in returned evidence cannot expand the capability boundary.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/mcp-surface.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/mcp-surface.test.ts"
+      ]
     }
   ],
   "liveGates": [

@@ -18,6 +18,7 @@ Before consuming a module, read its usage contract here. Source files alone are 
 - `@noema/noema-core/notification` → `usage/notification/README.md`
 - `@noema/noema-core/rest` → `usage/rest/README.md`
 - `@noema/noema-core/sdk` → `usage/sdk/README.md`
+- `@noema/noema-core/mcp` → `usage/mcp/README.md`
 - `@noema/noema-core/webhook` → `usage/webhook/README.md`
 
 ## Frontend consumption order

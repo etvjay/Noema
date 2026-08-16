@@ -16,10 +16,12 @@
     "./notification": "./src/notification.ts",
     "./rest": "./src/rest.ts",
     "./sdk": "./src/sdk.ts",
-    "./webhook": "./src/webhook.ts"
+    "./webhook": "./src/webhook.ts",
+    "./mcp": "./src/mcp.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*",
-    "@noema/schemas": "workspace:*"
+    "@noema/schemas": "workspace:*",
+    "zod": "^4.0.5"
   }
 }
