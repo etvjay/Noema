@@ -1,6 +1,11 @@
 name: X Layer Builder Code Attribution Proof
 
 on:
+  push:
+    branches:
+      - agent/noema-integration-lab
+    paths:
+      - '.github/workflows/builder-code-attribution.yml'
   workflow_dispatch:
 
 permissions:
