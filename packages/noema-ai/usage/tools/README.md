@@ -63,5 +63,5 @@ Any new tool is a security-sensitive capability addition. Update the public sche
 
 ## Proof
 
-- `tests/integrity/ai-tool-security-boundary.test.ts`
+- `tests/integrity/ai-tool-security.test.ts`
 - AI QA gate: `ai-tool-security-boundary`
