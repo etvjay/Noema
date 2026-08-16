@@ -2,16 +2,24 @@ import { describe, expect, it } from "vitest";
 import type { Attestation } from "@noema/economic-kernel";
 import { reduceEconomicObject } from "@noema/noema-core";
 import {
+  NOEMA_ATTESTATION_TYPES,
+  noemaAttestationTypedData,
   verifyAttestationAuthority,
   verifyEconomicObject,
+  verifyEconomicObjectWithAttestations,
   type AttestationAuthorityPolicy
 } from "@noema/verification";
+import {
+  eip712TestSignerAddress,
+  signEip712TestVector
+} from "../../packages/canonicalization/src/test-signing.js";
 import { makeEconomicObject } from "../helpers.js";
 
 const NOW = 1_700_000_001_000;
 const TRUSTED_ATTESTOR = "0x2222222222222222222222222222222222222222";
 const OTHER_ATTESTOR = "0x3333333333333333333333333333333333333333";
 const INVALID_SIGNATURE = `0x${"11".repeat(65)}`;
+const TEST_ONLY_PRIVATE_KEY = `0x${"01".repeat(32)}` as `0x${string}`;
 
 const authorityPolicy: AttestationAuthorityPolicy = {
   domain: {
@@ -214,5 +222,86 @@ describe("Noema deterministic verification boundary", () => {
     );
     expect(invalidSignature.result).toBe("FAIL");
     expect(invalidSignature.reason).toContain("EIP-712");
+  });
+
+  it("binds a real EIP-712 signature to the exact Noema domain, schema, and payload", async () => {
+    const signer = eip712TestSignerAddress(TEST_ONLY_PRIVATE_KEY);
+    const signedPolicy: AttestationAuthorityPolicy = {
+      ...authorityPolicy,
+      trustedAttestors: new Set([signer.toLowerCase()])
+    };
+    const unsigned = makeAttestation({
+      attestor: signer,
+      signature: INVALID_SIGNATURE
+    });
+    const typedData = noemaAttestationTypedData(unsigned, signedPolicy.domain);
+    const signed = await signEip712TestVector({
+      privateKey: TEST_ONLY_PRIVATE_KEY,
+      domain: typedData.domain,
+      types: NOEMA_ATTESTATION_TYPES,
+      primaryType: typedData.primaryType,
+      message: typedData.message
+    });
+    const validAttestation: Attestation = {
+      ...unsigned,
+      signature: signed.signature
+    };
+
+    const valid = await verifyAttestationAuthority(validAttestation, signedPolicy, { nowMs: NOW });
+    expect(valid.result).toBe("PASS");
+    expect(valid.reason).toBeUndefined();
+
+    const wrongDomain = await verifyAttestationAuthority(
+      validAttestation,
+      {
+        ...signedPolicy,
+        domain: {
+          ...signedPolicy.domain,
+          chainId: 1953
+        }
+      },
+      { nowMs: NOW }
+    );
+    expect(wrongDomain.result).toBe("FAIL");
+    expect(wrongDomain.reason).toContain("EIP-712");
+
+    const payloadMutation = await verifyAttestationAuthority(
+      {
+        ...validAttestation,
+        evidenceRoot: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      signedPolicy,
+      { nowMs: NOW }
+    );
+    expect(payloadMutation.result).toBe("FAIL");
+    expect(payloadMutation.reason).toContain("EIP-712");
+
+    const cryptographicSchemaMutation = await verifyAttestationAuthority(
+      {
+        ...validAttestation,
+        schema: "noema:attestation:v2"
+      },
+      {
+        ...signedPolicy,
+        schema: "noema:attestation:v2"
+      },
+      { nowMs: NOW }
+    );
+    expect(cryptographicSchemaMutation.result).toBe("FAIL");
+    expect(cryptographicSchemaMutation.reason).toContain("EIP-712");
+
+    const base = makeEconomicObject();
+    const claim = base.claims[0]!;
+    const object = makeEconomicObject({
+      claims: [{ ...claim, attestationRefs: [validAttestation.id] }],
+      attestations: [validAttestation]
+    });
+    const context = { nowMs: NOW, maxEvidenceAgeMs: 3_600_000 };
+    const firstReceipt = await verifyEconomicObjectWithAttestations(object, context, signedPolicy);
+    const secondReceipt = await verifyEconomicObjectWithAttestations(object, context, signedPolicy);
+
+    expect(secondReceipt).toEqual(firstReceipt);
+    expect(firstReceipt.overallStatus).toBe("PASS");
+    expect(firstReceipt.checks.some((check) => check.type === "ATTESTATION_AUTHORITY" && check.result === "PASS")).toBe(true);
   });
 });
