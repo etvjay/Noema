@@ -79,5 +79,5 @@ Adding or changing a model-visible capability is a security-sensitive public-con
 
 ## Proof
 
-- `tests/integrity/ai-tool-security-boundary.test.ts`
+- `tests/integrity/ai-tool-security.test.ts`
 - AI QA gate: `ai-tool-security-boundary`
