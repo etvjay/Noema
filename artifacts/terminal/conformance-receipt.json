@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "noema-terminal-conformance-v1",
+  "gate": "terminal-cross-surface",
+  "release": {
+    "commit": "7cb2f3b7ae935492891bd66fe22b00ee9c71d76d",
+    "branch": "agent/noema-integration-lab"
+  },
+  "correlation": {
+    "eventId": "event:terminal:material-change",
+    "correlationId": "correlation:terminal:change-1",
+    "replayKey": "change:terminal:stale",
+    "objectId": "object:fixture",
+    "objectVersion": 2,
+    "verificationReceiptRef": "verification:object:fixture:v2",
+    "decisionReceiptRef": "decision:object:fixture:v2:mandate:terminal:treasury:v1",
+    "objectRoot": "0x50104b91a8aabfc33d945b2fe51c1c2a92719ca9b701010b2de4c0dea817c181",
+    "evidenceRoot": "0xd2e8bf8271491b4d1645125c43114bfbeebe384b53b607ddabd730ddb2d1f1ca",
+    "webhookDeliveryIdHash": "87e2099e4f4ea422c62ca238a429b46f9e556476c6b4687c02b87f56c1d6ff74",
+    "webhookEnvelopeIdempotencyKeyHash": "94d7531d2d0bd1ef2b7fcb631187b186331b4c26ac55e6e8da226ee959602e49",
+    "telegramDeliveryIdHash": "db097ca74100c2d34bcf32ad6b5fb3b80b3267b286c9070bf1600df931ace0a2",
+    "telegramMessageIdHash": "f338e6a87ae2418c1e7a854d88d5def8b67b168abd6418e40e0e26cc236ae389"
+  },
+  "surfaces": {
+    "latest": {
+      "version": 2,
+      "status": "STALE"
+    },
+    "exactVersionImmutable": {
+      "v1HashesAgree": true
+    },
+    "rest": {
+      "snapshotHash": "705459d6dc34f8ed306d50f2c7619b0aea4d849d4e66d44e6c69563e151eeaa1"
+    },
+    "sdk": {
+      "snapshotHash": "1f6cff91c399a7dee837f883a8e371870bb0848d7fa8d6fd718a1dbffa5592dd"
+    },
+    "mcp": {
+      "snapshotHash": "3a8515f5c9b29806d57be9e7a15676f0464c555494faf37cc91e608dd19b98b6"
+    },
+    "mcpExplain": {
+      "decision": "BLOCK",
+      "hash": "c073e2e0d13f5885c3688bf3f5aa53db5593a189fc38f55d280c3b4d01ac1d28"
+    },
+    "ui": {
+      "hash": "ba704fca1941888bc97ba9ddfeca0fef6003a12cc20bda4a4044be64bc760fe5"
+    },
+    "telegram": {
+      "hash": "88c245fe38193dff0e51ce641b22117d4098d49cbf0c05ffe506315eb0aefd87"
+    },
+    "webhook": {
+      "hash": "9e09fc07285501e601134dca08c74cc3a1a8384d5733a6046b3ec962096701d4",
+      "signed": true
+    },
+    "why": {
+      "hash": "81ee2dd972b445959798bca85e7adf9075fb0e61df8f484f3c6a9fb1e4d821ba",
+      "groundedInCanonicalReceipts": true
+    },
+    "inboundAdmission": {
+      "hash": "491c7a21e0dc883e8efb0fc4196147a8e54ddac54a49759ad861c76f941c3164",
+      "authority": "DERIVED",
+      "cannotBypassVerification": true
+    }
+  },
+  "commitment": {
+    "version": 2,
+    "objectRoot": "0x50104b91a8aabfc33d945b2fe51c1c2a92719ca9b701010b2de4c0dea817c181",
+    "evidenceRoot": "0xd2e8bf8271491b4d1645125c43114bfbeebe384b53b607ddabd730ddb2d1f1ca"
+  },
+  "fanout": {
+    "deliveryReceipts": 2,
+    "channels": [
+      "TELEGRAM",
+      "WEBHOOK"
+    ],
+    "retriesPreserveIdentity": true,
+    "noDuplicateLogicalNotifications": true
+  },
+  "authBoundary": {
+    "privateSubscriptionDataNotLeaked": true,
+    "publicSurfacesExcludeSubscriptionIdentity": true
+  },
+  "noSecrets": true
+}

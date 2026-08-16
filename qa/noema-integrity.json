@@ -362,6 +362,23 @@
         "run",
         "tests/integrity/mcp-surface.test.ts"
       ]
+    },
+    {
+      "id": "terminal-cross-surface",
+      "phase": "serve",
+      "description": "Ambient Intelligence terminal gate (#54): one correlated watch/change scenario is proven identical across REST, SDK, MCP, Telegram, webhook, and UI. Same latest object/version and roots across all surfaces; exact-version lookup immutable across REST/SDK/MCP; one canonical SemanticEvent fans out to Telegram and signed webhook without semantic drift; delivery retries preserve event identity without duplicate logical notifications; /why explanation grounded in the same canonical receipts and cannot contradict them; inbound Telegram assertion follows SourceSnapshot/evidence admission (DERIVED) and cannot bypass verification; commitment objectRoot/evidenceRoot resolve consistently; private subscription data not leaked through public economic-state surfaces; machine-readable conformance receipt records every surface response hash/correlation ID with no secrets.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/terminal-cross-surface.test.ts",
+        "artifacts/terminal/conformance-receipt.json"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/terminal-cross-surface.test.ts"
+      ]
     }
   ],
   "liveGates": [
