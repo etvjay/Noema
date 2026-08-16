@@ -1,0 +1,106 @@
+name: X Layer Builder Code Live Proof
+
+on:
+  push:
+    branches:
+      - agent/noema-integration-lab
+    paths:
+      - '.github/workflows/builder-code-live.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  builder-code-live:
+    runs-on: ubuntu-24.04
+    env:
+      XLAYER_RPC_URL: https://testrpc.xlayer.tech/terigon
+      XLAYER_EXPECTED_CHAIN_ID: '1952'
+      XLAYER_BUILDER_REGISTRY: '0x33907e98d7392d95212b05ab03f091e02d7815bf'
+      NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY: ${{ secrets.NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Preflight current X Layer Builder Code registry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" || { echo '::error::Missing funded X Layer signer secret'; exit 2; }
+          CHAIN_ID=$(cast chain-id --rpc-url "$XLAYER_RPC_URL")
+          test "$CHAIN_ID" = "$XLAYER_EXPECTED_CHAIN_ID" || { echo "::error::Unexpected chain ID $CHAIN_ID"; exit 2; }
+          SIGNER=$(cast wallet address --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY")
+          BALANCE=$(cast balance "$SIGNER" --rpc-url "$XLAYER_RPC_URL")
+          REGISTRY_CODE=$(cast code "$XLAYER_BUILDER_REGISTRY" --rpc-url "$XLAYER_RPC_URL")
+          test "$BALANCE" != '0' || { echo '::error::Signer has zero testnet OKB'; exit 2; }
+          test "$REGISTRY_CODE" != '0x' || { echo '::error::Current documented Builder Code registry has no bytecode'; exit 2; }
+          echo "Signer: $SIGNER"
+          echo "Builder Code registry: $XLAYER_BUILDER_REGISTRY"
+          echo "Registry bytecode bytes: $(( (${#REGISTRY_CODE} - 2) / 2 ))"
+          echo "XLAYER_SIGNER=$SIGNER" >> "$GITHUB_ENV"
+
+      - name: Register testnet Builder Code with registerAuto
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/qa/builder-code
+          REGISTER_JSON=$(cast send "$XLAYER_BUILDER_REGISTRY" \
+            'registerAuto()' \
+            --rpc-url "$XLAYER_RPC_URL" \
+            --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" \
+            --json)
+          printf '%s\n' "$REGISTER_JSON" > artifacts/qa/builder-code/registration.json
+          TX_HASH=$(printf '%s' "$REGISTER_JSON" | jq -r '.transactionHash // .transaction_hash // empty')
+          test -n "$TX_HASH" || { echo '::error::registerAuto returned no transaction hash'; exit 2; }
+          STATUS=$(printf '%s' "$REGISTER_JSON" | jq -r '.status // empty')
+          test "$STATUS" = '0x1' || test "$STATUS" = '1' || { echo "::error::registerAuto receipt status was $STATUS"; exit 2; }
+
+          TRANSFER_TOPIC=$(cast keccak 'Transfer(address,address,uint256)' | tr '[:upper:]' '[:lower:]')
+          REGISTRY=$(printf '%s' "$XLAYER_BUILDER_REGISTRY" | tr '[:upper:]' '[:lower:]')
+          OWNER_HEX=$(printf '%064s' "${XLAYER_SIGNER#0x}" | tr ' ' '0' | tr '[:upper:]' '[:lower:]')
+          OWNER_TOPIC="0x$OWNER_HEX"
+          ZERO_TOPIC='0x0000000000000000000000000000000000000000000000000000000000000000'
+          TOKEN_ID=$(printf '%s' "$REGISTER_JSON" | jq -r \
+            --arg registry "$REGISTRY" \
+            --arg sig "$TRANSFER_TOPIC" \
+            --arg zero "$ZERO_TOPIC" \
+            --arg owner "$OWNER_TOPIC" \
+            '[.logs[]? | select((.address|ascii_downcase)==$registry and (.topics[0]|ascii_downcase)==$sig and (.topics[1]|ascii_downcase)==$zero and (.topics[2]|ascii_downcase)==$owner)][0].topics[3] // empty')
+          test -n "$TOKEN_ID" || { echo '::error::Could not recover ERC-721 token id from registerAuto Transfer event'; jq '.logs' artifacts/qa/builder-code/registration.json; exit 2; }
+
+          OWNER=$(cast call "$XLAYER_BUILDER_REGISTRY" 'ownerOf(uint256)(address)' "$TOKEN_ID" --rpc-url "$XLAYER_RPC_URL")
+          test "$(printf '%s' "$OWNER" | tr '[:upper:]' '[:lower:]')" = "$(printf '%s' "$XLAYER_SIGNER" | tr '[:upper:]' '[:lower:]')" || { echo '::error::Builder Code token owner mismatch'; exit 2; }
+
+          TOKEN_URI=$(cast call "$XLAYER_BUILDER_REGISTRY" 'tokenURI(uint256)(string)' "$TOKEN_ID" --rpc-url "$XLAYER_RPC_URL" 2>/dev/null || true)
+          NAME=$(cast call "$XLAYER_BUILDER_REGISTRY" 'name()(string)' --rpc-url "$XLAYER_RPC_URL" 2>/dev/null || true)
+          SYMBOL=$(cast call "$XLAYER_BUILDER_REGISTRY" 'symbol()(string)' --rpc-url "$XLAYER_RPC_URL" 2>/dev/null || true)
+
+          jq -n \
+            --arg registry "$XLAYER_BUILDER_REGISTRY" \
+            --arg signer "$XLAYER_SIGNER" \
+            --arg transactionHash "$TX_HASH" \
+            --arg tokenId "$TOKEN_ID" \
+            --arg owner "$OWNER" \
+            --arg tokenURI "$TOKEN_URI" \
+            --arg name "$NAME" \
+            --arg symbol "$SYMBOL" \
+            '{kind:"xlayer-builder-code-registration",chainId:1952,registry:$registry,signer:$signer,transactionHash:$transactionHash,tokenId:$tokenId,owner:$owner,tokenURI:$tokenURI,collectionName:$name,collectionSymbol:$symbol}' \
+            > artifacts/qa/builder-code/registration-proof.json
+
+          echo "Registration transaction: $TX_HASH"
+          echo "Builder Code token ID: $TOKEN_ID"
+          echo "Collection: $NAME ($SYMBOL)"
+          echo "Token URI: $TOKEN_URI"
+
+      - name: Upload Builder Code registration proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xlayer-builder-code-registration-${{ github.sha }}
+          path: artifacts/qa/builder-code/*
+          if-no-files-found: warn
+          retention-days: 30
