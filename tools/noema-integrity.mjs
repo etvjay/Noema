@@ -2,9 +2,15 @@
 
 import fs from 'node:fs/promises';
 import fsSync from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import { spawnSync } from 'node:child_process';
+
+const foundryBin = path.join(os.homedir(), '.foundry', 'bin');
+if (fsSync.existsSync(foundryBin) && !process.env.PATH?.split(path.delimiter).includes(foundryBin)) {
+  process.env.PATH = `${foundryBin}${path.delimiter}${process.env.PATH || ''}`;
+}
 
 const CONTRACT_PATH = path.resolve('qa/noema-integrity.json');
 const OUT_ROOT = process.env.NOEMA_QA_OUT || 'artifacts/qa/integrity';

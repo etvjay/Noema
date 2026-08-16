@@ -2,9 +2,15 @@
 
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import { spawnSync } from 'node:child_process';
+
+const foundryBin = path.join(os.homedir(), '.foundry', 'bin');
+if (fs.existsSync(foundryBin) && !process.env.PATH?.split(path.delimiter).includes(foundryBin)) {
+  process.env.PATH = `${foundryBin}${path.delimiter}${process.env.PATH || ''}`;
+}
 
 const VERSION = '0.2.0';
 const ROOT = process.cwd();
