@@ -43,6 +43,12 @@ export interface ConflictAnalysisResult {
   unresolvedIssues: ProposedUnresolvedIssue[];
 }
 
+export type ConflictExceptionCandidate =
+  | "EVIDENCE_CONFLICT"
+  | "EVIDENCE_STALE"
+  | "IDENTITY_AMBIGUOUS"
+  | "RELATIONSHIP_AMBIGUOUS";
+
 export class ConflictAnalysisError extends Error {
   constructor(
     readonly code:
@@ -162,6 +168,34 @@ function assertMaterialConflictsPreserved(
       );
     }
   }
+}
+
+export function conflictExceptionCandidates(input: {
+  result: ConflictAnalysisResult;
+  observations: readonly ConflictEvidenceObservation[];
+}): ConflictExceptionCandidate[] {
+  const candidates = new Set<ConflictExceptionCandidate>();
+
+  for (const conflict of input.result.conflicts) {
+    candidates.add("EVIDENCE_CONFLICT");
+    if (conflict.conflictType === "IDENTITY_MISMATCH") candidates.add("IDENTITY_AMBIGUOUS");
+    if (conflict.conflictType === "RELATIONSHIP_MISMATCH") candidates.add("RELATIONSHIP_AMBIGUOUS");
+
+    const affected = input.observations.filter(
+      (observation) => observation.subject === conflict.subject && observation.property === conflict.property
+    );
+    if (affected.some((observation) => observation.freshness === "STALE")) {
+      candidates.add("EVIDENCE_STALE");
+    }
+  }
+
+  for (const issue of input.result.unresolvedIssues) {
+    if (issue.reasonCode === "IDENTITY_AMBIGUOUS") candidates.add("IDENTITY_AMBIGUOUS");
+    if (issue.reasonCode === "RELATIONSHIP_AMBIGUOUS") candidates.add("RELATIONSHIP_AMBIGUOUS");
+    if (issue.reasonCode === "EVIDENCE_STALE") candidates.add("EVIDENCE_STALE");
+  }
+
+  return [...candidates].sort();
 }
 
 export async function analyzeConflicts(input: {
