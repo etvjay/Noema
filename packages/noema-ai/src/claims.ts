@@ -3,7 +3,6 @@ import {
   proposedClaimSchema,
   type ProposedClaim
 } from "@noema/schemas/ai";
-import { z } from "zod";
 
 export const CLAIM_EXTRACTION_JOB_VERSION = "noema-ai-claim-extraction-v1";
 
@@ -52,8 +51,6 @@ export class ClaimExtractionError extends Error {
   }
 }
 
-const modelOutputSchema = z.array(proposedClaimSchema);
-
 function validateInput(input: ClaimExtractionEvidenceInput): void {
   if (input.evidence.source !== input.snapshot.id) {
     throw new ClaimExtractionError(
@@ -69,6 +66,24 @@ function validateInput(input: ClaimExtractionEvidenceInput): void {
   }
   if (input.content.trim().length === 0) {
     throw new ClaimExtractionError("EMPTY_CONTENT", "Claim extraction requires non-empty evidence content");
+  }
+}
+
+function parseModelOutput(output: unknown): ProposedClaim[] {
+  if (!Array.isArray(output)) {
+    throw new ClaimExtractionError(
+      "MALFORMED_MODEL_OUTPUT",
+      "Model output must be an array of ProposedClaim objects"
+    );
+  }
+
+  try {
+    return output.map((item) => proposedClaimSchema.parse(item));
+  } catch (error) {
+    throw new ClaimExtractionError(
+      "MALFORMED_MODEL_OUTPUT",
+      error instanceof Error ? error.message : "Model output failed strict ProposedClaim validation"
+    );
   }
 }
 
@@ -117,17 +132,7 @@ export async function extractClaims(input: {
     }
   };
 
-  let claims: ProposedClaim[];
-  try {
-    claims = modelOutputSchema.parse(await input.model.extractClaims(envelope));
-  } catch (error) {
-    if (error instanceof ClaimExtractionError) throw error;
-    throw new ClaimExtractionError(
-      "MALFORMED_MODEL_OUTPUT",
-      error instanceof Error ? error.message : "Model output failed strict ProposedClaim validation"
-    );
-  }
-
+  const claims = parseModelOutput(await input.model.extractClaims(envelope));
   assertAuthorizedReferences(claims, input.evidenceInput);
   return structuredClone(claims);
 }
