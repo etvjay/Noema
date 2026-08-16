@@ -9,7 +9,8 @@
     "./semantic": "./src/semantic.ts",
     "./mandate": "./src/mandate.ts",
     "./versioning": "./src/versioning.ts",
-    "./watch": "./src/watch.ts"
+    "./watch": "./src/watch.ts",
+    "./surfaces": "./src/surfaces.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*"
