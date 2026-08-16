@@ -2,6 +2,33 @@
   "caseId": "semantic-case-b-similar-non-equivalent",
   "fixtureStatus": "DEMO_FIXTURE",
   "description": "Two Treasury-like exposures look similar but differ in economic rights and holder restrictions.",
+  "semanticInput": {
+    "left": {
+      "id": "representation:b:one",
+      "economicClaim": "claim:treasury-fund:institutional",
+      "issuerClaim": "issuer:fixture-treasury-fund",
+      "shareClass": "institutional",
+      "exposureClass": "US_TREASURY_BILL",
+      "rights": ["BENEFICIAL_INTEREST", "DAILY_REDEMPTION"],
+      "restrictions": ["ACCREDITED_INVESTOR_ONLY"],
+      "backing": ["UST-BILL-POOL-2026-B"],
+      "redemption": { "asset": "USD", "windowMs": 86400000 },
+      "evidenceFreshness": "FRESH"
+    },
+    "right": {
+      "id": "representation:b:two",
+      "economicClaim": "claim:treasury-fund:retail",
+      "issuerClaim": "issuer:fixture-treasury-fund",
+      "shareClass": "retail",
+      "exposureClass": "US_TREASURY_BILL",
+      "rights": ["BENEFICIAL_INTEREST", "WEEKLY_REDEMPTION"],
+      "restrictions": ["RETAIL_ELIGIBLE", "TRANSFER_WINDOW"],
+      "backing": ["UST-BILL-POOL-2026-B"],
+      "redemption": { "asset": "USD", "windowMs": 604800000 },
+      "evidenceFreshness": "FRESH"
+    },
+    "links": []
+  },
   "representations": [
     {
       "id": "representation:b:one",
@@ -20,5 +47,5 @@
   ],
   "relationshipExpectation": "SIMILAR_EXPOSURE_TO",
   "equivalenceExpectation": "NOT_EQUIVALENT",
-  "reason": "Similar exposure is insufficient when issuer, share class, redemption, eligibility, or rights differ."
+  "reason": "Similar exposure is insufficient when economic claim, share class, redemption, eligibility, rights, or explicit representation linkage differ."
 }
