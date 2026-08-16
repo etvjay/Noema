@@ -55,6 +55,8 @@ function canonicalSnapshot(): CanonicalNoemaSnapshot {
   const decision = evaluateMandate(object, verification, mandate, { nowMs: NOW });
   const snapshot: SourceSnapshot = {
     id: evidence.source,
+    schemaId: "noema:source-snapshot",
+    schemaVersion: 1,
     sourceId: "issuer:surface",
     uri: "https://issuer.example/surface.json",
     contentType: "application/json",

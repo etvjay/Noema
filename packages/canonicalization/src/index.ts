@@ -202,7 +202,6 @@ export function objectRoot(
 ): Hex {
   return hashCanonical(toObjectHashProjection(object, hashingVersion));
 }
-}
 
 export interface CanonicalHashBundle {
   objectRoot: Hex;

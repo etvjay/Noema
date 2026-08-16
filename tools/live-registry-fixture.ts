@@ -1,8 +1,8 @@
-import { computeRoots, hashUtf8 } from "@noema/canonicalization";
+import { computeRoots, HASHING_VERSION_V1, hashUtf8 } from "@noema/canonicalization";
 import { makeEconomicObject } from "../tests/helpers.ts";
 
 const object = makeEconomicObject();
-const roots = computeRoots(object);
+const roots = computeRoots(object, HASHING_VERSION_V1);
 
 process.stdout.write(`${JSON.stringify({
   fixtureKind: "LIVE_COMMITMENT_OF_DEMO_FIXTURE",
@@ -11,5 +11,5 @@ process.stdout.write(`${JSON.stringify({
   version: object.version,
   objectRoot: roots.objectRoot,
   evidenceRoot: roots.evidenceRoot,
-  hashingVersion: "noema-hashing-v1"
+  hashingVersion: roots.hashingVersion
 })}\n`);

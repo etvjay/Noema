@@ -58,13 +58,12 @@ importers:
 
   packages/schemas:
     dependencies:
-      zod:
-        specifier: ^4.0.5
-        version: 4.4.3
-    devDependencies:
       '@noema/economic-kernel':
         specifier: workspace:*
         version: link:../economic-kernel
+      zod:
+        specifier: ^4.0.5
+        version: 4.4.3
 
   packages/verification:
     dependencies:
@@ -74,6 +73,9 @@ importers:
       '@noema/economic-kernel':
         specifier: workspace:*
         version: link:../economic-kernel
+      '@noema/schemas':
+        specifier: workspace:*
+        version: link:../schemas
 
 packages:
 

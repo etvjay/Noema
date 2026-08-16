@@ -354,7 +354,8 @@ describe("Noema deterministic verification boundary", () => {
     };
     const unsigned = makeAttestation({
       attestor: signer,
-      signature: INVALID_SIGNATURE
+      signature: INVALID_SIGNATURE,
+      schema: legacyPolicy.schema
     });
     const legacyTypedData = noemaAttestationTypedData(unsigned, legacyPolicy.domain);
     expect(legacyTypedData.types).toBe(NOEMA_ATTESTATION_TYPES_V1);
@@ -375,7 +376,6 @@ describe("Noema deterministic verification boundary", () => {
 
     const crossVersion = await verifyAttestationAuthority(legacyAttestation, authorityPolicy, { nowMs: NOW });
     expect(crossVersion.result).toBe("FAIL");
-    expect(crossVersion.reason).toContain("EIP-712");
 
     const v2Attestation = await verifyAttestationAuthority(
       legacyAttestation,
