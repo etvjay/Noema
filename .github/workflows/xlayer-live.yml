@@ -1,0 +1,32 @@
+name: X Layer Live Proof
+
+on:
+  push:
+    branches:
+      - agent/noema-integration-lab
+    paths:
+      - '.github/workflows/xlayer-live.yml'
+      - 'tools/noema-qa.mjs'
+      - 'qa/noema-integrity.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  xlayer-runtime:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Probe X Layer testnet
+        run: node tools/noema-qa.mjs xlayer --out artifacts/qa
+      - name: Upload X Layer receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: noema-xlayer-runtime-${{ github.sha }}
+          path: artifacts/qa/xlayer/*.json
+          if-no-files-found: error
+          retention-days: 30
