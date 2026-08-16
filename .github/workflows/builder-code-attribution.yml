@@ -1,0 +1,188 @@
+name: X Layer Builder Code Attribution Proof
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  attribution-proof:
+    runs-on: ubuntu-24.04
+    env:
+      XLAYER_RPC_URL: https://testrpc.xlayer.tech/terigon
+      XLAYER_EXPECTED_CHAIN_ID: '1952'
+      NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY: ${{ secrets.NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY }}
+      NOEMA_XLAYER_BUILDER_CODE: ${{ secrets.NOEMA_XLAYER_BUILDER_CODE }}
+      NOEMA_QA_OUT: artifacts/qa
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Require funded signer and real Builder Code
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" || { echo '::error::Missing NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY'; exit 2; }
+          test -n "$NOEMA_XLAYER_BUILDER_CODE" || { echo '::error::Missing NOEMA_XLAYER_BUILDER_CODE. Create/obtain a real X Layer Builder Code before running this proof.'; exit 2; }
+          CHAIN_ID=$(cast chain-id --rpc-url "$XLAYER_RPC_URL")
+          test "$CHAIN_ID" = "$XLAYER_EXPECTED_CHAIN_ID" || { echo "::error::Unexpected chain ID $CHAIN_ID"; exit 2; }
+          SIGNER=$(cast wallet address --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY")
+          BALANCE=$(cast balance "$SIGNER" --rpc-url "$XLAYER_RPC_URL")
+          test "$BALANCE" != '0' || { echo '::error::Signer has zero testnet OKB'; exit 2; }
+          echo "Signer: $SIGNER"
+          echo "XLAYER_SIGNER=$SIGNER" >> "$GITHUB_ENV"
+
+      - name: Install workspace and exact attribution libraries
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm install --frozen-lockfile
+          mkdir -p /tmp/noema-erc8021
+          cd /tmp/noema-erc8021
+          npm init -y >/dev/null
+          npm install --ignore-scripts --save-exact ox@1.1.2 viem@2.55.10 >/dev/null
+          npm ls ox viem > "$GITHUB_WORKSPACE/artifacts-erc8021-versions.txt"
+
+      - name: Generate canonical Noema v1 commitment
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/qa/builder-code-attribution
+          node tools/live-registry-fixture.ts > artifacts/qa/builder-code-attribution/input-fixture.json
+          echo "OBJECT_ID=$(jq -r .objectId artifacts/qa/builder-code-attribution/input-fixture.json)" >> "$GITHUB_ENV"
+          echo "OBJECT_ROOT=$(jq -r .objectRoot artifacts/qa/builder-code-attribution/input-fixture.json)" >> "$GITHUB_ENV"
+          echo "EVIDENCE_ROOT=$(jq -r .evidenceRoot artifacts/qa/builder-code-attribution/input-fixture.json)" >> "$GITHUB_ENV"
+          cp artifacts-erc8021-versions.txt artifacts/qa/builder-code-attribution/erc8021-library-versions.txt
+
+      - name: Generate ERC-8021 dataSuffix using ox
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/noema-erc8021/suffix.mjs <<'NODE'
+          import { Attribution } from 'ox/erc8021'
+          const code = process.env.NOEMA_XLAYER_BUILDER_CODE
+          if (!code) throw new Error('NOEMA_XLAYER_BUILDER_CODE is required')
+          const suffix = Attribution.toDataSuffix({ codes: [code] })
+          if (!/^0x[0-9a-fA-F]+$/.test(suffix)) throw new Error('Invalid ERC-8021 suffix')
+          process.stdout.write(suffix)
+          NODE
+          SUFFIX=$(cd /tmp/noema-erc8021 && node suffix.mjs)
+          test -n "$SUFFIX" || { echo '::error::ox returned an empty dataSuffix'; exit 2; }
+          echo "DATA_SUFFIX=$SUFFIX" >> "$GITHUB_ENV"
+          jq -n --arg suffix "$SUFFIX" --arg generator 'ox/erc8021 Attribution.toDataSuffix' \
+            '{kind:"erc8021-data-suffix",generator:$generator,suffix:$suffix}' \
+            > artifacts/qa/builder-code-attribution/suffix.json
+          echo "Generated ERC-8021 suffix length: $(( (${#SUFFIX} - 2) / 2 )) bytes"
+
+      - name: Deploy fresh NoemaRegistry for attribution proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd contracts
+          forge install foundry-rs/forge-std
+          DEPLOY_JSON=$(forge create src/NoemaRegistry.sol:NoemaRegistry \
+            --rpc-url "$XLAYER_RPC_URL" \
+            --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" \
+            --broadcast \
+            --json)
+          printf '%s\n' "$DEPLOY_JSON" > ../artifacts/qa/builder-code-attribution/deployment.json
+          REGISTRY=$(printf '%s' "$DEPLOY_JSON" | jq -r '.deployedTo // .deployed_to // empty')
+          test -n "$REGISTRY" || { echo '::error::Could not parse deployed registry address'; exit 2; }
+          echo "ATTRIBUTION_REGISTRY=$REGISTRY" >> "$GITHUB_ENV"
+          echo "Attribution proof registry: $REGISTRY"
+
+      - name: Prove calldata prefix invariant and submit attributed transaction
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_DATA=$(cast calldata 'registerObject(bytes32,bytes32,bytes32)' "$OBJECT_ID" "$OBJECT_ROOT" "$EVIDENCE_ROOT")
+          SUFFIX_BODY="${DATA_SUFFIX#0x}"
+          ATTRIBUTED_DATA="${BASE_DATA}${SUFFIX_BODY}"
+
+          test "${ATTRIBUTED_DATA:0:${#BASE_DATA}}" = "$BASE_DATA" || { echo '::error::Attributed calldata mutated canonical ABI calldata prefix'; exit 2; }
+          test "0x${ATTRIBUTED_DATA:${#BASE_DATA}}" = "$DATA_SUFFIX" || { echo '::error::Attributed calldata tail does not equal generated ERC-8021 suffix'; exit 2; }
+
+          BASE_HASH=$(cast keccak "$BASE_DATA")
+          jq -n \
+            --arg baseCalldata "$BASE_DATA" \
+            --arg baseCalldataHash "$BASE_HASH" \
+            --arg dataSuffix "$DATA_SUFFIX" \
+            --arg attributedCalldata "$ATTRIBUTED_DATA" \
+            --arg objectId "$OBJECT_ID" \
+            --arg objectRoot "$OBJECT_ROOT" \
+            --arg evidenceRoot "$EVIDENCE_ROOT" \
+            '{kind:"erc8021-calldata-invariance",baseCalldata:$baseCalldata,baseCalldataHash:$baseCalldataHash,dataSuffix:$dataSuffix,attributedCalldata:$attributedCalldata,canonicalArguments:{objectId:$objectId,objectRoot:$objectRoot,evidenceRoot:$evidenceRoot},prefixInvariant:true}' \
+            > artifacts/qa/builder-code-attribution/calldata-invariance.json
+
+          SEND_JSON=$(cast send "$ATTRIBUTION_REGISTRY" \
+            --data "$ATTRIBUTED_DATA" \
+            --rpc-url "$XLAYER_RPC_URL" \
+            --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" \
+            --json)
+          printf '%s\n' "$SEND_JSON" > artifacts/qa/builder-code-attribution/attributed-transaction.json
+          TX_HASH=$(printf '%s' "$SEND_JSON" | jq -r '.transactionHash // .transaction_hash // empty')
+          STATUS=$(printf '%s' "$SEND_JSON" | jq -r '.status // empty')
+          test -n "$TX_HASH" || { echo '::error::Attributed transaction returned no hash'; exit 2; }
+          test "$STATUS" = '0x1' || test "$STATUS" = '1' || { echo "::error::Attributed transaction status was $STATUS"; exit 2; }
+          echo "ATTRIBUTED_TX_HASH=$TX_HASH" >> "$GITHUB_ENV"
+          echo "Attributed transaction: $TX_HASH"
+
+      - name: Verify event and direct state readback preserve canonical semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          RECEIPT=$(cast receipt "$ATTRIBUTED_TX_HASH" --rpc-url "$XLAYER_RPC_URL" --json)
+          printf '%s\n' "$RECEIPT" > artifacts/qa/builder-code-attribution/receipt.json
+          EVENT_SIG=$(cast keccak 'ObjectRegistered(bytes32,uint64,bytes32,bytes32)' | tr '[:upper:]' '[:lower:]')
+          OBJECT_TOPIC=$(printf '%s' "$OBJECT_ID" | tr '[:upper:]' '[:lower:]')
+          EVENT_DATA=$(printf '%s' "$RECEIPT" | jq -r --arg addr "$(printf '%s' "$ATTRIBUTION_REGISTRY" | tr '[:upper:]' '[:lower:]')" --arg sig "$EVENT_SIG" --arg obj "$OBJECT_TOPIC" \
+            '[.logs[] | select((.address|ascii_downcase)==$addr and (.topics[0]|ascii_downcase)==$sig and (.topics[1]|ascii_downcase)==$obj)][0].data // empty')
+          test -n "$EVENT_DATA" || { echo '::error::Expected ObjectRegistered event not found'; exit 2; }
+
+          READBACK=$(cast call "$ATTRIBUTION_REGISTRY" 'objects(bytes32)(bytes32,bytes32,uint64,uint64,bool)' "$OBJECT_ID" --rpc-url "$XLAYER_RPC_URL")
+          printf '%s\n' "$READBACK" > artifacts/qa/builder-code-attribution/readback.txt
+          READ_OBJECT=$(printf '%s\n' "$READBACK" | sed -n '1p')
+          READ_EVIDENCE=$(printf '%s\n' "$READBACK" | sed -n '2p')
+          READ_VERSION=$(printf '%s\n' "$READBACK" | sed -n '3p' | awk '{print $1}')
+          READ_ACTIVE=$(printf '%s\n' "$READBACK" | sed -n '5p')
+          test "$(printf '%s' "$READ_OBJECT" | tr '[:upper:]' '[:lower:]')" = "$(printf '%s' "$OBJECT_ROOT" | tr '[:upper:]' '[:lower:]')" || { echo '::error::Attributed readback objectRoot mismatch'; exit 2; }
+          test "$(printf '%s' "$READ_EVIDENCE" | tr '[:upper:]' '[:lower:]')" = "$(printf '%s' "$EVIDENCE_ROOT" | tr '[:upper:]' '[:lower:]')" || { echo '::error::Attributed readback evidenceRoot mismatch'; exit 2; }
+          test "$READ_VERSION" = '1' || { echo '::error::Attributed readback version mismatch'; exit 2; }
+          test "$READ_ACTIVE" = 'true' || { echo '::error::Attributed readback active flag mismatch'; exit 2; }
+
+          TX_INPUT=$(cast tx "$ATTRIBUTED_TX_HASH" input --rpc-url "$XLAYER_RPC_URL")
+          EXPECTED_DATA=$(jq -r .attributedCalldata artifacts/qa/builder-code-attribution/calldata-invariance.json)
+          test "$(printf '%s' "$TX_INPUT" | tr '[:upper:]' '[:lower:]')" = "$(printf '%s' "$EXPECTED_DATA" | tr '[:upper:]' '[:lower:]')" || { echo '::error::Mined transaction input differs from attributed calldata'; exit 2; }
+
+          jq -n \
+            --arg transactionHash "$ATTRIBUTED_TX_HASH" \
+            --arg registry "$ATTRIBUTION_REGISTRY" \
+            --arg objectId "$OBJECT_ID" \
+            --arg objectRoot "$OBJECT_ROOT" \
+            --arg evidenceRoot "$EVIDENCE_ROOT" \
+            --arg dataSuffix "$DATA_SUFFIX" \
+            '{kind:"xlayer-builder-code-attribution-proof",chainId:1952,transactionHash:$transactionHash,registry:$registry,objectId:$objectId,objectRoot:$objectRoot,evidenceRoot:$evidenceRoot,dataSuffix:$dataSuffix,calldataPrefixInvariant:true,eventMatched:true,onchainReadbackMatched:true,status:"PASS"}' \
+            > artifacts/qa/builder-code-attribution/result.json
+          cat artifacts/qa/builder-code-attribution/result.json
+
+      - name: Upload attribution proof bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xlayer-builder-code-attribution-${{ github.sha }}
+          path: artifacts/qa/builder-code-attribution/*
+          if-no-files-found: warn
+          retention-days: 30
