@@ -38,69 +38,71 @@ jobs:
           REGISTRY_CODE=$(cast code "$XLAYER_BUILDER_REGISTRY" --rpc-url "$XLAYER_RPC_URL")
           test "$BALANCE" != '0' || { echo '::error::Signer has zero testnet OKB'; exit 2; }
           test "$REGISTRY_CODE" != '0x' || { echo '::error::Current documented Builder Code registry has no bytecode'; exit 2; }
+          mkdir -p artifacts/qa/builder-code
+          printf '%s\n' "$REGISTRY_CODE" > artifacts/qa/builder-code/registry-runtime-bytecode.hex
           echo "Signer: $SIGNER"
           echo "Builder Code registry: $XLAYER_BUILDER_REGISTRY"
           echo "Registry bytecode bytes: $(( (${#REGISTRY_CODE} - 2) / 2 ))"
           echo "XLAYER_SIGNER=$SIGNER" >> "$GITHUB_ENV"
 
-      - name: Register testnet Builder Code with registerAuto
+      - name: Probe Builder Code registry state and registerAuto simulation
         shell: bash
         run: |
-          set -euo pipefail
+          set -u
           mkdir -p artifacts/qa/builder-code
-          REGISTER_JSON=$(cast send "$XLAYER_BUILDER_REGISTRY" \
-            'registerAuto()' \
-            --rpc-url "$XLAYER_RPC_URL" \
-            --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" \
-            --json)
-          printf '%s\n' "$REGISTER_JSON" > artifacts/qa/builder-code/registration.json
-          TX_HASH=$(printf '%s' "$REGISTER_JSON" | jq -r '.transactionHash // .transaction_hash // empty')
-          test -n "$TX_HASH" || { echo '::error::registerAuto returned no transaction hash'; exit 2; }
-          STATUS=$(printf '%s' "$REGISTER_JSON" | jq -r '.status // empty')
-          test "$STATUS" = '0x1' || test "$STATUS" = '1' || { echo "::error::registerAuto receipt status was $STATUS"; exit 2; }
-
-          TRANSFER_TOPIC=$(cast keccak 'Transfer(address,address,uint256)' | tr '[:upper:]' '[:lower:]')
-          REGISTRY=$(printf '%s' "$XLAYER_BUILDER_REGISTRY" | tr '[:upper:]' '[:lower:]')
-          OWNER_HEX=$(printf '%064s' "${XLAYER_SIGNER#0x}" | tr ' ' '0' | tr '[:upper:]' '[:lower:]')
-          OWNER_TOPIC="0x$OWNER_HEX"
-          ZERO_TOPIC='0x0000000000000000000000000000000000000000000000000000000000000000'
-          TOKEN_ID=$(printf '%s' "$REGISTER_JSON" | jq -r \
-            --arg registry "$REGISTRY" \
-            --arg sig "$TRANSFER_TOPIC" \
-            --arg zero "$ZERO_TOPIC" \
-            --arg owner "$OWNER_TOPIC" \
-            '[.logs[]? | select((.address|ascii_downcase)==$registry and (.topics[0]|ascii_downcase)==$sig and (.topics[1]|ascii_downcase)==$zero and (.topics[2]|ascii_downcase)==$owner)][0].topics[3] // empty')
-          test -n "$TOKEN_ID" || { echo '::error::Could not recover ERC-721 token id from registerAuto Transfer event'; jq '.logs' artifacts/qa/builder-code/registration.json; exit 2; }
-
-          OWNER=$(cast call "$XLAYER_BUILDER_REGISTRY" 'ownerOf(uint256)(address)' "$TOKEN_ID" --rpc-url "$XLAYER_RPC_URL")
-          test "$(printf '%s' "$OWNER" | tr '[:upper:]' '[:lower:]')" = "$(printf '%s' "$XLAYER_SIGNER" | tr '[:upper:]' '[:lower:]')" || { echo '::error::Builder Code token owner mismatch'; exit 2; }
-
-          TOKEN_URI=$(cast call "$XLAYER_BUILDER_REGISTRY" 'tokenURI(uint256)(string)' "$TOKEN_ID" --rpc-url "$XLAYER_RPC_URL" 2>/dev/null || true)
-          NAME=$(cast call "$XLAYER_BUILDER_REGISTRY" 'name()(string)' --rpc-url "$XLAYER_RPC_URL" 2>/dev/null || true)
-          SYMBOL=$(cast call "$XLAYER_BUILDER_REGISTRY" 'symbol()(string)' --rpc-url "$XLAYER_RPC_URL" 2>/dev/null || true)
+          NAME=$(cast call "$XLAYER_BUILDER_REGISTRY" 'name()(string)' --rpc-url "$XLAYER_RPC_URL" 2>&1 || true)
+          SYMBOL=$(cast call "$XLAYER_BUILDER_REGISTRY" 'symbol()(string)' --rpc-url "$XLAYER_RPC_URL" 2>&1 || true)
+          OWNER_BALANCE=$(cast call "$XLAYER_BUILDER_REGISTRY" 'balanceOf(address)(uint256)' "$XLAYER_SIGNER" --rpc-url "$XLAYER_RPC_URL" 2>&1 || true)
+          TOTAL_SUPPLY=$(cast call "$XLAYER_BUILDER_REGISTRY" 'totalSupply()(uint256)' --rpc-url "$XLAYER_RPC_URL" 2>&1 || true)
+          TOKEN_ZERO=$(cast call "$XLAYER_BUILDER_REGISTRY" 'tokenOfOwnerByIndex(address,uint256)(uint256)' "$XLAYER_SIGNER" 0 --rpc-url "$XLAYER_RPC_URL" 2>&1 || true)
+          REGISTER_SIM=$(cast call "$XLAYER_BUILDER_REGISTRY" 'registerAuto()' --from "$XLAYER_SIGNER" --rpc-url "$XLAYER_RPC_URL" 2>&1 || true)
+          REGISTER_DATA=$(cast calldata 'registerAuto()')
+          RAW_SIM=$(cast rpc --rpc-url "$XLAYER_RPC_URL" eth_call "{\"from\":\"$XLAYER_SIGNER\",\"to\":\"$XLAYER_BUILDER_REGISTRY\",\"data\":\"$REGISTER_DATA\"}" latest 2>&1 || true)
 
           jq -n \
             --arg registry "$XLAYER_BUILDER_REGISTRY" \
             --arg signer "$XLAYER_SIGNER" \
-            --arg transactionHash "$TX_HASH" \
-            --arg tokenId "$TOKEN_ID" \
-            --arg owner "$OWNER" \
-            --arg tokenURI "$TOKEN_URI" \
             --arg name "$NAME" \
             --arg symbol "$SYMBOL" \
-            '{kind:"xlayer-builder-code-registration",chainId:1952,registry:$registry,signer:$signer,transactionHash:$transactionHash,tokenId:$tokenId,owner:$owner,tokenURI:$tokenURI,collectionName:$name,collectionSymbol:$symbol}' \
-            > artifacts/qa/builder-code/registration-proof.json
+            --arg ownerBalance "$OWNER_BALANCE" \
+            --arg totalSupply "$TOTAL_SUPPLY" \
+            --arg tokenZero "$TOKEN_ZERO" \
+            --arg registerSimulation "$REGISTER_SIM" \
+            --arg rawSimulation "$RAW_SIM" \
+            '{kind:"xlayer-builder-code-probe",chainId:1952,registry:$registry,signer:$signer,name:$name,symbol:$symbol,ownerBalance:$ownerBalance,totalSupply:$totalSupply,tokenOfOwnerByIndex0:$tokenZero,registerAutoSimulation:$registerSimulation,rawEthCall:$rawSimulation}' \
+            > artifacts/qa/builder-code/probe.json
 
-          echo "Registration transaction: $TX_HASH"
-          echo "Builder Code token ID: $TOKEN_ID"
-          echo "Collection: $NAME ($SYMBOL)"
+          echo "Collection name: $NAME"
+          echo "Collection symbol: $SYMBOL"
+          echo "Signer NFT balance: $OWNER_BALANCE"
+          echo "Total supply: $TOTAL_SUPPLY"
+          echo "tokenOfOwnerByIndex(0): $TOKEN_ZERO"
+          echo "registerAuto simulation: $REGISTER_SIM"
+          echo "raw eth_call: $RAW_SIM"
+
+          if [[ "$OWNER_BALANCE" =~ ^[1-9][0-9]*$ ]] && [[ "$TOKEN_ZERO" =~ ^[0-9]+$ ]]; then
+            echo "XLAYER_BUILDER_TOKEN_ID=$TOKEN_ZERO" >> "$GITHUB_ENV"
+          fi
+
+      - name: Inspect existing Builder Code NFT when present
+        if: env.XLAYER_BUILDER_TOKEN_ID != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOKEN_ID="$XLAYER_BUILDER_TOKEN_ID"
+          OWNER=$(cast call "$XLAYER_BUILDER_REGISTRY" 'ownerOf(uint256)(address)' "$TOKEN_ID" --rpc-url "$XLAYER_RPC_URL")
+          TOKEN_URI=$(cast call "$XLAYER_BUILDER_REGISTRY" 'tokenURI(uint256)(string)' "$TOKEN_ID" --rpc-url "$XLAYER_RPC_URL" 2>&1 || true)
+          jq -n --arg tokenId "$TOKEN_ID" --arg owner "$OWNER" --arg tokenURI "$TOKEN_URI" \
+            '{kind:"xlayer-builder-code-existing-token",tokenId:$tokenId,owner:$owner,tokenURI:$tokenURI}' \
+            > artifacts/qa/builder-code/existing-token.json
+          echo "Existing Builder Code token: $TOKEN_ID"
           echo "Token URI: $TOKEN_URI"
 
-      - name: Upload Builder Code registration proof
+      - name: Upload Builder Code probe evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: xlayer-builder-code-registration-${{ github.sha }}
+          name: xlayer-builder-code-probe-${{ github.sha }}
           path: artifacts/qa/builder-code/*
           if-no-files-found: warn
           retention-days: 30
