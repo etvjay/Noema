@@ -10,7 +10,8 @@
     "./mandate": "./src/mandate.ts",
     "./versioning": "./src/versioning.ts",
     "./watch": "./src/watch.ts",
-    "./surfaces": "./src/surfaces.ts"
+    "./surfaces": "./src/surfaces.ts",
+    "./ui": "./src/ui.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*"
