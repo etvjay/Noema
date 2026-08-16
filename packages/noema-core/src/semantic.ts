@@ -1,6 +1,6 @@
 import type {
   EconomicObjectState,
-  RelationshipType
+  EconomicRelationship
 } from "@noema/economic-kernel";
 
 export interface SemanticRepresentationProfile {
@@ -37,7 +37,7 @@ export interface SemanticResolutionInput {
 }
 
 export interface SemanticResolutionResult {
-  relationship?: RelationshipType;
+  relationship?: EconomicRelationship["predicate"];
   objectState: EconomicObjectState;
   exceptionTypes: Array<"EVIDENCE_STALE" | "EVIDENCE_MISSING" | "RELATIONSHIP_AMBIGUOUS">;
   reasonCodes: string[];
