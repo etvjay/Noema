@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import type { EconomicRelationship } from "@noema/economic-kernel";
 import { computeRoots } from "@noema/canonicalization";
 import {
   resolveSemanticRelationship,
@@ -21,7 +22,7 @@ function loadFixture(name: string): SemanticFixture {
   return JSON.parse(readFileSync(path, "utf8")) as SemanticFixture;
 }
 
-function replayRoot(relationship: "ECONOMICALLY_EQUIVALENT_TO" | "SIMILAR_EXPOSURE_TO") {
+function replayRoot(relationship: EconomicRelationship["predicate"]) {
   const base = makeEconomicObject();
   const existing = base.relationships[0]!;
   const object = makeEconomicObject({
@@ -49,8 +50,14 @@ describe("Noema executable semantic resolution", () => {
     expect(first.exceptionTypes).toEqual([]);
     expect(first.reasonCodes).toEqual(["QUALIFYING_EQUIVALENCE_EVIDENCE"]);
 
-    const firstRoots = replayRoot(first.relationship!);
-    const secondRoots = replayRoot(second.relationship!);
+    if (
+      first.relationship !== "ECONOMICALLY_EQUIVALENT_TO" ||
+      second.relationship !== "ECONOMICALLY_EQUIVALENT_TO"
+    ) {
+      throw new Error("equivalence fixture did not derive canonical equivalence");
+    }
+    const firstRoots = replayRoot(first.relationship);
+    const secondRoots = replayRoot(second.relationship);
     expect(firstRoots.objectRoot).toBe(secondRoots.objectRoot);
     expect(firstRoots.evidenceRoot).toBe(secondRoots.evidenceRoot);
   });
