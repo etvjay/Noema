@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { Attestation, EconomicObject, Hex } from "@noema/economic-kernel";
+import type {
+  Attestation,
+  EconomicObject,
+  Evidence,
+  Hex,
+  SourceSnapshot
+} from "@noema/economic-kernel";
 import {
   computeRoots,
   evidenceLeaves,
@@ -18,13 +24,11 @@ import {
   UnsupportedSchemaError
 } from "@noema/schemas";
 import {
-  createEvidenceRecord,
-  createNextVersion,
-  createSourceSnapshot,
-  evaluateMandate,
-  reduceEconomicObject,
-  AppendOnlyVersionStore
-} from "@noema/noema-core";
+  appendEconomicObjectChange,
+  initializeVersionHistory
+} from "@noema/noema-core/versioning";
+import { evaluateMandate } from "@noema/noema-core/mandate";
+import { reduceEconomicObject } from "@noema/noema-core";
 import { verifyEconomicObject } from "@noema/verification";
 import { makeEconomicObject } from "../helpers.js";
 
@@ -90,17 +94,17 @@ describe("PR1 schema versioning: fail-closed registry and construction stamping"
     }
   });
 
-  it("prevents unsupported nested artifacts from entering AppendOnlyVersionStore", () => {
-    const store = new AppendOnlyVersionStore();
+  it("prevents unsupported nested artifacts from entering the version store boundary", () => {
     const object = makeEconomicObject();
     const evidence = object.evidence[0];
     if (evidence === undefined) {
       throw new Error("fixture evidence missing");
     }
+    const history = initializeVersionHistory(object);
     expect(() =>
-      store.save({ ...object, evidence: [{ ...evidence, schemaVersion: 99 }] })
+      appendEconomicObjectChange(history, { ...object, evidence: [{ ...evidence, schemaVersion: 99 }] }, "tampered")
     ).toThrow(SchemaValidationError);
-    expect(() => store.save(object)).not.toThrow();
+    expect(() => appendEconomicObjectChange(history, object, "stable")).not.toThrow();
   });
 
   it("stamps every constructor-produced artifact and decodes it round-trip", () => {
@@ -109,25 +113,34 @@ describe("PR1 schema versioning: fail-closed registry and construction stamping"
     expect(object.schemaId).toBe(SCHEMA_IDS.ECONOMIC_OBJECT);
     expect(object.schemaVersion).toBe(SCHEMA_VERSIONS.ECONOMIC_OBJECT);
 
-    const snapshot = createSourceSnapshot({
+    const snapshot: SourceSnapshot = {
+      id: "source:pr1",
+      schemaId: SCHEMA_IDS.SOURCE_SNAPSHOT,
+      schemaVersion: SCHEMA_VERSIONS.SOURCE_SNAPSHOT,
       sourceId: "source:pr1",
       uri: "https://example.test/snapshot.json",
       contentType: "application/json",
-      body: { ticker: "buidl" },
-      fetchedAt: 1_700_000_000_000
-    });
+      contentHash: ("0x" + "11".repeat(32)) as Hex,
+      fetchedAt: 1_700_000_000_000,
+      bodyStorageRef: "storage:pr1:snapshot",
+      extractionVersion: "fixture-v1"
+    };
     expect(snapshot.schemaId).toBe(SCHEMA_IDS.SOURCE_SNAPSHOT);
     expect(noemaSchemaRegistry.decode(snapshot)).toEqual(snapshot);
 
-    const evidence = createEvidenceRecord({
+    const evidence: Evidence = {
       id: "evidence:pr1",
+      schemaId: SCHEMA_IDS.EVIDENCE,
+      schemaVersion: SCHEMA_VERSIONS.EVIDENCE,
       type: "API_RESPONSE",
       source: snapshot.id,
       contentHash: snapshot.contentHash,
       observedAt: 1_700_000_000_000,
       fetchedAt: 1_700_000_000_000,
-      authority: "REFERENCE_DATA"
-    });
+      authority: "REFERENCE_DATA",
+      freshness: "FRESH",
+      metadata: {}
+    };
     expect(evidence.schemaId).toBe(SCHEMA_IDS.EVIDENCE);
     expect(noemaSchemaRegistry.decode(evidence)).toEqual(evidence);
   });
@@ -178,38 +191,55 @@ describe("PR1 schema versioning: fail-closed registry and construction stamping"
     expect(noemaSchemaRegistry.decode(decision)).toEqual(decision);
   });
 
-  it("preserves schema identity across createNextVersion", () => {
+  it("preserves schema identity across appendEconomicObjectChange", () => {
     const object = makeEconomicObject();
-    const next = createNextVersion(
-      object,
-      {
-        economics: {
-          asOf: 1_700_000_000_000,
-          values: { nav: "101.50", currency: "USD" },
-          claimRefs: object.claims.map((claim) => claim.id)
-        }
+    const history = initializeVersionHistory(object);
+    const candidate = reduceEconomicObject({
+      id: object.id,
+      version: object.version,
+      classification: object.classification,
+      identifiers: object.identifiers,
+      representations: object.representations,
+      relationships: object.relationships,
+      parties: object.parties,
+      rights: object.rights,
+      obligations: object.obligations,
+      restrictions: object.restrictions,
+      economics: {
+        asOf: 1_700_000_000_000,
+        values: { nav: "101.50", currency: "USD" },
+        claimRefs: object.claims.map((claim) => claim.id)
       },
-      { nowMs: 1_700_000_000_500 }
-    );
+      claims: object.claims,
+      evidence: object.evidence,
+      attestations: object.attestations,
+      exceptions: object.exceptions,
+      provenance: object.provenance,
+      createdAt: object.createdAt,
+      updatedAt: 1_700_000_000_500,
+      verification: object.verification
+    });
+    const result = appendEconomicObjectChange(history, candidate, "nav-update");
+    const next = result.current.object;
+    expect(result.created).toBe(true);
     expect(next.version).toBe(2);
     expect(next.schemaId).toBe(object.schemaId);
     expect(next.schemaVersion).toBe(object.schemaVersion);
     expect(noemaSchemaRegistry.decode(next)).toEqual(next);
   });
 
-  it("enforces the fail-closed decode boundary inside AppendOnlyVersionStore.save", () => {
-    const store = new AppendOnlyVersionStore();
+  it("enforces the fail-closed decode boundary inside the version store boundary", () => {
     const object = makeEconomicObject();
-    store.save(object);
+    const history = initializeVersionHistory(object);
 
     const unstamped = { ...object } as Record<string, unknown>;
     delete unstamped.schemaId;
     delete unstamped.schemaVersion;
-    expect(() => store.save(unstamped as unknown as EconomicObject)).toThrow(
+    expect(() => appendEconomicObjectChange(history, unstamped as unknown as EconomicObject, "unstamped")).toThrow(
       SchemaValidationError
     );
 
-    expect(() => store.save({ ...object, schemaVersion: 99 })).toThrow(UnsupportedSchemaError);
+    expect(() => appendEconomicObjectChange(history, { ...object, schemaVersion: 99 }, "future")).toThrow(UnsupportedSchemaError);
   });
 });
 

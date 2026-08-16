@@ -102,6 +102,8 @@ function sourceSnapshot(object: EconomicObject): SourceSnapshot {
   const evidence = object.evidence[0]!;
   return {
     id: evidence.source,
+    schemaId: "noema:source-snapshot",
+    schemaVersion: 1,
     sourceId: `issuer:${object.id}`,
     uri: `https://issuer.example/${encodeURIComponent(object.id)}.json`,
     contentType: "application/json",

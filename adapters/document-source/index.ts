@@ -1,3 +1,4 @@
+import { SCHEMA_IDS, SCHEMA_VERSIONS } from "@noema/schemas";
 import type { Ref, SourceSnapshot, UnixMillis } from "@noema/economic-kernel";
 import {
   SOURCE_ADAPTER_VERSION,
@@ -41,6 +42,8 @@ export function captureDocumentSource(input: DocumentSourceInput): SourceAdapter
   const contentHash = hashBytes(input.bytes);
   const snapshot: SourceSnapshot = {
     id: `snapshot:${input.sourceId}:${contentHash.slice(2, 18)}`,
+    schemaId: SCHEMA_IDS.SOURCE_SNAPSHOT,
+    schemaVersion: SCHEMA_VERSIONS.SOURCE_SNAPSHOT,
     sourceId: input.sourceId,
     uri: input.uri,
     contentType,
