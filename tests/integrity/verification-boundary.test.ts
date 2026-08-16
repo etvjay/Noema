@@ -1,9 +1,44 @@
 import { describe, expect, it } from "vitest";
+import type { Attestation } from "@noema/economic-kernel";
 import { reduceEconomicObject } from "@noema/noema-core";
-import { verifyEconomicObject } from "@noema/verification";
+import {
+  verifyAttestationAuthority,
+  verifyEconomicObject,
+  type AttestationAuthorityPolicy
+} from "@noema/verification";
 import { makeEconomicObject } from "../helpers.js";
 
 const NOW = 1_700_000_001_000;
+const TRUSTED_ATTESTOR = "0x2222222222222222222222222222222222222222";
+const OTHER_ATTESTOR = "0x3333333333333333333333333333333333333333";
+const INVALID_SIGNATURE = `0x${"11".repeat(65)}`;
+
+const authorityPolicy: AttestationAuthorityPolicy = {
+  domain: {
+    name: "Noema",
+    version: "1",
+    chainId: 1952,
+    verifyingContract: "0x1111111111111111111111111111111111111111"
+  },
+  schema: "noema:attestation:v1",
+  trustedAttestors: new Set([TRUSTED_ATTESTOR.toLowerCase()])
+};
+
+function makeAttestation(overrides: Partial<Attestation> = {}): Attestation {
+  return {
+    id: "attestation:fixture:authority",
+    subject: "object:fixture",
+    claimRef: "claim:fixture:identity",
+    schema: authorityPolicy.schema,
+    attestor: TRUSTED_ATTESTOR,
+    evidenceRoot: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    signature: INVALID_SIGNATURE,
+    issuedAt: NOW - 1_000,
+    expiresAt: NOW + 60_000,
+    state: "ACTIVE",
+    ...overrides
+  };
+}
 
 describe("Noema deterministic verification boundary", () => {
   it("replays identical normalized inputs and context to identical receipts", () => {
@@ -127,5 +162,57 @@ describe("Noema deterministic verification boundary", () => {
 
     expect(reduced.status).toBe("REVOKED");
     expect(reduced.verification.status).toBe("FAIL");
+  });
+
+  it("fails closed for malformed, wrong-schema, unknown, revoked, expired, and invalid-signature attestations", async () => {
+    const context = { nowMs: NOW };
+
+    const malformed = await verifyAttestationAuthority(
+      makeAttestation({ attestor: "not-an-address" }),
+      authorityPolicy,
+      context
+    );
+    expect(malformed.result).toBe("FAIL");
+    expect(malformed.reason).toContain("valid EVM address");
+
+    const wrongSchema = await verifyAttestationAuthority(
+      makeAttestation({ schema: "noema:attestation:v0" }),
+      authorityPolicy,
+      context
+    );
+    expect(wrongSchema.result).toBe("FAIL");
+    expect(wrongSchema.reason).toContain("schema");
+
+    const unknown = await verifyAttestationAuthority(
+      makeAttestation({ attestor: OTHER_ATTESTOR }),
+      authorityPolicy,
+      context
+    );
+    expect(unknown.result).toBe("FAIL");
+    expect(unknown.reason).toContain("not trusted");
+
+    const revoked = await verifyAttestationAuthority(
+      makeAttestation({ state: "REVOKED", revokedAt: NOW - 1 }),
+      authorityPolicy,
+      context
+    );
+    expect(revoked.result).toBe("FAIL");
+    expect(revoked.reason).toContain("revoked");
+
+    const expired = await verifyAttestationAuthority(
+      makeAttestation({ state: "EXPIRED", expiresAt: NOW - 1 }),
+      authorityPolicy,
+      context
+    );
+    expect(expired.result).toBe("FAIL");
+    expect(expired.reason).toContain("expired");
+
+    const invalidSignature = await verifyAttestationAuthority(
+      makeAttestation(),
+      authorityPolicy,
+      context
+    );
+    expect(invalidSignature.result).toBe("FAIL");
+    expect(invalidSignature.reason).toContain("EIP-712");
   });
 });
