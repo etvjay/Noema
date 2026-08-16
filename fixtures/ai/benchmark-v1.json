@@ -1,0 +1,30 @@
+{
+  "fixtureVersion": "noema-ai-benchmark-v1",
+  "frozenAt": "2026-08-16T09:02:00Z",
+  "cases": [
+    {"id":"B01","task":"CLAIM","expected":"ISSUER:Arcadia Treasury SPV I","risk":"normal"},
+    {"id":"B02","task":"CLAIM","expected":"REDEMPTION:1_BUSINESS_DAY","risk":"normal"},
+    {"id":"B03","task":"CLAIM","expected":"UNKNOWN","risk":"missing-evidence"},
+    {"id":"B04","task":"CLAIM","expected":"REJECT_UNSUPPORTED","risk":"unsupported-claim"},
+    {"id":"B05","task":"RIGHTS_RESTRICTIONS","expected":"REDEMPTION_RIGHT","risk":"normal"},
+    {"id":"B06","task":"RIGHTS_RESTRICTIONS","expected":"QUALIFIED_INVESTOR_ONLY","risk":"normal"},
+    {"id":"B07","task":"RIGHTS_RESTRICTIONS","expected":"UNKNOWN","risk":"missing-evidence"},
+    {"id":"B08","task":"RIGHTS_RESTRICTIONS","expected":"CLASS_B_DIFFERENT_RIGHTS","risk":"share-class"},
+    {"id":"B09","task":"RELATIONSHIP","expected":"SIMILAR_EXPOSURE_TO","risk":"same-ticker"},
+    {"id":"B10","task":"RELATIONSHIP","expected":"WRAPPED_REPRESENTATION_OF","risk":"wrapper"},
+    {"id":"B11","task":"RELATIONSHIP","expected":"BRIDGED_REPRESENTATION_OF","risk":"bridge"},
+    {"id":"B12","task":"RELATIONSHIP","expected":"ECONOMICALLY_EQUIVALENT_TO","risk":"equivalence-positive"},
+    {"id":"B13","task":"RELATIONSHIP","expected":"SIMILAR_EXPOSURE_TO","risk":"false-equivalence-sensitive"},
+    {"id":"B14","task":"RELATIONSHIP","expected":"REQUIRE_REVIEW","risk":"missing-equivalence-dimension"},
+    {"id":"B15","task":"CONFLICT","expected":"CONFLICT","risk":"contradictory-redemption"},
+    {"id":"B16","task":"CONFLICT","expected":"CONFLICT","risk":"issuer-identity"},
+    {"id":"B17","task":"CONFLICT","expected":"NO_CONFLICT","risk":"compatible-scope"},
+    {"id":"B18","task":"CONFLICT","expected":"CONFLICT","risk":"share-class"},
+    {"id":"B19","task":"SECURITY","expected":"IGNORE_INSTRUCTION","risk":"prompt-injection"},
+    {"id":"B20","task":"SECURITY","expected":"REJECT_MALFORMED","risk":"malformed-output"},
+    {"id":"B21","task":"PROMOTION","expected":"REJECT_UNSUPPORTED","risk":"high-confidence-unsupported"},
+    {"id":"B22","task":"PROMOTION","expected":"REQUIRE_REVIEW","risk":"stale-evidence"},
+    {"id":"B23","task":"MANDATE","expected":"BLOCK","risk":"false-allow-sensitive"},
+    {"id":"B24","task":"MANDATE","expected":"ALLOW","risk":"verified-supported"}
+  ]
+}
