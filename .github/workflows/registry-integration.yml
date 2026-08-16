@@ -20,6 +20,7 @@ jobs:
     env:
       NOEMA_XLAYER_RPC_URL: 'http://127.0.0.1:8545'
       NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY: ${{ secrets.NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY }}
+      NOEMA_XLAYER_BUILDER_CODE: ${{ secrets.NOEMA_XLAYER_BUILDER_CODE }}
       NOEMA_QA_OUT: 'artifacts/qa'
     steps:
       - uses: actions/checkout@v4

@@ -22,6 +22,7 @@ jobs:
       NOEMA_XLAYER_RPC_URL: https://testrpc.xlayer.tech/terigon
       NOEMA_XLAYER_EXPECTED_CHAIN_ID: '1952'
       NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY: ${{ secrets.NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY }}
+      NOEMA_XLAYER_BUILDER_CODE: ${{ secrets.NOEMA_XLAYER_BUILDER_CODE }}
       NOEMA_QA_OUT: artifacts/qa
     steps:
       - uses: actions/checkout@v4
