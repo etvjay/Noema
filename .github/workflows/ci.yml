@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
         with:
           version: 11.19.0
@@ -18,5 +20,68 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm test
+      - name: Guard integrity contract scope
+        run: node tools/noema-integrity-manifest-guard.mjs
+      - name: Package typecheck
+        run: pnpm typecheck
+      - name: Package tests
+        run: pnpm test
+      - name: Full-system Noema integrity
+        id: integrity
+        if: always()
+        continue-on-error: true
+        run: pnpm qa
+      - name: Publish integrity summary
+        if: always()
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const dir = 'artifacts/qa/integrity';
+          const summary = process.env.GITHUB_STEP_SUMMARY;
+          if (!fs.existsSync(dir)) {
+            fs.appendFileSync(summary, '## Noema Full-System Integrity\n\nNo integrity receipt was produced. **FAIL**\n');
+            process.exit(0);
+          }
+          const files = fs.readdirSync(dir).filter((file) => file.endsWith('.json')).sort();
+          const latest = files.at(-1);
+          if (!latest) {
+            fs.appendFileSync(summary, '## Noema Full-System Integrity\n\nNo integrity receipt was produced. **FAIL**\n');
+            process.exit(0);
+          }
+          const receipt = JSON.parse(fs.readFileSync(path.join(dir, latest), 'utf8'));
+          const counts = receipt.counts ?? {};
+          fs.appendFileSync(summary, [
+            '## Noema Full-System Integrity',
+            '',
+            `**Overall:** ${receipt.overall}`,
+            '',
+            '| PASS | FAIL | NOT_IMPLEMENTED | BLOCKED |',
+            '|---:|---:|---:|---:|',
+            `| ${counts.PASS ?? 0} | ${counts.FAIL ?? 0} | ${counts.NOT_IMPLEMENTED ?? 0} | ${counts.BLOCKED ?? 0} |`,
+            '',
+            `Contract version: \`${receipt.contractVersion}\``,
+            '',
+            `Commit: \`${receipt.gitCommit ?? 'unknown'}\``,
+            '',
+            `Receipt: \`${path.join(dir, latest)}\``,
+            ''
+          ].join('\n'));
+          NODE
+      - name: Upload integrity receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: noema-integrity-${{ github.sha }}
+          path: artifacts/qa/integrity/*.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce full-system integrity
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.integrity.outcome }}" != "success" ]; then
+            echo "Full-system Noema integrity is not PASS. See the uploaded receipt and job summary."
+            exit 2
+          fi
