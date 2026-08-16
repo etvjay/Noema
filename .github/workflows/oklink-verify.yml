@@ -1,0 +1,122 @@
+name: X Layer OKLink Source Verification
+
+on:
+  push:
+    branches:
+      - agent/noema-integration-lab
+    paths:
+      - '.github/workflows/oklink-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-oklink:
+    runs-on: ubuntu-24.04
+    env:
+      XLAYER_RPC_URL: https://testrpc.xlayer.tech/terigon
+      XLAYER_EXPECTED_CHAIN_ID: '1952'
+      NOEMA_XLAYER_REGISTRY_ADDRESS: '0xBa76F97969000D632cF33B87afb4d853C52d1C03'
+      OKLINK_VERIFY_URL: 'https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/XLAYER_TESTNET'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Preflight deployed contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/qa/oklink-verification
+          CHAIN_ID=$(cast chain-id --rpc-url "$XLAYER_RPC_URL")
+          test "$CHAIN_ID" = "$XLAYER_EXPECTED_CHAIN_ID" || { echo "::error::Unexpected chain ID $CHAIN_ID"; exit 2; }
+          CODE=$(cast code "$NOEMA_XLAYER_REGISTRY_ADDRESS" --rpc-url "$XLAYER_RPC_URL")
+          test "$CODE" != '0x' || { echo '::error::Target registry has no deployed bytecode'; exit 2; }
+          printf '%s\n' "$CODE" > artifacts/qa/oklink-verification/onchain-runtime-bytecode.hex
+          echo "Registry: $NOEMA_XLAYER_REGISTRY_ADDRESS"
+          echo "Runtime bytecode bytes: $(( (${#CODE} - 2) / 2 ))"
+
+      - name: Build exact contract configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd contracts
+          forge install foundry-rs/forge-std
+          forge build --force
+          forge inspect src/NoemaRegistry.sol:NoemaRegistry metadata > ../artifacts/qa/oklink-verification/compiler-metadata.json
+          forge inspect src/NoemaRegistry.sol:NoemaRegistry deployedBytecode > ../artifacts/qa/oklink-verification/local-runtime-bytecode.hex
+          forge inspect src/NoemaRegistry.sol:NoemaRegistry abi > ../artifacts/qa/oklink-verification/abi.json
+
+      - name: Check whether OKLink already reports verified source
+        shell: bash
+        run: |
+          set +e
+          URL="https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/XLAYER_TESTNET?module=contract&action=getsourcecode&address=$NOEMA_XLAYER_REGISTRY_ADDRESS"
+          HTTP=$(curl -sS -o artifacts/qa/oklink-verification/precheck.json -w '%{http_code}' "$URL")
+          echo "$HTTP" > artifacts/qa/oklink-verification/precheck-http-status.txt
+          echo "Precheck HTTP status: $HTTP"
+          cat artifacts/qa/oklink-verification/precheck.json || true
+          exit 0
+
+      - name: Attempt credential-free Foundry verification using current official route
+        id: verify
+        shell: bash
+        run: |
+          set +e
+          cd contracts
+          forge verify-contract \
+            "$NOEMA_XLAYER_REGISTRY_ADDRESS" \
+            src/NoemaRegistry.sol:NoemaRegistry \
+            --chain 1952 \
+            --verifier oklink \
+            --verifier-url "$OKLINK_VERIFY_URL" \
+            --watch \
+            > ../artifacts/qa/oklink-verification/verify-stdout.txt \
+            2> ../artifacts/qa/oklink-verification/verify-stderr.txt
+          CODE=$?
+          echo "$CODE" > ../artifacts/qa/oklink-verification/verify-exit-code.txt
+          echo "exit_code=$CODE" >> "$GITHUB_OUTPUT"
+          cat ../artifacts/qa/oklink-verification/verify-stdout.txt || true
+          cat ../artifacts/qa/oklink-verification/verify-stderr.txt || true
+          exit 0
+
+      - name: Classify verification result
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXIT_CODE=$(cat artifacts/qa/oklink-verification/verify-exit-code.txt)
+          COMBINED=$(cat artifacts/qa/oklink-verification/verify-stdout.txt artifacts/qa/oklink-verification/verify-stderr.txt 2>/dev/null || true)
+          STATUS='FAILED'
+          REASON='verification command failed for an unclassified reason'
+          if [ "$EXIT_CODE" = '0' ]; then
+            STATUS='PASS'
+            REASON='credential-free OKLink verification completed successfully'
+          elif printf '%s' "$COMBINED" | grep -Eqi 'api.?key|unauthoriz|forbidden|credential|access.?key'; then
+            STATUS='BLOCKED_CREDENTIAL_REQUIRED'
+            REASON='OKLink rejected the credential-free verification path and requires an API credential'
+          elif printf '%s' "$COMBINED" | grep -Eqi 'already verified'; then
+            STATUS='PASS_ALREADY_VERIFIED'
+            REASON='OKLink reports the contract is already verified'
+          fi
+          jq -n \
+            --arg status "$STATUS" \
+            --arg reason "$REASON" \
+            --arg address "$NOEMA_XLAYER_REGISTRY_ADDRESS" \
+            --arg verifierUrl "$OKLINK_VERIFY_URL" \
+            --arg exitCode "$EXIT_CODE" \
+            '{kind:"oklink-source-verification-attempt",chainId:1952,address:$address,verifierUrl:$verifierUrl,status:$status,reason:$reason,exitCode:$exitCode}' \
+            > artifacts/qa/oklink-verification/result.json
+          cat artifacts/qa/oklink-verification/result.json
+          if [ "$STATUS" = 'FAILED' ]; then exit 1; fi
+
+      - name: Upload OKLink verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xlayer-oklink-verification-${{ github.sha }}
+          path: artifacts/qa/oklink-verification/*
+          if-no-files-found: warn
+          retention-days: 30
