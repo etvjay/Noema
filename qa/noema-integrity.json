@@ -284,6 +284,22 @@
       ]
     },
     {
+      "id": "telegram-inbound",
+      "phase": "serve",
+      "description": "Telegram inbound boundary (#48): structured intents map to canonical application commands only, natural-language requests cannot invoke capabilities outside the declared Telegram tool/command boundary, uploaded content becomes immutable SourceSnapshot candidates before any AI reasoning, user assertions cannot directly create VERIFIED/ATTESTED state/equivalence/mandate outcomes/versions, duplicate updates are idempotent, Telegram user/chat authorization is enforced per resource, prompt-injection content is captured as inert candidate data, and secret tokens/chat credentials never enter model-visible intent context.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/telegram-inbound.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/telegram-inbound.test.ts"
+      ]
+    },
+    {
       "id": "webhook-delivery",
       "phase": "serve",
       "description": "Signed webhook envelopes authenticate origin, bound replay, are idempotent under duplicate delivery, preserve canonical event identity across retries, keep destination secrets out of receipts, and support endpoint secret rotation.",
