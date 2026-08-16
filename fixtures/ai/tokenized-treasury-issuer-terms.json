@@ -1,0 +1,31 @@
+{
+  "fixtureVersion": "noema-ai-rwa-source-v1",
+  "label": "DEMO_FIXTURE",
+  "sourceSnapshot": {
+    "id": "source-snapshot:arcadia-treasury:class-a:v1",
+    "sourceId": "issuer:arcadia-treasury-spv-i",
+    "uri": "https://issuer.example/arcadia-treasury/class-a/terms",
+    "contentType": "text/plain",
+    "contentHash": "0xcf55ae8b68f9db54d78946a4985e5f5bbef5eaf8cfd1ba4f2e24d6d09352bc7a",
+    "fetchedAt": 1700000000000,
+    "httpStatus": 200,
+    "bodyStorageRef": "fixture:ai:arcadia-treasury-class-a",
+    "extractionVersion": "fixture-text-v1"
+  },
+  "evidence": {
+    "id": "evidence:arcadia-treasury:class-a:terms",
+    "type": "DOCUMENT",
+    "source": "source-snapshot:arcadia-treasury:class-a:v1",
+    "contentHash": "0xcf55ae8b68f9db54d78946a4985e5f5bbef5eaf8cfd1ba4f2e24d6d09352bc7a",
+    "locator": "document://arcadia-treasury/class-a/terms",
+    "observedAt": 1700000000000,
+    "fetchedAt": 1700000000000,
+    "authority": "DEMO_FIXTURE",
+    "freshness": "FRESH",
+    "metadata": {
+      "fixture": true,
+      "sourceKind": "issuer-terms"
+    }
+  },
+  "content": "Tokenized Treasury Participation Note — Class A Terms\n\nIssuer: Arcadia Treasury SPV I.\nEconomic exposure: beneficial participation in a segregated pool of short-duration U.S. Treasury bills.\nRedemption: eligible holders may submit redemption requests on any business day. The contractual redemption period is one business day after an accepted request.\nEligibility: transfers and holdings are restricted to qualified institutional and professional investors that satisfy the issuer's onboarding requirements.\nDistributions: net income attributable to the Treasury pool is distributed monthly after fees.\nNo statement in these terms guarantees token-to-token equivalence with any other share class, wrapper, bridge representation, or Treasury product.\n"
+}
