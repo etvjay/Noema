@@ -32,6 +32,8 @@ const WEBHOOK_SECRET = "terminal-webhook-secret-fixture";
 const TELEGRAM_CHAT = "-100terminalgate";
 
 function gitCommit(): string {
+  const pinned = process.env.NOEMA_RELEASE_COMMIT;
+  if (pinned !== undefined && /^[0-9a-f]{40}$/.test(pinned)) return pinned;
   try {
     return execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
   } catch {
