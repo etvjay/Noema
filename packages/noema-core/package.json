@@ -18,7 +18,8 @@
     "./sdk": "./src/sdk.ts",
     "./webhook": "./src/webhook.ts",
     "./mcp": "./src/mcp.ts",
-    "./explain": "./src/explain.ts"
+    "./explain": "./src/explain.ts",
+    "./telegram": "./src/telegram.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*",

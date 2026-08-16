@@ -268,6 +268,22 @@
       ]
     },
     {
+      "id": "telegram-outbound",
+      "phase": "serve",
+      "description": "Telegram outbound sidecar (#47): deterministic rendering from canonical SemanticEvent + presentation config, alerts carry object identity/version transition/changed fields/old-new decision/receipt refs, VERIFIED/INFERRED/STALE/CONFLICTING/UNKNOWN/REVOKED distinctions survive rendering, no sensitive evidence bodies/secrets by default, duplicate router attempts do not duplicate logical alerts, delivery correlation records message/chat identity without becoming economic state, and failed Telegram delivery cannot affect watch/object/decision state.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/telegram-outbound.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/telegram-outbound.test.ts"
+      ]
+    },
+    {
       "id": "webhook-delivery",
       "phase": "serve",
       "description": "Signed webhook envelopes authenticate origin, bound replay, are idempotent under duplicate delivery, preserve canonical event identity across retries, keep destination secrets out of receipts, and support endpoint secret rotation.",

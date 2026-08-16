@@ -17,6 +17,7 @@ Before consuming a module, read its usage contract here. Source files alone are 
 - `@noema/noema-core/ui` → `usage/ui/README.md`
 - `@noema/noema-core/commitment` → `usage/commitment/README.md`
 - `@noema/noema-core/notification` → `usage/notification/README.md`
+- `@noema/noema-core/telegram` → `usage/telegram/README.md`
 - `@noema/noema-core/rest` → `usage/rest/README.md`
 - `@noema/noema-core/sdk` → `usage/sdk/README.md`
 - `@noema/noema-core/mcp` → `usage/mcp/README.md`
