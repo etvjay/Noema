@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./ai": "./src/ai.ts"
+    "./ai": "./src/ai.ts",
+    "./ai-tools": "./src/ai-tools.ts"
   },
   "dependencies": {
     "zod": "^4.0.5"
