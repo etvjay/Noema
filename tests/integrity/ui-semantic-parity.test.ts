@@ -49,7 +49,7 @@ function snapshot(version: 1 | 2): CanonicalNoemaSnapshot {
   const nowMs = version === 1 ? NOW : NOW + 1_000;
   const verification = verifyEconomicObject(object, {
     nowMs,
-    maxEvidenceAgeMs: mandate.maxEvidenceAgeMs
+    maxEvidenceAgeMs: mandate.maxEvidenceAgeMs!
   });
   const decision = evaluateMandate(object, verification, mandate, { nowMs });
   return { object, verification, decision };
