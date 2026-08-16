@@ -79,7 +79,7 @@ Do not recompute or override object status, economic equivalence, verification r
 
 Economic-kernel canonical object/receipt types plus the core lineage report type. No network/runtime dependency is required by this projection module.
 
-## Integrity proof
+## Proof
 
 Canonical gate: `machine-surface-parity`.
 Test: `tests/integrity/machine-surface-parity.test.ts`.
