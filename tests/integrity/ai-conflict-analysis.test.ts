@@ -109,7 +109,8 @@ describe("Noema AI conflict and ambiguity analyst", () => {
   it("rejects a model that drops one materially conflicting source", async () => {
     const observations = [
       observation({ id: "redemption-a", property: "redemptionPeriodDays", value: 1 }),
-      observation({ id: "redemption-b", property: "redemptionPeriodDays", value: 5 })
+      observation({ id: "redemption-b", property: "redemptionPeriodDays", value: 5 }),
+      observation({ id: "redemption-c", property: "redemptionPeriodDays", value: 7 })
     ];
 
     await expect(
@@ -121,7 +122,7 @@ describe("Noema AI conflict and ambiguity analyst", () => {
               id: "conflict:redemption:incomplete",
               property: "redemptionPeriodDays",
               conflictType: "VALUE_MISMATCH",
-              evidenceIds: ["redemption-a"]
+              evidenceIds: ["redemption-a", "redemption-b"]
             })
           ],
           unresolvedIssues: []
