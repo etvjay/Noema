@@ -2,7 +2,7 @@
   "schemaVersion": "noema-terminal-conformance-v1",
   "gate": "terminal-cross-surface",
   "release": {
-    "commit": "7cb2f3b7ae935492891bd66fe22b00ee9c71d76d",
+    "commit": "bd3a00ae596d480d0852f6cdc72fccdc26c0dceb",
     "branch": "agent/noema-integration-lab"
   },
   "correlation": {
