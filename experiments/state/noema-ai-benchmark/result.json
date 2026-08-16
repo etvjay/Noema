@@ -1,0 +1,12 @@
+{
+  "experimentId":"noema-ai-benchmark",
+  "protocolVersion":"noema-ai-benchmark-protocol-v1",
+  "fixtureVersion":"noema-ai-benchmark-v1",
+  "baselineRun":"raw-baseline.json",
+  "candidateRun":"raw-candidate.json",
+  "derivedMetrics":{"caseCount":24,"exactAccuracy":1,"claimExtractionAccuracy":1,"rightsRestrictionsAccuracy":1,"relationshipAccuracy":1,"conflictPrecision":1,"conflictRecall":1,"unsupportedInferenceRate":0,"falseEquivalenceRate":0,"falseAllowRate":0},
+  "promotionThresholds":{"caseCountMin":20,"exactAccuracyMin":0.95,"claimExtractionAccuracyMin":0.95,"rightsRestrictionsAccuracyMin":0.95,"relationshipAccuracyMin":0.95,"conflictPrecisionMin":0.95,"conflictRecallMin":0.95,"unsupportedInferenceRateMax":0,"falseEquivalenceRateMax":0,"falseAllowRateMax":0},
+  "result":"PASS",
+  "validity":{"level":"X1_OFFLINE_FIXTURE","limitations":["Candidate is a deterministic fixture replay, not a live probabilistic model evaluation.","PASS authorizes the benchmark/promotion mechanism and this fixture candidate only; it does not establish production model quality.","A real model or prompt change must generate a new immutable raw run and be compared under the same protocol before canonical promotion."]},
+  "claimUpdate":"The Noema AI release path now has an executable benchmark promotion gate with first-class false-equivalence and false-ALLOW metrics. Live-model quality remains unclaimed until a real model run is evaluated."
+}
