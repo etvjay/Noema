@@ -63,6 +63,34 @@ export function verifyClaim(
     );
   }
 
+  if (claim.state === "CONFLICTING") {
+    checks.push(
+      check(
+        "check:" + claim.id + ":conflict-boundary",
+        "CONFLICT_BOUNDARY",
+        claim.id,
+        "FAIL",
+        claim.evidenceRefs,
+        context,
+        "Conflicting claim state cannot establish verified state"
+      )
+    );
+  }
+
+  if (claim.state === "STALE") {
+    checks.push(
+      check(
+        "check:" + claim.id + ":stale-boundary",
+        "STALE_BOUNDARY",
+        claim.id,
+        "FAIL",
+        claim.evidenceRefs,
+        context,
+        "Stale claim state cannot establish verified state"
+      )
+    );
+  }
+
   if (claim.state === "INFERRED") {
     checks.push(
       check(
