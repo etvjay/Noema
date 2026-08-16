@@ -33,6 +33,8 @@ jobs:
         run: forge install foundry-rs/forge-std
       - name: Guard integrity contract scope
         run: node tools/noema-integrity-manifest-guard.mjs
+      - name: Guard reusable module usage contracts
+        run: pnpm qa:module-usage
       - name: Package typecheck
         run: pnpm typecheck
       - name: Package tests
