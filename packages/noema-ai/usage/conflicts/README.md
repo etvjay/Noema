@@ -27,10 +27,13 @@ Noema AI orchestration and integrity tests. Frontend code must not invoke this a
 - `ProposedConflict[]`;
 - `ProposedUnresolvedIssue[]`.
 
+The separate pure helper `conflictExceptionCandidates({ result, observations })` derives candidate canonical exception types for deterministic downstream promotion without changing the model's proposal-only output. Current candidates are `EVIDENCE_CONFLICT`, `EVIDENCE_STALE`, `IDENTITY_AMBIGUOUS`, and `RELATIONSHIP_AMBIGUOUS`.
+
 ## Minimal example
 
 ```ts
 const result = await analyzeConflicts({ observations, model });
+const exceptionCandidates = conflictExceptionCandidates({ result, observations });
 ```
 
 ## Frontend-safe usage
@@ -43,6 +46,8 @@ The model may explain likely causes such as effective-date, share-class, represe
 
 The boundary deterministically groups same-subject/same-property observations and detects materially different values before accepting model output. Every detected material conflict must appear in the proposal and must cite every conflicting evidence locator. Missing a conflict or dropping one side fails closed.
 
+`conflictExceptionCandidates` is only a deterministic candidate mapping. It does not mutate an EconomicObject or decide canonical conflict resolution.
+
 Canonical conflict resolution remains owned by deterministic source-authority/freshness/specificity policy and later proposal promotion.
 
 ## Failure semantics
@@ -51,7 +56,7 @@ Malformed output, foreign evidence references, dropped material conflicts, and i
 
 ## Compatibility
 
-Changes to deterministic conflict grouping or materiality semantics require corresponding tests and Product Truth review. Promotion to a public export requires stable dependencies plus usage/index/catalog updates and CI proof.
+Changes to deterministic conflict grouping, materiality, or exception-candidate mapping require corresponding tests and Product Truth review. Promotion to a public export requires stable dependencies plus usage/index/catalog updates and CI proof.
 
 ## Proof
 
