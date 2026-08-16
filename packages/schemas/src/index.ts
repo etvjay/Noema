@@ -7,6 +7,7 @@ import {
   UnsupportedSchemaError,
   versionedFromZod
 } from "./registry.js";
+import { MigrationRegistry, migrationReceiptSchema } from "./migration.js";
 
 const jsonValueSchema: z.ZodType<unknown> = z.lazy(() =>
   z.union([
@@ -465,6 +466,28 @@ export {
   versionedFromZod
 } from "./registry.js";
 
+export {
+  AmbiguousMigrationError,
+  MIGRATION_HOP_BOUND,
+  MigrationCycleError,
+  MigrationDowngradeError,
+  MigrationError,
+  MigrationGapError,
+  MigrationPathError,
+  MigrationRegistry,
+  NO_OP_MIGRATION_ID,
+  detectMigrationCycle,
+  migrateArtifact,
+  migrationReceiptSchema
+} from "./migration.js";
+export type {
+  MigrationEdge,
+  MigrationResult,
+  MigrationSummary,
+  MigrationTraceStep,
+  VersionedArtifact
+} from "./migration.js";
+
 export const noemaSchemaRegistry = new SchemaRegistry()
   .register(
     versionedFromZod(SCHEMA_IDS.ECONOMIC_OBJECT, SCHEMA_VERSIONS.ECONOMIC_OBJECT, economicObjectSchema)
@@ -483,4 +506,13 @@ export const noemaSchemaRegistry = new SchemaRegistry()
   )
   .register(
     versionedFromZod(SCHEMA_IDS.DECISION_RECEIPT, SCHEMA_VERSIONS.DECISION_RECEIPT, decisionReceiptSchema)
+  )
+  .register(
+    versionedFromZod(
+      SCHEMA_IDS.MIGRATION_RECEIPT,
+      SCHEMA_VERSIONS.MIGRATION_RECEIPT,
+      migrationReceiptSchema
+    )
   );
+
+export const noemaMigrationRegistry = new MigrationRegistry(noemaSchemaRegistry);

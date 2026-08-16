@@ -7,9 +7,11 @@
     ".": "./src/index.ts",
     "./ai": "./src/ai.ts",
     "./ai-tools": "./src/ai-tools.ts",
-    "./events": "./src/events.ts"
+    "./events": "./src/events.ts",
+    "./migration": "./src/migration.ts"
   },
   "dependencies": {
+    "@noema/canonicalization": "workspace:*",
     "@noema/economic-kernel": "workspace:*",
     "zod": "^4.0.5"
   }

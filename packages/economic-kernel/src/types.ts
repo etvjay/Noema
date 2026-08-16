@@ -393,3 +393,15 @@ export interface DecisionReceipt {
   policyEngineVersion: string;
   createdAt: UnixMillis;
 }
+
+export interface MigrationReceipt {
+  id: Ref;
+  schemaId: SchemaId;
+  schemaVersion: SchemaVersion;
+  subjectSchemaId: SchemaId;
+  fromVersion: SchemaVersion;
+  toVersion: SchemaVersion;
+  migrationId: string;
+  inputHash: Hex;
+  outputHash: Hex;
+}

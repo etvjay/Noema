@@ -10,6 +10,7 @@ Before consuming a schema module, read its adjacent usage contract. Export prese
 - `@noema/schemas/ai` → `usage/ai/README.md`
 - `@noema/schemas/ai-tools` → `usage/ai-tools/README.md`
 - `@noema/schemas/events` → `usage/events/README.md`
+- `@noema/schemas/migration` → `usage/migration/README.md`
 
 ## Consumption rule
 

@@ -40,6 +40,7 @@ Usage index: `packages/schemas/usage/README.md`
 | Noema AI typed tool contract | `@noema/schemas/ai-tools`
 | Canonical event & subscription contract | `@noema/schemas/events` | notification router, webhook, Telegram, MCP, cross-surface conformance | strict versioned SemanticEvent/Subscription/delivery-correlation schemas with deterministic event identity and fail-closed migration | `packages/schemas/usage/events/README.md` |
  | Noema AI runtime, tool adapters, transcript/audit surfaces | strict allowlisted read/proposal-only tool vocabulary, bounded results and transcript validation | `packages/schemas/usage/ai-tools/README.md` |
+| Explicit schema migration | `@noema/schemas/migration` | backend/ops migration of versioned stored artifacts, integrity tooling | deterministic forward-only artifact migration with per-step validation and MigrationReceipt audit provenance | `packages/schemas/usage/migration/README.md` |
 
 ## Frontend rule
 

@@ -7,7 +7,8 @@ export const SCHEMA_IDS = {
   SOURCE_SNAPSHOT: "noema:source-snapshot",
   ATTESTATION: "noema:attestation",
   VERIFICATION_RECEIPT: "noema:verification-receipt",
-  DECISION_RECEIPT: "noema:decision-receipt"
+  DECISION_RECEIPT: "noema:decision-receipt",
+  MIGRATION_RECEIPT: "noema:migration-receipt"
 } as const;
 
 export const SCHEMA_VERSIONS = {
@@ -16,7 +17,8 @@ export const SCHEMA_VERSIONS = {
   SOURCE_SNAPSHOT: 1,
   ATTESTATION: 1,
   VERIFICATION_RECEIPT: 1,
-  DECISION_RECEIPT: 1
+  DECISION_RECEIPT: 1,
+  MIGRATION_RECEIPT: 1
 } as const;
 
 export interface VersionedSchema<T> {

@@ -25,6 +25,7 @@ export type {
   JsonValue,
   Mandate,
   MandateDecision,
+  MigrationReceipt,
   Money,
   PolicyCheck,
   ProvenanceEdge,

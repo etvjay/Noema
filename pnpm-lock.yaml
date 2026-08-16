@@ -32,6 +32,9 @@ importers:
       vitest:
         specifier: ^3.2.4
         version: 3.2.7(@types/node@24.13.3)
+      zod:
+        specifier: ^4.0.5
+        version: 4.4.3
 
   packages/canonicalization:
     dependencies:
@@ -58,6 +61,9 @@ importers:
 
   packages/schemas:
     dependencies:
+      '@noema/canonicalization':
+        specifier: workspace:*
+        version: link:../canonicalization
       '@noema/economic-kernel':
         specifier: workspace:*
         version: link:../economic-kernel
