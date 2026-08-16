@@ -40,27 +40,9 @@ contract NoemaRegistryTest is Test {
         registry.registerObject(objectId, objectRootV1, evidenceRootV1);
         registry.updateObject(objectId, 1, objectRootV2, evidenceRootV2);
 
-        (bytes32 historyObjectRootV1, bytes32 historyEvidenceRootV1, uint64 historyVersionV1,, bool activeV1) =
-            registry.commitmentHistory(objectId, 1);
-        (bytes32 historyObjectRootV2, bytes32 historyEvidenceRootV2, uint64 historyVersionV2,, bool activeV2) =
-            registry.commitmentHistory(objectId, 2);
-
-        assertEq(historyObjectRootV1, objectRootV1);
-        assertEq(historyEvidenceRootV1, evidenceRootV1);
-        assertEq(historyVersionV1, 1);
-        assertTrue(activeV1);
-
-        assertEq(historyObjectRootV2, objectRootV2);
-        assertEq(historyEvidenceRootV2, evidenceRootV2);
-        assertEq(historyVersionV2, 2);
-        assertTrue(activeV2);
-
-        (bytes32 latestObjectRoot, bytes32 latestEvidenceRoot, uint64 latestVersion,, bool latestActive) =
-            registry.objects(objectId);
-        assertEq(latestObjectRoot, objectRootV2);
-        assertEq(latestEvidenceRoot, evidenceRootV2);
-        assertEq(latestVersion, 2);
-        assertTrue(latestActive);
+        _assertHistoricalCommitment(objectId, 1, objectRootV1, evidenceRootV1);
+        _assertHistoricalCommitment(objectId, 2, objectRootV2, evidenceRootV2);
+        _assertLatestCommitment(objectId, 2, objectRootV2, evidenceRootV2);
     }
 
     function testRejectsStaleUpdate() public {
@@ -81,5 +63,32 @@ contract NoemaRegistryTest is Test {
         assertEq(registry.claimAttestations(objectId, claimId), attestationHash);
         registry.revokeAttestation(objectId, claimId, attestationHash);
         assertTrue(registry.revokedAttestations(objectId, claimId, attestationHash));
+    }
+
+    function _assertHistoricalCommitment(
+        bytes32 objectId,
+        uint64 expectedVersion,
+        bytes32 expectedObjectRoot,
+        bytes32 expectedEvidenceRoot
+    ) private view {
+        (bytes32 objectRoot, bytes32 evidenceRoot, uint64 version,, bool active) =
+            registry.commitmentHistory(objectId, expectedVersion);
+        assertEq(objectRoot, expectedObjectRoot);
+        assertEq(evidenceRoot, expectedEvidenceRoot);
+        assertEq(version, expectedVersion);
+        assertTrue(active);
+    }
+
+    function _assertLatestCommitment(
+        bytes32 objectId,
+        uint64 expectedVersion,
+        bytes32 expectedObjectRoot,
+        bytes32 expectedEvidenceRoot
+    ) private view {
+        (bytes32 objectRoot, bytes32 evidenceRoot, uint64 version,, bool active) = registry.objects(objectId);
+        assertEq(objectRoot, expectedObjectRoot);
+        assertEq(evidenceRoot, expectedEvidenceRoot);
+        assertEq(version, expectedVersion);
+        assertTrue(active);
     }
 }
