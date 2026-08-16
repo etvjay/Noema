@@ -5,7 +5,7 @@ import type {
   Hex,
   JsonValue
 } from "@noema/economic-kernel";
-import { keccak256, stringToHex } from "viem";
+import { keccak256, stringToHex, verifyTypedData } from "viem";
 
 export const HASHING_VERSION = "noema-hashing-v1";
 export const OBJECT_DOMAIN = "noema:economic-object:v1";
@@ -26,6 +26,12 @@ export function hashUtf8(value: string): Hex {
 
 export function hashCanonical(value: JsonValue | Record<string, unknown>): Hex {
   return hashUtf8(canonicalJson(value));
+}
+
+export async function verifyEip712Signature(
+  input: Parameters<typeof verifyTypedData>[0]
+): Promise<boolean> {
+  return verifyTypedData(input);
 }
 
 export function toObjectHashProjection(object: EconomicObject): Record<string, unknown> {
