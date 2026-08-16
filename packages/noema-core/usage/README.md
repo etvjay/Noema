@@ -10,6 +10,7 @@ Before consuming a module, read its usage contract here. Source files alone are 
 - `@noema/noema-core/evidence` → `usage/evidence/README.md`
 - `@noema/noema-core/semantic` → `usage/semantic/README.md`
 - `@noema/noema-core/mandate` → `usage/mandate/README.md`
+- `@noema/noema-core/explain` → `usage/explain/README.md`
 - `@noema/noema-core/versioning` → `usage/versioning/README.md`
 - `@noema/noema-core/watch` → `usage/watch/README.md`
 - `@noema/noema-core/surfaces` → `usage/surfaces/README.md`

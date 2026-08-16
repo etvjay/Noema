@@ -143,6 +143,22 @@
       ]
     },
     {
+      "id": "explanation-surface",
+      "phase": "interpret",
+      "description": "Evidence-bounded explanation surface: every material assertion cites canonical claim/evidence/receipt/event refs, cannot mutate state or override canonical outcomes, returns explicit UNRESOLVED/insufficient evidence when the canonical record does not establish a reason, distinguishes source fact/attestation/deterministic conclusion/AI inference, uses exact requested versions, passes adversarial tests that prove the model cannot rewrite an ALLOW/BLOCK result or hide conflicting evidence, and preserves run receipt/provenance without hidden chain-of-thought.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/explanation-surface.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/explanation-surface.test.ts"
+      ]
+    },
+    {
       "id": "version-history",
       "phase": "watch",
       "description": "Material change creates vN+1 and never silently overwrites historical canonical versions.",

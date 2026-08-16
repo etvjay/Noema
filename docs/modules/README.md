@@ -20,6 +20,7 @@ Usage index: `packages/noema-core/usage/README.md`
 | Evidence ingestion | `@noema/noema-core/evidence` | source adapters, ingestion workers | normalize immutable SourceSnapshot observations into Evidence | `packages/noema-core/usage/evidence/README.md` |
 | Semantic resolution | `@noema/noema-core/semantic` | canonical semantic pipeline, backend services | conservative evidence-bounded relationship resolution | `packages/noema-core/usage/semantic/README.md` |
 | Mandate evaluation | `@noema/noema-core/mandate` | treasury/policy services, backend orchestration | deterministic ALLOW/CONDITIONAL/BLOCK DecisionReceipt generation | `packages/noema-core/usage/mandate/README.md` |
+| Explanation surface | `@noema/noema-core/explain` | Telegram `/why`, REST, SDK, MCP, UI decision traces | evidence-bounded canonical explanations: ref-cited assertions, no mutation/override, explicit UNRESOLVED, basis labels, exact history, run receipt without hidden chain-of-thought | `packages/noema-core/usage/explain/README.md` |
 | Versioning | `@noema/noema-core/versioning` | canonical persistence/watch services | append-only material EconomicObject version history | `packages/noema-core/usage/versioning/README.md` |
 | Watch | `@noema/noema-core/watch`
 | Notification router | `@noema/noema-core/notification` | notification orchestration, webhook/Telegram/MCP delivery, terminal notification proof | idempotent fan-out of canonical SemanticEvents with bounded backoff, delivery receipts, secret-free routing | `packages/noema-core/usage/notification/README.md` |
