@@ -1,0 +1,78 @@
+name: Noema AI Integrity
+
+on:
+  push:
+    branches: ["main", "agent/**"]
+  pull_request:
+
+jobs:
+  ai-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Noema AI integrity
+        id: ai_integrity
+        continue-on-error: true
+        run: pnpm qa:ai
+      - name: Publish AI integrity summary
+        if: always()
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const dir = 'artifacts/qa/ai-integrity';
+          const summary = process.env.GITHUB_STEP_SUMMARY;
+          if (!fs.existsSync(dir)) {
+            fs.appendFileSync(summary, '## Noema AI Integrity\n\nNo AI integrity receipt was produced. **FAIL**\n');
+            process.exit(0);
+          }
+          const files = fs.readdirSync(dir).filter((file) => file.endsWith('.json')).sort();
+          const latest = files.at(-1);
+          if (!latest) {
+            fs.appendFileSync(summary, '## Noema AI Integrity\n\nNo AI integrity receipt was produced. **FAIL**\n');
+            process.exit(0);
+          }
+          const receipt = JSON.parse(fs.readFileSync(path.join(dir, latest), 'utf8'));
+          const counts = receipt.counts ?? {};
+          fs.appendFileSync(summary, [
+            '## Noema AI Integrity',
+            '',
+            `**Overall:** ${receipt.overall}`,
+            '',
+            '| PASS | FAIL | NOT_IMPLEMENTED | BLOCKED |',
+            '|---:|---:|---:|---:|',
+            `| ${counts.PASS ?? 0} | ${counts.FAIL ?? 0} | ${counts.NOT_IMPLEMENTED ?? 0} | ${counts.BLOCKED ?? 0} |`,
+            '',
+            `Contract version: \`${receipt.contractVersion}\``,
+            '',
+            `Commit: \`${receipt.gitCommit ?? 'unknown'}\``,
+            '',
+            `Receipt: \`${path.join(dir, latest)}\``,
+            ''
+          ].join('\n'));
+          NODE
+      - name: Upload AI integrity receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: noema-ai-integrity-${{ github.sha }}
+          path: artifacts/qa/ai-integrity/*.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce Noema AI integrity
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.ai_integrity.outcome }}" != "success" ]; then
+            echo "Noema AI integrity is not PASS. See the uploaded receipt and job summary."
+            exit 2
+          fi
