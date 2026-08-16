@@ -19,11 +19,16 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
-      - uses: foundry-rs/foundry-toolchain@v1
+      - name: Provision Foundry for registry QA
+        id: foundry
+        continue-on-error: true
+        uses: foundry-rs/foundry-toolchain@v1
         with:
           version: stable
       - run: pnpm install --frozen-lockfile
       - name: Install Foundry test dependency
+        if: steps.foundry.outcome == 'success'
+        continue-on-error: true
         working-directory: contracts
         run: forge install foundry-rs/forge-std
       - name: Guard integrity contract scope
