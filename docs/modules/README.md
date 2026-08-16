@@ -26,9 +26,21 @@ Usage index: `packages/noema-core/usage/README.md`
 | UI view model | `@noema/noema-core/ui` | frontend/UI only | presentation-safe canonical Noema view model | `packages/noema-core/usage/ui/README.md` |
 | Registry commitment model | `@noema/noema-core/commitment` | backend registry service, E2E integrity tests | deterministic offchain mirror of NoemaRegistry commitment/version semantics | `packages/noema-core/usage/commitment/README.md` |
 
+## @noema/schemas
+
+Source package: `packages/schemas/`
+Usage index: `packages/schemas/usage/README.md`
+
+| Module | Import path | Intended consumers | Responsibility | Usage contract |
+|---|---|---|---|---|
+| Canonical runtime schemas | `@noema/schemas` | backend boundaries, adapters, persistence/transport validation | strict runtime validation of canonical Noema domain records | `packages/schemas/usage/core/README.md` |
+| Noema AI proposal contract | `@noema/schemas/ai` | Noema AI runtime, deterministic proposal promotion, provenance tooling, inspectability surfaces | strict proposal-only schemas, evidence locators, deterministic proposal hashing, AI run provenance | `packages/schemas/usage/ai/README.md` |
+
 ## Frontend rule
 
 The frontend SHOULD prefer `@noema/noema-core/ui` for presentation and `@noema/noema-core/surfaces` for machine-readable canonical snapshots.
+
+The frontend MAY use `@noema/schemas/ai` to validate a documented stored/transported AI proposal or run receipt for inspectability, but schema validity never grants that proposal canonical authority.
 
 The frontend MUST NOT independently decide or recompute:
 
