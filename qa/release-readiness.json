@@ -1,0 +1,239 @@
+{
+  "version": "1.0.0",
+  "name": "Noema Phase 2 Release Readiness Matrix",
+  "authority": "RELEASE_READINESS.md",
+  "proofClasses": [
+    "IMPLEMENTED",
+    "DETERMINISTICALLY_PROVEN",
+    "LIVE_PROVEN",
+    "NOT_CLAIMED"
+  ],
+  "capabilities": [
+    {
+      "id": "economic-object-kernel",
+      "claim": "EconomicObject schemas and deterministic semantic kernel preserve canonical Noema invariants over replayable fixtures.",
+      "proofClass": "DETERMINISTICALLY_PROVEN",
+      "evidence": [
+        "qa/noema-integrity.json",
+        "tests/integrity/semantic-resolution.test.ts",
+        "tests/integrity/evidence-lineage.test.ts",
+        "tests/integrity/root-replay.test.ts",
+        "tests/integrity/verification-boundary.test.ts",
+        "tests/integrity/mandate-determinism.test.ts",
+        "tests/integrity/version-history.test.ts",
+        "tests/integrity/watch-reevaluation.test.ts",
+        "tests/integrity/golden-path.e2e.test.ts"
+      ],
+      "limitations": [
+        "Deterministic fixture proof is not itself proof of correctness over arbitrary real-world economic sources."
+      ]
+    },
+    {
+      "id": "noema-ai-safety-boundary",
+      "claim": "Noema AI is proposal-only and deterministic promotion policy prevents unsupported model output from becoming canonical authority in the tested benchmark/integrity cases.",
+      "proofClass": "DETERMINISTICALLY_PROVEN",
+      "evidence": [
+        ".github/workflows/ai-integrity.yml",
+        "qa/noema-ai-integrity.json",
+        "tests/integrity/ai-promotion-boundary.test.ts",
+        "tests/integrity/ai-benchmark.test.ts",
+        "experiments/state/noema-ai-benchmark/result.json"
+      ],
+      "limitations": [
+        "This does not claim production model accuracy on arbitrary live RWA documents.",
+        "The benchmark proves the fixed promotion-safety experiment claim only."
+      ]
+    },
+    {
+      "id": "xlayer-runtime",
+      "claim": "The selected public runtime is X Layer testnet chain ID 1952 and required runtime surfaces are reachable.",
+      "proofClass": "LIVE_PROVEN",
+      "evidence": [
+        ".github/workflows/xlayer-live.yml",
+        "GitHub Actions run 31938172219",
+        "artifact 9261245983",
+        "sha256:750d82c5b39d9979c5da2b66c8dcdcc272f2c1056051925c055c38bafa924024"
+      ],
+      "limitations": [
+        "A live network probe does not establish economic-source authority."
+      ]
+    },
+    {
+      "id": "xlayer-registry-commitment",
+      "claim": "NoemaRegistry can be deployed on X Layer testnet, commit canonical object/evidence roots, emit traceable events, preserve append-only history, and support direct state readback.",
+      "proofClass": "LIVE_PROVEN",
+      "evidence": [
+        "registry 0xBa76F97969000D632cF33B87afb4d853C52d1C03",
+        "deploy tx 0x9fed8f54140836ea1b23ccca96e43cdc5116261bcbe2f6e7c1d6b3d9a8c003ce",
+        "register tx 0x9975dfb6aab5c1c6a01e4b7a67b8f4f661be96fd8a404acaaf2d3c801517414b",
+        "update tx 0xb500f90c8603558cc0a5e3459c76ef48df857416f2897e9448746343c2f5ed87",
+        "GitHub Actions run 31943852093",
+        "artifact 9262747665",
+        "sha256:0870ae188f9a646037e7eaf25cbfc1c6caabf5cd7ee4f7ab9d6e9bc71f679ac3"
+      ],
+      "limitations": [
+        "The cited v1/v2 live history proof used explicitly labelled registry mechanics/demo fixtures, not a Phase 2 real-RWA evidence object."
+      ]
+    },
+    {
+      "id": "oklink-source-verification",
+      "claim": "The deployed NoemaRegistry source was verified through the OKLink X Layer Foundry verifier without an API key.",
+      "proofClass": "LIVE_PROVEN",
+      "evidence": [
+        "registry 0xBa76F97969000D632cF33B87afb4d853C52d1C03",
+        "GitHub Actions run 31944788775",
+        "verification GUID 0xba76f97969000d632cf33b87afb4d853c52d1c03",
+        "artifact 9262980443",
+        "sha256:0f631755257c27fc05d1fa3260c3a0eaf09a446129e02ccb82d2555b17503c47"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "xlayer-builder-code-attribution",
+      "claim": "ERC-8021 Builder Code attribution can be appended to a Noema registry transaction without mutating canonical ABI calldata semantics or object/evidence roots.",
+      "proofClass": "LIVE_PROVEN",
+      "evidence": [
+        ".github/workflows/builder-code-attribution.yml",
+        "proof registry 0x8208664a9d784beF81Ea5c4327F0a07CAE49d2B3",
+        "attributed tx 0xbaaed0471fce578cfb5a3931c1fee02420d92b9807e868ac1481d6a78ff7c242",
+        "GitHub Actions run 31946871487",
+        "artifact 9263538494",
+        "sha256:33de681f48f3c73e6345f5ba3acf726fe6669ef3c575c1a0ad711ce2eaf9ee89"
+      ],
+      "limitations": [
+        "This proves attribution transport semantics, not economic correctness."
+      ]
+    },
+    {
+      "id": "source-adapters",
+      "claim": "HTTP, document, and EVM acquisition boundaries exist and terminate at canonical SourceSnapshot/SourceFailure contracts.",
+      "proofClass": "IMPLEMENTED",
+      "evidence": [
+        "adapters/http-source",
+        "adapters/document-source",
+        "adapters/evm-source",
+        "@noema/noema-core/evidence"
+      ],
+      "limitations": [
+        "Phase 2 has not yet captured a release-grade multi-source real-RWA evidence pack through these adapters."
+      ]
+    },
+    {
+      "id": "real-rwa-economic-object",
+      "claim": "A real multi-source RWA case has been resolved end-to-end into a canonical Evidence-Bounded Economic Object.",
+      "proofClass": "IMPLEMENTED",
+      "evidence": [
+        "Phase 2 issue #34",
+        "Phase 2 issue #35",
+        "Phase 2 issue #36"
+      ],
+      "limitations": [
+        "The required Phase 2 real-RWA release scenario has not yet been captured and proven."
+      ],
+      "releaseUpgradeTarget": "LIVE_PROVEN"
+    },
+    {
+      "id": "real-rwa-mandate",
+      "claim": "A deterministic treasury mandate has been evaluated over the selected real RWA candidate set with fully traversable receipts and evidence lineage.",
+      "proofClass": "IMPLEMENTED",
+      "evidence": [
+        "Phase 2 issue #37"
+      ],
+      "limitations": [
+        "The mandate engine is deterministic, but the Phase 2 real-candidate application proof is pending."
+      ],
+      "releaseUpgradeTarget": "LIVE_PROVEN"
+    },
+    {
+      "id": "real-rwa-xlayer-commitment",
+      "claim": "At least one X Layer commitment corresponds to an EconomicObject built from captured real RWA evidence rather than a demo fixture.",
+      "proofClass": "IMPLEMENTED",
+      "evidence": [
+        "Phase 2 issue #38"
+      ],
+      "limitations": [
+        "Existing live registry proof is transport/mechanics proof over labelled fixtures. The Phase 2 real-evidence commitment is pending."
+      ],
+      "releaseUpgradeTarget": "LIVE_PROVEN"
+    },
+    {
+      "id": "real-material-change-cycle",
+      "claim": "Two genuine dated source states produce a replayable vN -> vN+1 material-change cycle with re-verification, re-evaluation, event, and notification.",
+      "proofClass": "DETERMINISTICALLY_PROVEN",
+      "evidence": [
+        "tests/integrity/version-history.test.ts",
+        "tests/integrity/watch-reevaluation.test.ts",
+        "Phase 2 issue #39"
+      ],
+      "limitations": [
+        "The behavior is proven over canonical fixtures; the Phase 2 genuine-source-state application proof is pending."
+      ],
+      "releaseUpgradeTarget": "LIVE_PROVEN"
+    },
+    {
+      "id": "machine-surfaces",
+      "claim": "REST, SDK, and MCP projections preserve canonical Noema semantics in deterministic parity tests.",
+      "proofClass": "DETERMINISTICALLY_PROVEN",
+      "evidence": [
+        "tests/integrity/machine-surface-parity.test.ts",
+        "packages/noema-core/src/surfaces.ts",
+        "Phase 2 issue #40"
+      ],
+      "limitations": [
+        "The canonical machine surfaces are not yet proven as one deployed Phase 2 release runtime."
+      ],
+      "releaseUpgradeTarget": "LIVE_PROVEN"
+    },
+    {
+      "id": "ui-projection",
+      "claim": "The Noema UI/view-model layer is presentation-only and preserves canonical semantics in deterministic parity tests.",
+      "proofClass": "DETERMINISTICALLY_PROVEN",
+      "evidence": [
+        "tests/integrity/ui-semantic-parity.test.ts",
+        "packages/noema-core/src/ui.ts",
+        "Phase 2 issue #41"
+      ],
+      "limitations": [
+        "The Phase 2 live-RWA release demo has not yet been packaged against the deployed runtime."
+      ]
+    },
+    {
+      "id": "phase2-terminal-release",
+      "claim": "The complete Phase 2 live-RWA release candidate has been replayed at one exact commit with a durable terminal receipt.",
+      "proofClass": "IMPLEMENTED",
+      "evidence": [
+        "Phase 2 issue #43"
+      ],
+      "limitations": [
+        "Terminal Phase 2 convergence proof is pending."
+      ],
+      "releaseUpgradeTarget": "LIVE_PROVEN"
+    },
+    {
+      "id": "eas",
+      "claim": "Noema uses X Layer EAS as a release dependency.",
+      "proofClass": "NOT_CLAIMED",
+      "evidence": [],
+      "limitations": [
+        "EAS remains conditional and outside the current MVP/Phase 2 dependency graph."
+      ]
+    },
+    {
+      "id": "downstream-execution",
+      "claim": "Noema owns trading, lending, settlement, financing, or autonomous execution.",
+      "proofClass": "NOT_CLAIMED",
+      "evidence": [
+        "PRODUCT_TRUTH.md"
+      ],
+      "limitations": [
+        "Execution authority belongs downstream by Product Truth."
+      ]
+    }
+  ],
+  "terminalGate": {
+    "issue": 43,
+    "epic": 32,
+    "requiredBeforeRelease": true,
+    "closeEpicOnlyAfterTerminalPass": true
+  }
+}
