@@ -2,6 +2,39 @@
   "caseId": "semantic-case-a-equivalence",
   "fixtureStatus": "DEMO_FIXTURE",
   "description": "Two representations are explicitly linked to the same economic claim.",
+  "semanticInput": {
+    "left": {
+      "id": "representation:a:primary",
+      "economicClaim": "claim:treasury-share-class-a",
+      "issuerClaim": "issuer:fixture-treasury-fund",
+      "shareClass": "class-a",
+      "exposureClass": "US_TREASURY_BILL",
+      "rights": ["BENEFICIAL_INTEREST", "REDEMPTION"],
+      "restrictions": ["ELIGIBLE_INVESTORS_ONLY"],
+      "backing": ["UST-BILL-POOL-2026-A"],
+      "redemption": { "asset": "USD", "windowMs": 86400000 },
+      "evidenceFreshness": "FRESH"
+    },
+    "right": {
+      "id": "representation:a:bridged",
+      "economicClaim": "claim:treasury-share-class-a",
+      "issuerClaim": "issuer:fixture-treasury-fund",
+      "shareClass": "class-a",
+      "exposureClass": "US_TREASURY_BILL",
+      "rights": ["REDEMPTION", "BENEFICIAL_INTEREST"],
+      "restrictions": ["ELIGIBLE_INVESTORS_ONLY"],
+      "backing": ["UST-BILL-POOL-2026-A"],
+      "redemption": { "asset": "USD", "windowMs": 86400000 },
+      "evidenceFreshness": "FRESH"
+    },
+    "links": [
+      {
+        "from": "representation:a:bridged",
+        "to": "representation:a:primary",
+        "type": "BRIDGED_REPRESENTATION_OF"
+      }
+    ]
+  },
   "representations": [
     {
       "id": "representation:a:primary",
@@ -20,5 +53,5 @@
     }
   ],
   "relationshipExpectation": "ECONOMICALLY_EQUIVALENT_TO",
-  "reason": "Same issuer claim, share class, rights, backing, and conversion relationship are present in the fixture evidence."
+  "reason": "Same issuer claim, share class, rights, backing, redemption terms, and an explicit supported representation relationship are present in the fixture evidence."
 }
