@@ -208,8 +208,12 @@ function evidenceReview(input: {
     : { reasonCodes: ["EVIDENCE_POLICY_SATISFIED"] };
 }
 
+function isProposedClaim(item: ProposedClaim | ProposedRelationship): item is ProposedClaim {
+  return "property" in item;
+}
+
 function activeConflictFor(item: ProposedClaim | ProposedRelationship, object: EconomicObject): boolean {
-  if (item.property !== undefined) {
+  if (isProposedClaim(item)) {
     return object.claims.some(
       (claim) =>
         claim.subject === item.subject &&
