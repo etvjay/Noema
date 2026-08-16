@@ -1,0 +1,91 @@
+{
+  "version": "phase2-rwa-candidates-v1",
+  "researchDate": "2026-08-16",
+  "parentIssue": 32,
+  "owningIssue": 34,
+  "selected": ["benji-fobxx", "ondo-ousg", "openeden-tbill"],
+  "candidates": [
+    {
+      "id": "benji-fobxx",
+      "name": "Franklin OnChain U.S. Government Money Fund / BENJI",
+      "ticker": "FOBXX",
+      "selected": true,
+      "vehicle": "U.S.-registered money market mutual fund",
+      "representationHypothesis": "One BENJI token represents one FOBXX share; blockchain-integrated transfer-agent recordkeeping is authoritative for share ownership activity.",
+      "economicExposure": "U.S. government securities, cash, and fully collateralized repurchase agreements",
+      "selectionReason": "Explicit one-token/one-fund-share relationship creates the cleanest representation-vs-economic-identity case.",
+      "primarySources": [
+        "https://www.franklintempleton.com/investments/options/money-market-funds/products/29386/SINGLCLASS/franklin-on-chain-u-s-government-money-fund/FOBXX",
+        "https://digitalassets.franklintempleton.com/benji/",
+        "https://www.franklintempleton.com/press-releases/news-room/2024/franklin-templeton-announces-availability-of-peer-to-peer-transfers-for-franklin-onchain-u.s.-government-money-fund"
+      ]
+    },
+    {
+      "id": "ondo-ousg",
+      "name": "Ondo Short-Term US Government Treasuries",
+      "ticker": "OUSG",
+      "selected": true,
+      "vehicle": "Ondo I LP private fund / Section 3(c)(7) structure",
+      "representationHypothesis": "OUSG token represents a unitized limited-partnership interest in the Fund.",
+      "economicExposure": "Short-term U.S. Treasury/GSE exposure through a portfolio that may include funds from multiple asset managers plus liquidity assets",
+      "selectionReason": "Strongest test of limited-partnership claim, portfolio-of-funds exposure, eligibility restrictions, and exposure-vs-equivalence boundaries.",
+      "primarySources": [
+        "https://docs.ondo.finance/qualified-access-products/ousg/overview",
+        "https://docs.ondo.finance/trust-and-security",
+        "https://ondo.finance/ousg"
+      ]
+    },
+    {
+      "id": "openeden-tbill",
+      "name": "OpenEden TBILL",
+      "ticker": "TBILL",
+      "selected": true,
+      "vehicle": "BVI regulated professional fund",
+      "representationHypothesis": "EIP-20 token represents investor economic interest and pro-rata contractual redemption-value rights in the Fund.",
+      "economicExposure": "Short-dated U.S. Treasury Bills plus a small USD allocation",
+      "selectionReason": "Direct Treasury portfolio, NAV-accreting token economics, explicit redemption-value rights and whitelist restrictions create strong contrast with BENJI and OUSG.",
+      "primarySources": [
+        "https://docs.openeden.com/tbill/product-structuring",
+        "https://docs.openeden.com/treasury-bills-vault/introduction",
+        "https://docs.openeden.com/tbill/faq",
+        "https://docs.openeden.com/tbill/investor-onboarding",
+        "https://openeden.com/tbill"
+      ]
+    },
+    {
+      "id": "superstate-ustb",
+      "name": "Superstate / Invesco Short Duration US Government Securities Fund",
+      "ticker": "USTB",
+      "selected": false,
+      "vehicle": "Delaware Statutory Trust private fund",
+      "representationHypothesis": "Fund ownership can be represented as tokenized USTB shares or book-entry shares across supported networks/recordkeeping forms.",
+      "economicExposure": "Short-duration U.S. Treasury Bills",
+      "selectionReason": "Retained for a later representation-equivalence/share-class scenario across token networks and book-entry ownership.",
+      "primarySources": [
+        "https://superstate.com/ustb",
+        "https://superstate.com/assets/ustb"
+      ]
+    },
+    {
+      "id": "blackrock-buidl",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "ticker": "BUIDL",
+      "selected": false,
+      "vehicle": "BlackRock institutional tokenized fund distributed/tokenized through Securitize",
+      "representationHypothesis": "Public-chain BUIDL tokens/share classes represent interests in the Fund and are subject to qualified-investor/approved-transfer controls.",
+      "economicExposure": "Cash, U.S. Treasury bills, and repurchase agreements",
+      "selectionReason": "Retained for a later multi-chain share-class/interoperability and collateral-utility scenario.",
+      "primarySources": [
+        "https://investors.securitize.io/news/news-details/2024/BlackRock-Launches-Its-First-Tokenized-Fund-BUIDL-on-the-Ethereum-Network-03-20-2024/default.aspx",
+        "https://investors.securitize.io/news/news-details/2025/BlackRock-USD-Institutional-Digital-Liquidity-Fund-BUIDL-Tokenized-By-Securitize-Surpasses-1B-in-AUM-03-13-2025/default.aspx",
+        "https://www.blackrock.com/corporate/compliance/scams-and-fraud/resources",
+        "https://investors.securitize.io/news/news-details/2026/OKX-BlackRock-and-Standard-Chartered-Launch-Joint-Framework-to-Establish-New-Utility-for-Tokenized-Real-World-Assets/default.aspx"
+      ]
+    }
+  ],
+  "researchHypothesis": {
+    "relationship": "SIMILAR_EXPOSURE_TO",
+    "status": "HYPOTHESIS_ONLY",
+    "rule": "Do not promote this relationship from the research manifest. #35–#37 must derive canonical relationships from immutable captured evidence."
+  }
+}
