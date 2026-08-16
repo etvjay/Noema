@@ -1,0 +1,89 @@
+name: NoemaRegistry Integration Proof
+
+on:
+  push:
+    branches:
+      - agent/noema-integration-lab
+    paths:
+      - '.github/workflows/registry-integration.yml'
+      - 'tests/integrity/registry-live-trace.test.ts'
+      - 'tools/live-registry-fixture.ts'
+      - 'contracts/src/NoemaRegistry.sol'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  registry-integration:
+    runs-on: ubuntu-24.04
+    env:
+      NOEMA_XLAYER_RPC_URL: http://127.0.0.1:8545
+      NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+      NOEMA_QA_OUT: artifacts/qa
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+      - run: pnpm install --frozen-lockfile
+
+      - name: Start local chain with X Layer chain ID
+        shell: bash
+        run: |
+          anvil --chain-id 1952 --host 127.0.0.1 --port 8545 > /tmp/anvil.log 2>&1 &
+          for i in $(seq 1 20); do
+            if cast chain-id --rpc-url "$NOEMA_XLAYER_RPC_URL" >/dev/null 2>&1; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/anvil.log
+          exit 2
+
+      - name: Generate canonical Noema commitment
+        shell: bash
+        run: |
+          node tools/live-registry-fixture.ts > /tmp/noema-live-fixture.json
+          jq . /tmp/noema-live-fixture.json
+          echo "NOEMA_XLAYER_TRACE_OBJECT_ID=$(jq -r .objectId /tmp/noema-live-fixture.json)" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_TRACE_OBJECT_ROOT=$(jq -r .objectRoot /tmp/noema-live-fixture.json)" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_TRACE_EVIDENCE_ROOT=$(jq -r .evidenceRoot /tmp/noema-live-fixture.json)" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_TRACE_VERSION=$(jq -r .version /tmp/noema-live-fixture.json)" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_TRACE_KIND=REGISTER" >> "$GITHUB_ENV"
+
+      - name: Deploy NoemaRegistry
+        shell: bash
+        run: |
+          cd contracts
+          forge install foundry-rs/forge-std
+          DEPLOY_JSON=$(forge create src/NoemaRegistry.sol:NoemaRegistry --rpc-url "$NOEMA_XLAYER_RPC_URL" --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" --broadcast --json)
+          echo "$DEPLOY_JSON" > /tmp/noema-deploy.json
+          REGISTRY=$(echo "$DEPLOY_JSON" | jq -r '.deployedTo // .deployed_to // empty')
+          test -n "$REGISTRY"
+          echo "NOEMA_XLAYER_REGISTRY_ADDRESS=$REGISTRY" >> "$GITHUB_ENV"
+
+      - name: Register canonical roots
+        shell: bash
+        run: |
+          REGISTER_JSON=$(cast send "$NOEMA_XLAYER_REGISTRY_ADDRESS" "registerObject(bytes32,bytes32,bytes32)" "$NOEMA_XLAYER_TRACE_OBJECT_ID" "$NOEMA_XLAYER_TRACE_OBJECT_ROOT" "$NOEMA_XLAYER_TRACE_EVIDENCE_ROOT" --rpc-url "$NOEMA_XLAYER_RPC_URL" --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" --json)
+          echo "$REGISTER_JSON" > /tmp/noema-register.json
+          TX_HASH=$(echo "$REGISTER_JSON" | jq -r '.transactionHash // .transaction_hash // empty')
+          test -n "$TX_HASH"
+          echo "NOEMA_XLAYER_TRACE_TX_HASH=$TX_HASH" >> "$GITHUB_ENV"
+
+      - name: Run the same registry trace verifier used for live X Layer
+        run: pnpm exec vitest run tests/integrity/registry-live-trace.test.ts
+
+      - name: Upload integration proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: noema-registry-integration-${{ github.sha }}
+          path: artifacts/qa/registry-live-trace/*
+          if-no-files-found: error
+          retention-days: 30
