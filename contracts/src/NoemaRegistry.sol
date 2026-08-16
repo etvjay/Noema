@@ -24,6 +24,7 @@ contract NoemaRegistry {
     mapping(address => bool) public publishers;
     mapping(address => bool) public attestors;
     mapping(bytes32 => ObjectCommitment) public objects;
+    mapping(bytes32 => mapping(uint64 => ObjectCommitment)) public commitmentHistory;
     mapping(bytes32 => mapping(bytes32 => bytes32)) public claimAttestations;
     mapping(bytes32 => mapping(bytes32 => mapping(bytes32 => bool))) public revokedAttestations;
     mapping(bytes32 => mapping(bytes32 => bytes32)) public representations;
@@ -92,13 +93,16 @@ contract NoemaRegistry {
             revert ObjectAlreadyRegistered();
         }
 
-        objects[objectId] = ObjectCommitment({
+        ObjectCommitment memory commitment = ObjectCommitment({
             objectRoot: objectRoot,
             evidenceRoot: evidenceRoot,
             version: 1,
             updatedAt: uint64(block.timestamp),
             active: true
         });
+
+        objects[objectId] = commitment;
+        commitmentHistory[objectId][1] = commitment;
 
         emit ObjectRegistered(objectId, 1, objectRoot, evidenceRoot);
     }
@@ -116,13 +120,19 @@ contract NoemaRegistry {
         if (current.version != expectedVersion) revert InvalidExpectedVersion();
 
         uint64 previousVersion = current.version;
-        current.objectRoot = newObjectRoot;
-        current.evidenceRoot = newEvidenceRoot;
-        current.version = previousVersion + 1;
-        current.updatedAt = uint64(block.timestamp);
-        current.active = true;
+        uint64 newVersion = previousVersion + 1;
+        ObjectCommitment memory next = ObjectCommitment({
+            objectRoot: newObjectRoot,
+            evidenceRoot: newEvidenceRoot,
+            version: newVersion,
+            updatedAt: uint64(block.timestamp),
+            active: true
+        });
 
-        emit ObjectUpdated(objectId, previousVersion, current.version, newObjectRoot, newEvidenceRoot);
+        objects[objectId] = next;
+        commitmentHistory[objectId][newVersion] = next;
+
+        emit ObjectUpdated(objectId, previousVersion, newVersion, newObjectRoot, newEvidenceRoot);
     }
 
     function attestClaim(bytes32 objectId, bytes32 claimId, bytes32 attestationHash)
