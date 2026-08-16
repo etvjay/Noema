@@ -35,12 +35,13 @@ Usage index: `packages/schemas/usage/README.md`
 |---|---|---|---|---|
 | Canonical runtime schemas | `@noema/schemas` | backend boundaries, adapters, persistence/transport validation | strict runtime validation of canonical Noema domain records | `packages/schemas/usage/core/README.md` |
 | Noema AI proposal contract | `@noema/schemas/ai` | Noema AI runtime, deterministic proposal promotion, provenance tooling, inspectability surfaces | strict proposal-only schemas, evidence locators, deterministic proposal hashing, AI run provenance | `packages/schemas/usage/ai/README.md` |
+| Noema AI typed tool contract | `@noema/schemas/ai-tools` | Noema AI runtime, tool adapters, transcript/audit surfaces | strict allowlisted read/proposal-only tool vocabulary, bounded results and transcript validation | `packages/schemas/usage/ai-tools/README.md` |
 
 ## Frontend rule
 
 The frontend SHOULD prefer `@noema/noema-core/ui` for presentation and `@noema/noema-core/surfaces` for machine-readable canonical snapshots.
 
-The frontend MAY use `@noema/schemas/ai` to validate a documented stored/transported AI proposal or run receipt for inspectability, but schema validity never grants that proposal canonical authority.
+The frontend MAY use `@noema/schemas/ai` and `@noema/schemas/ai-tools` to validate documented stored/transported AI proposals, run receipts, or tool transcripts for inspectability, but schema validity never grants canonical or execution authority.
 
 The frontend MUST NOT independently decide or recompute:
 
@@ -50,7 +51,8 @@ The frontend MUST NOT independently decide or recompute:
 - mandate outcomes;
 - canonical version creation;
 - registry authority;
-- AI proposal promotion.
+- AI proposal promotion;
+- AI tool execution policy.
 
 If the frontend needs a field that is missing from the documented UI/surface contract, extend the canonical projection and update the relevant usage document rather than deriving a parallel semantic rule in UI code.
 
