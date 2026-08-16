@@ -23,6 +23,7 @@ Usage index: `packages/noema-core/usage/README.md`
 | Versioning | `@noema/noema-core/versioning` | canonical persistence/watch services | append-only material EconomicObject version history | `packages/noema-core/usage/versioning/README.md` |
 | Watch | `@noema/noema-core/watch`
 | Notification router | `@noema/noema-core/notification` | notification orchestration, webhook/Telegram/MCP delivery, terminal notification proof | idempotent fan-out of canonical SemanticEvents with bounded backoff, delivery receipts, secret-free routing | `packages/noema-core/usage/notification/README.md` |
+| REST resource contract | `@noema/noema-core/rest` | HTTP runtimes (#40), SDK, MCP, frontend loaders | versioned canonical HTTP resource model: latest selection proof, immutable exact refs, deterministic cursors, typed errors, explicit auth, cache-safe semantics | `packages/noema-core/usage/rest/README.md` |
 | Signed webhook delivery | `@noema/noema-core/webhook` | backend delivery adapters, institutional receivers, integration tests | canonical signed event envelopes, replay-bound verification, destination-scoped secret rotation | `packages/noema-core/usage/webhook/README.md` |
  | watch workers, notification orchestration | idempotent material-change re-evaluation and semantic events | `packages/noema-core/usage/watch/README.md` |
 | Machine surfaces | `@noema/noema-core/surfaces` | REST, SDK, MCP, frontend data loaders | canonical read projection shared across machine interfaces | `packages/noema-core/usage/surfaces/README.md` |

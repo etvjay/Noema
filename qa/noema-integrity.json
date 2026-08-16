@@ -266,6 +266,22 @@
         "run",
         "tests/integrity/webhook-delivery.test.ts"
       ]
+    },
+    {
+      "id": "rest-contract",
+      "phase": "serve",
+      "description": "Versioned REST resource contract: canonical latest resolution with selection proof, immutable exact-version refs, deterministic cursors, typed errors, explicit auth, and cache semantics that never mislabel stale objects as latest.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/rest-contract.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/rest-contract.test.ts"
+      ]
     }
   ],
   "liveGates": [
