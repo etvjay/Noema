@@ -1,6 +1,8 @@
 # `@noema/noema-core/ui`
 
-Presentation-only projection for frontend consumers.
+## Purpose
+
+Provides the presentation-only projection for frontend consumers. It converts an already-canonical Noema snapshot into a view model without recomputing economic, verification, mandate, versioning, or registry semantics.
 
 ## Import
 
