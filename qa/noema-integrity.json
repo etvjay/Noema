@@ -282,6 +282,22 @@
         "run",
         "tests/integrity/rest-contract.test.ts"
       ]
+    },
+    {
+      "id": "typed-sdk",
+      "phase": "serve",
+      "description": "Typed SDK is a thin wrapper over canonical contracts: latest matches REST semantics, mandate evaluation matches the canonical engine, snapshots agree with machine surfaces, watch creation never embeds destination secrets, and errors preserve canonical reason codes.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/typed-sdk.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/typed-sdk.test.ts"
+      ]
     }
   ],
   "liveGates": [

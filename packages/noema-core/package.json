@@ -15,6 +15,7 @@
     "./commitment": "./src/commitment.ts",
     "./notification": "./src/notification.ts",
     "./rest": "./src/rest.ts",
+    "./sdk": "./src/sdk.ts",
     "./webhook": "./src/webhook.ts"
   },
   "dependencies": {
