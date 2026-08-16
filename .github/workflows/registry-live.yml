@@ -131,3 +131,5 @@ jobs:
           path: artifacts/qa/registry-live-trace/*
           if-no-files-found: warn
           retention-days: 30
+
+# Triggered after funding the dedicated X Layer testnet signer.
