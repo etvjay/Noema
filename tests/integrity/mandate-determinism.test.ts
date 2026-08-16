@@ -32,11 +32,17 @@ function makeMandate(overrides: Partial<Mandate> = {}): Mandate {
   };
 }
 
-function evaluate(object: EconomicObject, mandate = makeMandate()) {
-  const verification = verifyEconomicObject(object, {
+function verificationContext(mandate: Mandate) {
+  return {
     nowMs: NOW,
-    maxEvidenceAgeMs: mandate.maxEvidenceAgeMs
-  });
+    ...(mandate.maxEvidenceAgeMs === undefined
+      ? {}
+      : { maxEvidenceAgeMs: mandate.maxEvidenceAgeMs })
+  };
+}
+
+function evaluate(object: EconomicObject, mandate = makeMandate()) {
+  const verification = verifyEconomicObject(object, verificationContext(mandate));
   return {
     verification,
     decision: evaluateMandate(object, verification, mandate, { nowMs: NOW })
@@ -47,10 +53,7 @@ describe("Noema deterministic mandate evaluation", () => {
   it("replays verified eligible inputs to the same ALLOW DecisionReceipt", () => {
     const object = makeEconomicObject();
     const mandate = makeMandate();
-    const verification = verifyEconomicObject(object, {
-      nowMs: NOW,
-      maxEvidenceAgeMs: mandate.maxEvidenceAgeMs
-    });
+    const verification = verifyEconomicObject(object, verificationContext(mandate));
 
     const first = evaluateMandate(object, verification, mandate, { nowMs: NOW });
     const second = evaluateMandate(object, verification, mandate, { nowMs: NOW });
