@@ -25,6 +25,7 @@ Read at minimum:
 - `PRODUCT_TRUTH.md`
 - the issue(s) being implemented
 - `skills/noema-qa/SKILL.md`
+- `skills/evm-live-proof/SKILL.md` whenever claiming or changing live EVM deployment, transaction, event, state, history, source-verification, finality, or attribution behavior
 - `qa/noema-integrity.json`
 - `RESEARCH_LEDGER.md` when any external API/model/network/tool behavior is involved
 - `experiments/README.md` when making a performance, correctness, robustness, integration, or model-quality claim
