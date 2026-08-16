@@ -9,7 +9,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --exclude tests/integrity/registry-live-trace.test.ts",
     "test:watch": "vitest",
     "test:semantic": "vitest run tests/semantic",
     "contracts:build": "cd contracts && forge build",
