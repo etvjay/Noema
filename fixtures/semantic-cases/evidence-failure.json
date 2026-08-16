@@ -2,6 +2,9 @@
   "caseId": "semantic-case-c-evidence-failure",
   "fixtureStatus": "DEMO_FIXTURE",
   "description": "An otherwise eligible object has a stale valuation observation.",
+  "semanticInput": {
+    "evidenceFreshness": ["STALE"]
+  },
   "claim": {
     "id": "claim:c:nav",
     "property": "nav",
