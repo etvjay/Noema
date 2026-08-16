@@ -8,7 +8,8 @@
     "./evidence": "./src/evidence.ts",
     "./semantic": "./src/semantic.ts",
     "./mandate": "./src/mandate.ts",
-    "./versioning": "./src/versioning.ts"
+    "./versioning": "./src/versioning.ts",
+    "./watch": "./src/watch.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*"
