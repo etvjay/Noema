@@ -35,7 +35,9 @@ Usage index: `packages/schemas/usage/README.md`
 |---|---|---|---|---|
 | Canonical runtime schemas | `@noema/schemas` | backend boundaries, adapters, persistence/transport validation | strict runtime validation of canonical Noema domain records | `packages/schemas/usage/core/README.md` |
 | Noema AI proposal contract | `@noema/schemas/ai` | Noema AI runtime, deterministic proposal promotion, provenance tooling, inspectability surfaces | strict proposal-only schemas, evidence locators, deterministic proposal hashing, AI run provenance | `packages/schemas/usage/ai/README.md` |
-| Noema AI typed tool contract | `@noema/schemas/ai-tools` | Noema AI runtime, tool adapters, transcript/audit surfaces | strict allowlisted read/proposal-only tool vocabulary, bounded results and transcript validation | `packages/schemas/usage/ai-tools/README.md` |
+| Noema AI typed tool contract | `@noema/schemas/ai-tools`
+| Canonical event & subscription contract | `@noema/schemas/events` | notification router, webhook, Telegram, MCP, cross-surface conformance | strict versioned SemanticEvent/Subscription/delivery-correlation schemas with deterministic event identity and fail-closed migration | `packages/schemas/usage/events/README.md` |
+ | Noema AI runtime, tool adapters, transcript/audit surfaces | strict allowlisted read/proposal-only tool vocabulary, bounded results and transcript validation | `packages/schemas/usage/ai-tools/README.md` |
 
 ## Frontend rule
 

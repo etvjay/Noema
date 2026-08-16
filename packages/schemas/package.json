@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./ai": "./src/ai.ts",
-    "./ai-tools": "./src/ai-tools.ts"
+    "./ai-tools": "./src/ai-tools.ts",
+    "./events": "./src/events.ts"
   },
   "dependencies": {
     "zod": "^4.0.5"
