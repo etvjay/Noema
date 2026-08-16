@@ -1,0 +1,12 @@
+{
+  "name": "Noema",
+  "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
+  "onCreateCommand": "bash /workspaces/Noema/tools/start-agy-daemon.sh",
+  "postStartCommand": "bash /workspaces/Noema/tools/start-agy-daemon.sh",
+  "postAttachCommand": "bash /workspaces/Noema/tools/start-agy-daemon.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
+    }
+  }
+}
