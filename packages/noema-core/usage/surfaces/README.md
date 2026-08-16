@@ -4,50 +4,80 @@
 
 **Source:** `packages/noema-core/src/surfaces.ts`
 
+**Schema version:** `MACHINE_SURFACE_VERSION = "noema-machine-v1"`
+
 ## Purpose
 
-Provides canonical read projections for REST, SDK, MCP and frontend data-loading boundaries. It exists so every machine interface exposes the same EconomicObject, VerificationReceipt and DecisionReceipt semantics.
+Provides canonical read projections for REST, SDK, MCP and frontend data-loading boundaries so every machine interface preserves the same EconomicObject, VerificationReceipt and DecisionReceipt semantics.
 
-## Consumer contract
+## Public API
 
-Use this module to project already-canonical state for transport. Consumers may serialize, paginate or present the projection, but must not reinterpret it.
+- `MACHINE_SURFACE_VERSION`
+- `CanonicalNoemaSnapshot`
+- `RestNoemaSnapshot`
+- `McpNoemaResource`
+- `MachineSourceFailure`
+- `ExternalProviderObservationEnvelope`
+- `toRestSnapshot(snapshot)`
+- `fromSdkSnapshot(snapshot)`
+- `toMcpResource(snapshot)`
+- `machineSourceFailure(sourceId, code, message)`
+- `externalProviderObservationEnvelope(input)`
 
-Typical input is a canonical snapshot containing:
-
-- `EconomicObject`
-- `VerificationReceipt`
-- `DecisionReceipt`
-
-Typical output is the corresponding canonical machine-readable projection.
-
-## Example
+## Core input
 
 ```ts
-import { toMachineSurface } from "@noema/noema-core/surfaces";
-
-const payload = toMachineSurface({ object, verification, decision });
-return Response.json(payload);
+interface CanonicalNoemaSnapshot {
+  object: EconomicObject;
+  verification: VerificationReceipt;
+  decision: DecisionReceipt;
+  lineage?: EconomicObjectLineageReport;
+}
 ```
 
-Use the actual exported function/type names from the module when integrating; if exports change, update this document in the same change.
+## Examples
+
+```ts
+import {
+  toRestSnapshot,
+  fromSdkSnapshot,
+  toMcpResource
+} from "@noema/noema-core/surfaces";
+
+const canonical = { object, verification, decision, lineage };
+const rest = toRestSnapshot(canonical);
+const sdk = fromSdkSnapshot(canonical);
+const mcp = toMcpResource(canonical);
+```
+
+`toMcpResource` produces a resource URI shaped as `noema://objects/<id>/versions/<version>`.
+
+Explicit source failures and external observations can be represented with:
+
+```ts
+import {
+  machineSourceFailure,
+  externalProviderObservationEnvelope
+} from "@noema/noema-core/surfaces";
+```
 
 ## Frontend guidance
 
-Frontend data loaders may consume this projection directly when they need full canonical machine state. Presentation components should normally convert canonical state through `@noema/noema-core/ui`.
+Frontend data loaders may consume `CanonicalNoemaSnapshot` or the REST/SDK projections when they need full canonical machine state. Presentation components should normally use `@noema/noema-core/ui` to create the view model.
+
+## Invariants
+
+The module clones canonical snapshots rather than interpreting them. Transport boundaries preserve canonical object, verification and decision semantics.
 
 ## Do not
 
-Do not recompute or override:
+Do not recompute or override object status, economic equivalence, verification results/roots, mandate decisions/reason codes, canonical version authority or AI proposal promotion.
 
-- object status;
-- relationship predicates/equivalence;
-- verification result or roots;
-- mandate decision/reason codes;
-- version authority.
+`externalProviderObservationEnvelope` is observation-only; it does not confer verification authority.
 
 ## Dependencies
 
-Depends on canonical economic-kernel receipt/object types. It must remain presentation/transport logic only.
+Economic-kernel canonical object/receipt types plus the core lineage report type. No network/runtime dependency is required by this projection module.
 
 ## Integrity proof
 
@@ -56,4 +86,4 @@ Test: `tests/integrity/machine-surface-parity.test.ts`.
 
 ## Compatibility
 
-If the transport shape changes, update REST/SDK/MCP/frontend consumers and this usage contract together. A transport projection must never silently diverge by interface.
+If the transport shape or `MACHINE_SURFACE_VERSION` changes, update REST/SDK/MCP/frontend consumers and this usage contract together.
