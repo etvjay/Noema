@@ -356,6 +356,7 @@ export interface VerificationReceipt {
   objectId: Ref;
   objectVersion: number;
   verifierVersion: string;
+  hashingVersion: string;
   evidenceRoot: Hex;
   objectRoot: Hex;
   checks: VerificationCheck[];
