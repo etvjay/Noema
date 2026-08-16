@@ -28,8 +28,49 @@ Read at minimum:
 - `qa/noema-integrity.json`
 - `RESEARCH_LEDGER.md` when any external API/model/network/tool behavior is involved
 - `experiments/README.md` when making a performance, correctness, robustness, integration, or model-quality claim
+- `docs/modules/README.md` and the relevant module usage folder before consuming or changing a reusable module
 
 For Noema AI issues #23–#31, also preserve the proposal-only boundary described in those issues.
+
+## Reusable module documentation contract
+
+Any module exposed for reuse by another package, agent, service, SDK, API, MCP surface, or frontend MUST ship with maintained usage documentation in the same change that exposes or materially changes it.
+
+Canonical locations:
+
+```text
+docs/modules/README.md                         # repository-wide module catalog
+packages/<package>/usage/<module>/README.md   # package-adjacent usage contract
+```
+
+For `@noema/noema-core`, every public package export in `packages/noema-core/package.json` MUST have a corresponding usage folder under `packages/noema-core/usage/`.
+
+Each module usage document MUST state, at minimum:
+
+1. package/import path;
+2. source implementation path;
+3. purpose and ownership boundary;
+4. exported public functions/types intended for consumers;
+5. input/output contract;
+6. minimal working example;
+7. frontend-safe usage guidance when applicable;
+8. canonical invariants the module preserves;
+9. operations the consumer MUST NOT recompute or override;
+10. dependency/runtime requirements;
+11. relevant integrity tests/QA gates;
+12. compatibility/version notes and known limitations.
+
+Rules for every model and team member:
+
+- Do not expose a new reusable module without creating its usage folder and catalog entry.
+- Do not rename/remove/change a public module contract without updating its usage documentation in the same commit/PR.
+- Do not make frontend engineers infer capabilities from implementation files or Git history.
+- Do not duplicate canonical logic in the frontend because a module is undocumented; document or expose the missing boundary instead.
+- Treat the module catalog as navigation, not Product Truth: implementation/tests remain executable evidence and higher authorities still win on semantics.
+- A module that exists in source but is not exported must be labeled internal and MUST NOT be presented as frontend-consumable.
+- A documented module that is not actually exported is a documentation defect and must be fixed before claiming availability.
+
+PR handoffs that add or modify reusable surfaces MUST include the usage-doc path(s) changed.
 
 ## Product Foundry portable contract
 
@@ -224,6 +265,7 @@ Every material PR must state:
 - Product Truth invariants touched;
 - external facts relied upon and their evidence status;
 - fixtures/tests added;
+- reusable module usage docs added/changed, when applicable;
 - `pnpm typecheck` result;
 - `pnpm test` result;
 - `pnpm qa` receipt path and gate summary;
