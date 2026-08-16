@@ -9,6 +9,7 @@ import type {
   VerificationReceipt
 } from "@noema/economic-kernel";
 import {
+  HASHING_VERSION,
   computeRoots,
   hashUtf8
 } from "@noema/canonicalization";
@@ -209,6 +210,7 @@ export function verifyEconomicObject(
     objectId: object.id,
     objectVersion: object.version,
     verifierVersion: "noema-verifier-v1",
+    hashingVersion: HASHING_VERSION,
     evidenceRoot: roots.evidenceRoot,
     objectRoot: roots.objectRoot,
     checks,
