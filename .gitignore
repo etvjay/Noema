@@ -20,4 +20,4 @@ artifacts/qa/
 .tools/
 
 *.log
-.DS_Store
+.DS_Storetools/agy-daemon.out
