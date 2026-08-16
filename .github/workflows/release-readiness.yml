@@ -1,0 +1,54 @@
+name: Phase 2 Release Readiness
+
+on:
+  push:
+    branches:
+      - agent/noema-phase2-live-rwa
+  pull_request:
+    paths:
+      - 'RELEASE_READINESS.md'
+      - 'qa/release-readiness.json'
+      - 'tools/release-readiness.mjs'
+      - 'package.json'
+      - '.github/workflows/release-readiness.yml'
+      - 'tests/**'
+      - 'packages/**'
+      - 'adapters/**'
+      - 'contracts/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-readiness:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install workspace
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate release truth matrix
+        run: pnpm qa:release
+
+      - name: Preserve release matrix
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: noema-phase2-release-readiness-${{ github.sha }}
+          path: |
+            RELEASE_READINESS.md
+            qa/release-readiness.json
+          if-no-files-found: error
+          retention-days: 30
