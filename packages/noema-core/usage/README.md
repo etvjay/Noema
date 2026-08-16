@@ -15,6 +15,7 @@ Before consuming a module, read its usage contract here. Source files alone are 
 - `@noema/noema-core/surfaces` → `usage/surfaces/README.md`
 - `@noema/noema-core/ui` → `usage/ui/README.md`
 - `@noema/noema-core/commitment` → `usage/commitment/README.md`
+- `@noema/noema-core/notification` → `usage/notification/README.md`
 
 ## Frontend consumption order
 

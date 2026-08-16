@@ -52,6 +52,9 @@ importers:
       '@noema/economic-kernel':
         specifier: workspace:*
         version: link:../economic-kernel
+      '@noema/schemas':
+        specifier: workspace:*
+        version: link:../schemas
 
   packages/schemas:
     dependencies:

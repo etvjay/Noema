@@ -21,7 +21,9 @@ Usage index: `packages/noema-core/usage/README.md`
 | Semantic resolution | `@noema/noema-core/semantic` | canonical semantic pipeline, backend services | conservative evidence-bounded relationship resolution | `packages/noema-core/usage/semantic/README.md` |
 | Mandate evaluation | `@noema/noema-core/mandate` | treasury/policy services, backend orchestration | deterministic ALLOW/CONDITIONAL/BLOCK DecisionReceipt generation | `packages/noema-core/usage/mandate/README.md` |
 | Versioning | `@noema/noema-core/versioning` | canonical persistence/watch services | append-only material EconomicObject version history | `packages/noema-core/usage/versioning/README.md` |
-| Watch | `@noema/noema-core/watch` | watch workers, notification orchestration | idempotent material-change re-evaluation and semantic events | `packages/noema-core/usage/watch/README.md` |
+| Watch | `@noema/noema-core/watch`
+| Notification router | `@noema/noema-core/notification` | notification orchestration, webhook/Telegram/MCP delivery, terminal notification proof | idempotent fan-out of canonical SemanticEvents with bounded backoff, delivery receipts, secret-free routing | `packages/noema-core/usage/notification/README.md` |
+ | watch workers, notification orchestration | idempotent material-change re-evaluation and semantic events | `packages/noema-core/usage/watch/README.md` |
 | Machine surfaces | `@noema/noema-core/surfaces` | REST, SDK, MCP, frontend data loaders | canonical read projection shared across machine interfaces | `packages/noema-core/usage/surfaces/README.md` |
 | UI view model | `@noema/noema-core/ui` | frontend/UI only | presentation-safe canonical Noema view model | `packages/noema-core/usage/ui/README.md` |
 | Registry commitment model | `@noema/noema-core/commitment` | backend registry service, E2E integrity tests | deterministic offchain mirror of NoemaRegistry commitment/version semantics | `packages/noema-core/usage/commitment/README.md` |

@@ -12,9 +12,11 @@
     "./watch": "./src/watch.ts",
     "./surfaces": "./src/surfaces.ts",
     "./ui": "./src/ui.ts",
-    "./commitment": "./src/commitment.ts"
+    "./commitment": "./src/commitment.ts",
+    "./notification": "./src/notification.ts"
   },
   "dependencies": {
-    "@noema/economic-kernel": "workspace:*"
+    "@noema/economic-kernel": "workspace:*",
+    "@noema/schemas": "workspace:*"
   }
 }
