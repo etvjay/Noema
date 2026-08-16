@@ -27,6 +27,8 @@ const REPO_STATE = "repository:state:123";
 function version(v: number, overrides: Partial<EconomicObject> = {}): EconomicObject {
   return {
     id: "object:rest",
+    schemaId: "noema:economic-object",
+    schemaVersion: 1,
     version: v,
     classification: { primary: "TOKENIZED_TREASURY", secondary: [], confidence: 1, claimRef: "claim:rest" },
     identifiers: [],

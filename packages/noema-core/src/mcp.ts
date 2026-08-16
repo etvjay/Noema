@@ -440,22 +440,22 @@ const noemaMcpResources: readonly McpResourceDefinition[] = [
   {
     uriTemplate: "noema://objects/{objectId}/latest",
     mimeType: "application/vnd.noema.snapshot+json",
-    schemaVersion: MCP_CONTRACT_VERSION
+  schemaVersion: MCP_CONTRACT_VERSION
   },
   {
     uriTemplate: "noema://objects/{objectId}/versions/{version}",
     mimeType: "application/vnd.noema.snapshot+json",
-    schemaVersion: MCP_CONTRACT_VERSION
+  schemaVersion: MCP_CONTRACT_VERSION
   },
   {
     uriTemplate: "noema://objects/{objectId}/verification/{version}",
     mimeType: "application/vnd.noema.snapshot+json",
-    schemaVersion: MCP_CONTRACT_VERSION
+  schemaVersion: MCP_CONTRACT_VERSION
   },
   {
     uriTemplate: "noema://events/{eventId}",
     mimeType: "application/vnd.noema.snapshot+json",
-    schemaVersion: MCP_CONTRACT_VERSION
+  schemaVersion: MCP_CONTRACT_VERSION
   }
 ];
 
@@ -709,6 +709,8 @@ export function createNoemaMcpServer(options: NoemaMcpServerOptions): NoemaMcpSe
 
 const EMPTY_DECISION: DecisionReceipt = {
   id: "no-decision",
+  schemaId: "noema:decision-receipt",
+  schemaVersion: 1,
   objectId: "",
   objectVersion: 0,
   mandateId: "no-mandate",

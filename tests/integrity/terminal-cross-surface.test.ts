@@ -92,7 +92,7 @@ describe("Noema terminal cross-surface gate (#54)", () => {
     });
 
     const subscription: WatchSubscription = watchSubscriptionSchema.parse({
-      schemaVersion: "noema-watch-subscription-v1",
+    schemaVersion: "noema-watch-subscription-v1",
       subscriptionId: "subscription:terminal:1",
       watchId: "watch:terminal:1",
       objectId: v1.id,
@@ -137,7 +137,7 @@ describe("Noema terminal cross-surface gate (#54)", () => {
     });
 
     const semanticEvent: SemanticEvent = semanticEventSchema.parse({
-      schemaVersion: "noema-semantic-event-v1",
+    schemaVersion: "noema-semantic-event-v1",
       eventId: "event:terminal:material-change",
       eventType: "MATERIAL_CHANGE",
       correlationId: "correlation:terminal:change-1",
@@ -339,6 +339,8 @@ describe("Noema terminal cross-surface gate (#54)", () => {
       contentType: "text/plain",
       makeSnapshot: (input) => ({
         id: `snapshot:${input.sourceId}`,
+        schemaId: "noema:source-snapshot",
+        schemaVersion: 1,
         sourceId: input.sourceId,
         uri: input.uri,
         contentType: input.contentType,
@@ -408,7 +410,7 @@ describe("Noema terminal cross-surface gate (#54)", () => {
     };
 
     const conformanceReceipt = {
-      schemaVersion: "noema-terminal-conformance-v1",
+    schemaVersion: "noema-terminal-conformance-v1",
       gate: "terminal-cross-surface",
       release: { commit, branch: RELEASE_BRANCH },
       correlation: {

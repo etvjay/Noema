@@ -15,6 +15,8 @@ const RUN_ID = "run:mcp:integrity";
 function baseObject(version: number): EconomicObject {
   return {
     id: "object:mcp:integrity",
+    schemaId: "noema:economic-object",
+    schemaVersion: 1,
     version,
     classification: { primary: "TOKENIZED_TREASURY", secondary: [], confidence: 1, claimRef: "claim:mcp:1" },
     identifiers: [],
@@ -29,6 +31,8 @@ function baseObject(version: number): EconomicObject {
     evidence: [
       {
         id: `evidence:mcp:integrity:${version}`,
+        schemaId: "noema:evidence",
+        schemaVersion: 1,
         type: "API_RESPONSE",
         source: "source:mcp:integrity",
         contentHash: `0x${String(version).repeat(64)}`,
@@ -205,7 +209,7 @@ describe("MCP surface parity with REST/SDK (#51)", () => {
   it("prompt injection in returned evidence cannot expand the MCP capability boundary", async () => {
     const toolNames = mcp.listTools().map((tool) => tool.name);
     const hostileSubscription = {
-      schemaVersion: "noema-watch-subscription-v1",
+    schemaVersion: "noema-watch-subscription-v1",
       subscriptionId: "subscription:mcp:integrity:1",
       watchId: "watch:mcp:integrity:1",
       objectId: "object:mcp:integrity",

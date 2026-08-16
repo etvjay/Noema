@@ -23,6 +23,8 @@ const RUN_ID = "run:mcp:test";
 function baseObject(version: number, overrides: Partial<EconomicObject> = {}): EconomicObject {
   return {
     id: "object:mcp",
+    schemaId: "noema:economic-object",
+    schemaVersion: 1,
     version,
     classification: { primary: "TOKENIZED_TREASURY", secondary: [], confidence: 1, claimRef: "claim:mcp:1" },
     identifiers: [],
@@ -37,6 +39,8 @@ function baseObject(version: number, overrides: Partial<EconomicObject> = {}): E
     evidence: [
       {
         id: `evidence:mcp:${version}`,
+        schemaId: "noema:evidence",
+        schemaVersion: 1,
         type: "API_RESPONSE",
         source: "source:mcp",
         contentHash: `0x${String(version).repeat(64)}`,
@@ -87,7 +91,7 @@ const decisionV2: DecisionReceipt = evaluateMandate(objectV2, verificationV2, ma
 
 const events: SemanticEvent[] = [
   semanticEventSchema.parse({
-    schemaVersion: "noema-semantic-event-v1",
+  schemaVersion: "noema-semantic-event-v1",
     eventId: "event:mcp:material-1",
     eventType: "MATERIAL_CHANGE",
     correlationId: "correlation:mcp:1",
@@ -234,7 +238,7 @@ describe("MCP surface", () => {
       name: "create_watch",
       args: {
         subscription: {
-          schemaVersion: "noema-watch-subscription-v1",
+        schemaVersion: "noema-watch-subscription-v1",
           subscriptionId: "subscription:mcp:1",
           watchId: "watch:mcp:1",
           objectId: "object:mcp",
@@ -291,6 +295,8 @@ describe("MCP surface", () => {
       evidence: [
         {
           id: "evidence:mcp:hostile",
+          schemaId: "noema:evidence",
+          schemaVersion: 1,
           type: "API_RESPONSE",
           source: "source:hostile",
           contentHash: `0x${"a".repeat(64)}`,

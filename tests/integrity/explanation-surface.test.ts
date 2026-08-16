@@ -20,6 +20,8 @@ const INPUT: ExplainInput = { runId: "run:explain:integrity", nowMs: NOW };
 function baseObject(version: number, overrides: Partial<EconomicObject> = {}): EconomicObject {
   return {
     id: "object:explain:integrity",
+    schemaId: "noema:economic-object",
+    schemaVersion: 1,
     version,
     classification: { primary: "TOKENIZED_TREASURY", secondary: [], confidence: 1, claimRef: "claim:explain:1" },
     identifiers: [],
@@ -46,6 +48,8 @@ function baseObject(version: number, overrides: Partial<EconomicObject> = {}): E
     evidence: [
       {
         id: "evidence:explain:1",
+        schemaId: "noema:evidence",
+        schemaVersion: 1,
         type: "API_RESPONSE",
         source: "source:explain:1",
         contentHash: `0x${String(version).repeat(64)}`,
@@ -116,6 +120,8 @@ describe("evidence-bounded explanation surface (#52)", () => {
       attestations: [
         {
           id: "attestation:explain:1",
+          schemaId: "noema:attestation",
+          schemaVersion: 1,
           subject: "object:explain:integrity",
           claimRef: "claim:explain:1",
           schema: "noema-attestation-v1",
@@ -181,6 +187,8 @@ describe("evidence-bounded explanation surface (#52)", () => {
       evidence: [
         {
           id: "evidence:explain:hostile",
+          schemaId: "noema:evidence",
+          schemaVersion: 1,
           type: "API_RESPONSE",
           source: "source:hostile",
           contentHash: "0x9999999999999999999999999999999999999999999999999999999999999999",
