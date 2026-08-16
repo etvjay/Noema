@@ -1,0 +1,16 @@
+# @noema/schemas Usage Index
+
+This directory documents public reusable exports from `packages/schemas/package.json`.
+
+Before consuming a schema module, read its adjacent usage contract. Export presence plus usage documentation defines the supported reusable boundary.
+
+## Public entrypoints
+
+- `@noema/schemas` → `usage/core/README.md`
+- `@noema/schemas/ai` → `usage/ai/README.md`
+
+## Consumption rule
+
+Runtime schemas validate data shape; they do not grant evidence authority, semantic truth, verification state, mandate outcome, or execution authority.
+
+Frontend code should normally consume higher-level `@noema/noema-core/ui` or `@noema/noema-core/surfaces` projections. Use raw schemas only when validating a documented transport or stored payload boundary.
