@@ -48,6 +48,7 @@ function materialProjection(object: EconomicObject): unknown {
 }
 
 function canonical(value: unknown): string {
+  if (value === undefined) return "undefined";
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
   if (value !== null && typeof value === "object") {
     const record = value as Record<string, unknown>;
