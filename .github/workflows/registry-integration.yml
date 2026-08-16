@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       NOEMA_XLAYER_RPC_URL: 'http://127.0.0.1:8545'
-      NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+      NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY: ${{ secrets.NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY }}
       NOEMA_QA_OUT: 'artifacts/qa'
     steps:
       - uses: actions/checkout@v4
@@ -45,6 +45,20 @@ jobs:
           done
           cat /tmp/anvil.log
           exit 2
+
+      - name: Fund X Layer signer on local chain
+        shell: bash
+        run: |
+          SIGNER=$(cast wallet address --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY")
+          echo "Signer address: $SIGNER"
+          cast send --unlocked --from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 \
+            "$SIGNER" --value 10ether --rpc-url "$NOEMA_XLAYER_RPC_URL" >/dev/null
+          BALANCE=$(cast balance "$SIGNER" --rpc-url "$NOEMA_XLAYER_RPC_URL")
+          echo "Signer balance (wei): $BALANCE"
+          if [ "$BALANCE" = "0" ]; then
+            echo "::error::Could not fund signer on local Anvil chain."
+            exit 2
+          fi
 
       - name: Generate canonical Noema commitment
         shell: bash
