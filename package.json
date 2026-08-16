@@ -17,6 +17,7 @@
     "qa": "node tools/noema-integrity.mjs",
     "qa:ai": "node tools/noema-ai-integrity.mjs",
     "qa:module-usage": "node tools/module-usage-contract.mjs",
+    "qa:release": "node tools/release-readiness.mjs",
     "qa:probe": "node tools/noema-qa.mjs",
     "experiment": "node tools/noema-experiment.mjs"
   },
