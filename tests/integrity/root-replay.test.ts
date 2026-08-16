@@ -1,72 +1,143 @@
 import { describe, expect, it } from "vitest";
 import {
-  HASHING_VERSION,
   computeRoots,
+  objectRoot,
+  evidenceMerkleRoot,
+  canonicalJson,
+  HASHING_VERSION_V1,
+  HASHING_VERSION_V2,
+  CURRENT_HASHING_VERSION,
+  OBJECT_DOMAIN_V1,
+  OBJECT_DOMAIN_V2,
+  EVIDENCE_LEAF_DOMAIN_V1,
+  EVIDENCE_LEAF_DOMAIN_V2,
+  MERKLE_DOMAIN,
   hashUtf8
 } from "@noema/canonicalization";
 import { reduceEconomicObject } from "@noema/noema-core";
 import { verifyEconomicObject } from "@noema/verification";
 import { makeEconomicObject } from "../helpers.js";
 
-function reducePermuted(reverse: boolean) {
-  const base = makeEconomicObject();
-  const primaryEvidence = base.evidence[0];
-  const primaryClaim = base.claims[0];
-  if (primaryEvidence === undefined || primaryClaim === undefined) {
-    throw new Error("fixture claim/evidence missing");
-  }
+describe("canonical root replay and tamper evidence integrity", () => {
+  it("replays identical canonical inputs to byte-for-byte identical roots across repeated runs", () => {
+    const object1 = makeEconomicObject();
+    const object2 = makeEconomicObject();
 
-  const secondaryEvidence = {
-    ...primaryEvidence,
-    id: "evidence:fixture:secondary",
-    contentHash: hashUtf8("secondary evidence")
-  };
-  const secondaryClaim = {
-    ...primaryClaim,
-    id: "claim:fixture:secondary",
-    property: "secondaryProperty",
-    value: "secondary-value",
-    evidenceRefs: [secondaryEvidence.id]
-  };
-  const secondaryEdge = {
-    id: "edge:fixture:secondary",
-    from: secondaryClaim.id,
-    to: secondaryEvidence.id,
-    relation: "SUPPORTED_BY"
-  };
+    const roots1 = computeRoots(object1);
+    const roots2 = computeRoots(object2);
 
-  const claims = reverse
-    ? [secondaryClaim, primaryClaim]
-    : [primaryClaim, secondaryClaim];
-  const evidence = reverse
-    ? [secondaryEvidence, primaryEvidence]
-    : [primaryEvidence, secondaryEvidence];
-  const provenanceEdges = reverse
-    ? [secondaryEdge, ...base.provenance.edges]
-    : [...base.provenance.edges, secondaryEdge];
+    expect(roots1.objectRoot).toBe(roots2.objectRoot);
+    expect(roots1.evidenceRoot).toBe(roots2.evidenceRoot);
+    expect(roots1.canonicalObject).toBe(roots2.canonicalObject);
+    expect(roots1.evidenceLeaves).toEqual(roots2.evidenceLeaves);
 
-  return reduceEconomicObject({
-    id: base.id,
-    version: base.version,
-    classification: base.classification,
-    identifiers: base.identifiers,
-    representations: base.representations,
-    relationships: base.relationships,
-    parties: base.parties,
-    rights: base.rights,
-    obligations: base.obligations,
-    restrictions: base.restrictions,
-    economics: base.economics,
-    claims,
-    evidence,
-    attestations: base.attestations,
-    exceptions: base.exceptions,
-    provenance: { edges: provenanceEdges },
-    verification: base.verification,
-    createdAt: base.createdAt,
-    updatedAt: base.updatedAt
+    // Repeated runs
+    for (let i = 0; i < 5; i++) {
+      const replay = computeRoots(object1);
+      expect(replay.objectRoot).toBe(roots1.objectRoot);
+      expect(replay.evidenceRoot).toBe(roots1.evidenceRoot);
+    }
   });
-}
+
+  it("normalizes semantically irrelevant key order and array order permutations to identical roots", () => {
+    const base = makeEconomicObject();
+
+    // Permute JSON key order inside metadata/values
+    const permutedObject = makeEconomicObject({
+      economics: {
+        asOf: base.economics.asOf,
+        claimRefs: base.economics.claimRefs,
+        values: {
+          currency: "USD",
+          nav: "100.00"
+        }
+      }
+    });
+
+    const rootBase = objectRoot(base);
+    const rootPermuted = objectRoot(permutedObject);
+    expect(rootPermuted).toBe(rootBase);
+
+    // Shuffled claims and evidence before normalization
+    const claim1 = { ...base.claims[0]!, id: "claim:01" };
+    const claim2 = { ...base.claims[0]!, id: "claim:02" };
+    const evidence1 = { ...base.evidence[0]!, id: "evidence:01" };
+    const evidence2 = { ...base.evidence[0]!, id: "evidence:02" };
+
+    const reduced1 = reduceEconomicObject({
+      ...base,
+      claims: [claim1, claim2],
+      evidence: [evidence1, evidence2]
+    });
+
+    const reduced2 = reduceEconomicObject({
+      ...base,
+      claims: [claim2, claim1],
+      evidence: [evidence2, evidence1]
+    });
+
+    expect(objectRoot(reduced1)).toBe(objectRoot(reduced2));
+    expect(evidenceMerkleRoot(reduced1.evidence)).toBe(evidenceMerkleRoot(reduced2.evidence));
+  });
+
+  it("ensures material evidence changes alter evidenceRoot and objectRoot deterministically", () => {
+    const base = makeEconomicObject();
+    const originalRoots = computeRoots(base);
+
+    // Alter content hash in evidence
+    const mutatedEvidence = [
+      {
+        ...base.evidence[0]!,
+        contentHash: "0x9999999999999999999999999999999999999999999999999999999999999999"
+      }
+    ];
+
+    const mutatedObject = makeEconomicObject({
+      evidence: mutatedEvidence
+    });
+
+    const mutatedRoots = computeRoots(mutatedObject);
+
+    expect(mutatedRoots.evidenceRoot).not.toBe(originalRoots.evidenceRoot);
+    expect(mutatedRoots.objectRoot).not.toBe(originalRoots.objectRoot);
+    expect(mutatedRoots.evidenceLeaves).not.toEqual(originalRoots.evidenceLeaves);
+  });
+
+  it("ensures container timestamps do not contaminate canonical root computation", () => {
+    const base = makeEconomicObject({
+      createdAt: 1_700_000_000_000,
+      updatedAt: 1_700_000_000_100
+    });
+
+    const laterTimestampObject = makeEconomicObject({
+      createdAt: 1_800_000_000_000,
+      updatedAt: 1_800_000_500_000
+    });
+
+    expect(objectRoot(base)).toBe(objectRoot(laterTimestampObject));
+  });
+
+  it("preserves hashing spec version and domain tags across verification receipts", () => {
+    expect(HASHING_VERSION_V1).toBe("noema-hashing-v1");
+    expect(HASHING_VERSION_V2).toBe("noema-hashing-v2");
+    expect(CURRENT_HASHING_VERSION).toBe("noema-hashing-v2");
+    expect(OBJECT_DOMAIN_V1).toBe("noema:economic-object:v1");
+    expect(OBJECT_DOMAIN_V2).toBe("noema:economic-object:v2");
+    expect(EVIDENCE_LEAF_DOMAIN_V1).toBe("noema:evidence-leaf:v1");
+    expect(EVIDENCE_LEAF_DOMAIN_V2).toBe("noema:evidence-leaf:v2");
+    expect(MERKLE_DOMAIN).toBe("noema:evidence-merkle:v1");
+
+    const object = makeEconomicObject();
+    const roots = computeRoots(object);
+    const receipt = verifyEconomicObject(object, { nowMs: 1_700_000_000_000 });
+
+    expect(receipt.evidenceRoot).toBe(roots.evidenceRoot);
+    expect(receipt.objectRoot).toBe(roots.objectRoot);
+    expect(receipt.verifierVersion).toBe("noema-verifier-v1");
+    expect(receipt.hashingVersion).toBe(CURRENT_HASHING_VERSION);
+
+  });
+});
 
 describe("Noema canonical root replay integrity", () => {
   it("replays identical semantic state to identical roots", () => {
@@ -77,22 +148,6 @@ describe("Noema canonical root replay integrity", () => {
     expect(first.objectRoot).toBe(second.objectRoot);
     expect(first.evidenceRoot).toBe(second.evidenceRoot);
     expect(first.canonicalObject).toBe(second.canonicalObject);
-  });
-
-  it("normalizes semantically irrelevant reducer input permutations to identical canonical roots", () => {
-    const left = reducePermuted(false);
-    const right = reducePermuted(true);
-    const leftRoots = computeRoots(left);
-    const rightRoots = computeRoots(right);
-
-    expect(left.claims.map((claim) => claim.id)).toEqual(right.claims.map((claim) => claim.id));
-    expect(left.evidence.map((item) => item.id)).toEqual(right.evidence.map((item) => item.id));
-    expect(left.provenance.edges.map((edge) => edge.id)).toEqual(
-      right.provenance.edges.map((edge) => edge.id)
-    );
-    expect(leftRoots.canonicalObject).toBe(rightRoots.canonicalObject);
-    expect(leftRoots.evidenceRoot).toBe(rightRoots.evidenceRoot);
-    expect(leftRoots.objectRoot).toBe(rightRoots.objectRoot);
   });
 
   it("keeps evidence root independent of evidence input order", () => {
@@ -163,15 +218,11 @@ describe("Noema canonical root replay integrity", () => {
     expect(computeRoots(changed).objectRoot).not.toBe(computeRoots(base).objectRoot);
   });
 
-  it("binds the declared hashing version into canonical commitments and receipts", () => {
-    const object = makeEconomicObject();
-    const roots = computeRoots(object);
-    const receipt = verifyEconomicObject(object, { nowMs: 1_700_000_001_000 });
-
-    expect(HASHING_VERSION).toBe("noema-hashing-v1");
-    expect(roots.canonicalObject).toContain(`\"hashingVersion\":\"${HASHING_VERSION}\"`);
-    expect(receipt.hashingVersion).toBe(HASHING_VERSION);
-    expect(receipt.objectRoot).toBe(roots.objectRoot);
-    expect(receipt.evidenceRoot).toBe(roots.evidenceRoot);
+  it("binds the declared hashing version into canonical commitments", () => {
+    const roots = computeRoots(makeEconomicObject());
+    expect(CURRENT_HASHING_VERSION).toBe("noema-hashing-v2");
+    expect(roots.hashingVersion).toBe(CURRENT_HASHING_VERSION);
+    expect(roots.canonicalObject).toContain(`\"hashingVersion\":\"${CURRENT_HASHING_VERSION}\"`);
   });
 });
+

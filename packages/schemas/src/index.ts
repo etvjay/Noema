@@ -1,4 +1,12 @@
 import { z } from "zod";
+import {
+  SCHEMA_IDS,
+  SCHEMA_VERSIONS,
+  SchemaRegistry,
+  SchemaValidationError,
+  UnsupportedSchemaError,
+  versionedFromZod
+} from "./registry.js";
 
 const jsonValueSchema: z.ZodType<unknown> = z.lazy(() =>
   z.union([
@@ -15,6 +23,8 @@ const jsonObjectSchema = z.record(z.string(), jsonValueSchema);
 const refSchema = z.string().min(1);
 const hexSchema = z.string().regex(/^0x[0-9a-fA-F]+$/);
 const unixMillisSchema = z.number().int().nonnegative();
+const schemaIdSchema = z.string().min(1);
+const schemaVersionSchema = z.number().int().positive();
 
 export const claimStateSchema = z.enum([
   "UNKNOWN",
@@ -168,6 +178,8 @@ export const claimSchema = z
 export const evidenceSchema = z
   .object({
     id: refSchema,
+    schemaId: z.literal(SCHEMA_IDS.EVIDENCE),
+    schemaVersion: z.literal(SCHEMA_VERSIONS.EVIDENCE),
     type: evidenceTypeSchema,
     source: refSchema,
     contentHash: hexSchema,
@@ -183,6 +195,8 @@ export const evidenceSchema = z
 export const attestationSchema = z
   .object({
     id: refSchema,
+    schemaId: z.literal(SCHEMA_IDS.ATTESTATION),
+    schemaVersion: z.literal(SCHEMA_VERSIONS.ATTESTATION),
     subject: refSchema,
     claimRef: refSchema,
     schema: z.string().min(1),
@@ -300,6 +314,8 @@ export const economicObjectProjectionSchema = z
   .object({
     id: refSchema,
     version: z.number().int().positive(),
+    schemaId: schemaIdSchema,
+    schemaVersion: schemaVersionSchema,
     classification: economicClassificationSchema,
     identifiers: z.array(externalIdentifierSchema),
     representations: z.array(representationSchema),
@@ -322,6 +338,8 @@ export const economicObjectProjectionSchema = z
 export const sourceSnapshotSchema = z
   .object({
     id: refSchema,
+    schemaId: schemaIdSchema,
+    schemaVersion: schemaVersionSchema,
     sourceId: refSchema,
     uri: z.string().url(),
     contentType: z.string().min(1),
@@ -374,10 +392,95 @@ export const mandateSchema = z
   })
   .strict();
 
+export const economicObjectSchema = economicObjectProjectionSchema.extend({
+  createdAt: unixMillisSchema,
+  updatedAt: unixMillisSchema
+});
+
+export const policyCheckSchema = z
+  .object({
+    ruleId: refSchema,
+    result: verificationOutcomeSchema,
+    claimRefs: z.array(refSchema),
+    evidenceRefs: z.array(refSchema),
+    reasonCode: z.string().min(1)
+  })
+  .strict();
+
+export const verificationReceiptSchema = z
+  .object({
+    id: refSchema,
+    schemaId: schemaIdSchema,
+    schemaVersion: schemaVersionSchema,
+    objectId: refSchema,
+    objectVersion: z.number().int().positive(),
+    verifierVersion: z.string().min(1),
+    hashingVersion: z.string().min(1),
+    evidenceRoot: hexSchema,
+    objectRoot: hexSchema,
+    checks: z.array(verificationCheckSchema),
+    overallStatus: verificationOutcomeSchema,
+    createdAt: unixMillisSchema
+  })
+  .strict();
+
+export const decisionReceiptSchema = z
+  .object({
+    id: refSchema,
+    schemaId: schemaIdSchema,
+    schemaVersion: schemaVersionSchema,
+    objectId: refSchema,
+    objectVersion: z.number().int().positive(),
+    mandateId: refSchema,
+    mandateVersion: z.number().int().positive(),
+    decision: z.enum(["ALLOW", "BLOCK", "CONDITIONAL"]),
+    reasonCodes: z.array(z.string()),
+    policyChecks: z.array(policyCheckSchema),
+    supportingClaims: z.array(refSchema),
+    evidenceRoot: hexSchema,
+    verificationReceiptRef: refSchema,
+    policyEngineVersion: z.string().min(1),
+    createdAt: unixMillisSchema
+  })
+  .strict();
+
 export const schemas = {
   claim: claimSchema,
   evidence: evidenceSchema,
   economicObjectProjection: economicObjectProjectionSchema,
+  economicObject: economicObjectSchema,
   sourceSnapshot: sourceSnapshotSchema,
+  attestation: attestationSchema,
+  verificationReceipt: verificationReceiptSchema,
+  decisionReceipt: decisionReceiptSchema,
   mandate: mandateSchema
 } as const;
+
+export { SCHEMA_IDS, SCHEMA_VERSIONS } from "./registry.js";
+export type { VersionedSchema } from "./registry.js";
+export {
+  SchemaRegistry,
+  SchemaValidationError,
+  UnsupportedSchemaError,
+  versionedFromZod
+} from "./registry.js";
+
+export const noemaSchemaRegistry = new SchemaRegistry()
+  .register(
+    versionedFromZod(SCHEMA_IDS.ECONOMIC_OBJECT, SCHEMA_VERSIONS.ECONOMIC_OBJECT, economicObjectSchema)
+  )
+  .register(versionedFromZod(SCHEMA_IDS.EVIDENCE, SCHEMA_VERSIONS.EVIDENCE, evidenceSchema))
+  .register(
+    versionedFromZod(SCHEMA_IDS.SOURCE_SNAPSHOT, SCHEMA_VERSIONS.SOURCE_SNAPSHOT, sourceSnapshotSchema)
+  )
+  .register(versionedFromZod(SCHEMA_IDS.ATTESTATION, SCHEMA_VERSIONS.ATTESTATION, attestationSchema))
+  .register(
+    versionedFromZod(
+      SCHEMA_IDS.VERIFICATION_RECEIPT,
+      SCHEMA_VERSIONS.VERIFICATION_RECEIPT,
+      verificationReceiptSchema
+    )
+  )
+  .register(
+    versionedFromZod(SCHEMA_IDS.DECISION_RECEIPT, SCHEMA_VERSIONS.DECISION_RECEIPT, decisionReceiptSchema)
+  );

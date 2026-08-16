@@ -10,6 +10,7 @@ import type {
   VerificationOutcome,
   VerificationReceipt
 } from "@noema/economic-kernel";
+import { SCHEMA_IDS, SCHEMA_VERSIONS } from "@noema/schemas";
 
 export const POLICY_ENGINE_VERSION = "noema-mandate-v1";
 
@@ -223,6 +224,8 @@ export function evaluateMandate(
 
   return {
     id: `decision:${object.id}:v${object.version}:${mandate.id}:v${mandate.version}`,
+    schemaId: SCHEMA_IDS.DECISION_RECEIPT,
+    schemaVersion: SCHEMA_VERSIONS.DECISION_RECEIPT,
     objectId: object.id,
     objectVersion: object.version,
     mandateId: mandate.id,

@@ -6,6 +6,8 @@ import type {
 
 const evidence: Evidence = {
   id: "evidence:fixture:primary",
+  schemaId: "noema:evidence",
+  schemaVersion: 1,
   type: "API_RESPONSE",
   source: "source:fixture:primary",
   contentHash: "0x1111111111111111111111111111111111111111111111111111111111111111",
@@ -36,6 +38,8 @@ export function makeEconomicObject(
   return {
     id: "object:fixture",
     version: 1,
+    schemaId: "noema:economic-object",
+    schemaVersion: 1,
     classification: {
       primary: "TOKENIZED_TREASURY",
       secondary: [],

@@ -10,11 +10,13 @@ import type {
   VerificationReceipt
 } from "@noema/economic-kernel";
 import {
-  HASHING_VERSION,
   computeRoots,
+  CURRENT_HASHING_VERSION,
   hashUtf8,
-  verifyEip712Signature
+  verifyEip712Signature,
+  type HashingVersion
 } from "@noema/canonicalization";
+import { SCHEMA_IDS, SCHEMA_VERSIONS } from "@noema/schemas";
 
 export interface VerificationContext {
   nowMs: UnixMillis;
@@ -38,7 +40,7 @@ export interface AttestationAuthorityPolicy {
 
 const ZERO_BYTES32 = "0x0000000000000000000000000000000000000000000000000000000000000000" as const;
 
-export const NOEMA_ATTESTATION_TYPES = {
+export const NOEMA_ATTESTATION_TYPES_V1 = {
   NoemaAttestation: [
     { name: "attestationId", type: "string" },
     { name: "subject", type: "string" },
@@ -51,16 +53,35 @@ export const NOEMA_ATTESTATION_TYPES = {
   ]
 } as const;
 
+export const NOEMA_ATTESTATION_TYPES_V2 = {
+  NoemaAttestation: [
+    { name: "attestationId", type: "string" },
+    { name: "schemaId", type: "string" },
+    { name: "schemaVersion", type: "uint256" },
+    { name: "subject", type: "string" },
+    { name: "claimRef", type: "string" },
+    { name: "schema", type: "string" },
+    { name: "attestor", type: "address" },
+    { name: "evidenceRoot", type: "bytes32" },
+    { name: "issuedAt", type: "uint256" },
+    { name: "expiresAt", type: "uint256" }
+  ]
+} as const;
+
+export const NOEMA_ATTESTATION_TYPES = NOEMA_ATTESTATION_TYPES_V2;
+
 export function noemaAttestationTypedData(
   attestation: Attestation,
   domain: NoemaAttestationDomain
 ) {
+  const v1 = domain.version === "1";
   return {
     domain,
-    types: NOEMA_ATTESTATION_TYPES,
+    types: v1 ? NOEMA_ATTESTATION_TYPES_V1 : NOEMA_ATTESTATION_TYPES_V2,
     primaryType: "NoemaAttestation" as const,
     message: {
       attestationId: attestation.id,
+      ...(v1 ? {} : { schemaId: attestation.schemaId, schemaVersion: BigInt(attestation.schemaVersion) }),
       subject: attestation.subject,
       claimRef: attestation.claimRef,
       schema: attestation.schema,
@@ -202,17 +223,20 @@ function overallStatus(checks: readonly VerificationCheck[]): VerificationOutcom
 
 export function verifyEconomicObject(
   object: EconomicObject,
-  context: VerificationContext
+  context: VerificationContext,
+  hashingVersion: HashingVersion = CURRENT_HASHING_VERSION
 ): VerificationReceipt {
   const evidenceById = new Map(object.evidence.map((item) => [item.id, item]));
   const checks = object.claims.flatMap((claim) => verifyClaim(claim, evidenceById, context));
-  const roots = computeRoots(object);
+  const roots = computeRoots(object, hashingVersion);
   return {
     id: `verification:${object.id}:v${object.version}`,
+    schemaId: SCHEMA_IDS.VERIFICATION_RECEIPT,
+    schemaVersion: SCHEMA_VERSIONS.VERIFICATION_RECEIPT,
     objectId: object.id,
     objectVersion: object.version,
     verifierVersion: "noema-verifier-v1",
-    hashingVersion: HASHING_VERSION,
+    hashingVersion,
     evidenceRoot: roots.evidenceRoot,
     objectRoot: roots.objectRoot,
     checks,
@@ -224,9 +248,10 @@ export function verifyEconomicObject(
 export async function verifyEconomicObjectWithAttestations(
   object: EconomicObject,
   context: VerificationContext,
-  policy: AttestationAuthorityPolicy
+  policy: AttestationAuthorityPolicy,
+  hashingVersion: HashingVersion = CURRENT_HASHING_VERSION
 ): Promise<VerificationReceipt> {
-  const base = verifyEconomicObject(object, context);
+  const base = verifyEconomicObject(object, context, hashingVersion);
   const attestationChecks = await Promise.all(
     object.attestations.map((attestation) => verifyAttestationAuthority(attestation, policy, context))
   );

@@ -7,6 +7,7 @@ import type {
   SourceSnapshot,
   UnixMillis
 } from "@noema/economic-kernel";
+import { SCHEMA_IDS, SCHEMA_VERSIONS } from "@noema/schemas";
 
 export type SourceIngestionStatus = "INGESTED" | "STALE" | "SOURCE_FAILURE";
 
@@ -93,6 +94,8 @@ export function ingestSourceSnapshot(
 
   const evidence: Evidence = {
     id: input.evidenceId,
+    schemaId: SCHEMA_IDS.EVIDENCE,
+    schemaVersion: SCHEMA_VERSIONS.EVIDENCE,
     type: input.type,
     source: snapshot.id,
     contentHash: snapshot.contentHash,
