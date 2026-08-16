@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./evidence": "./src/evidence.ts"
+    "./evidence": "./src/evidence.ts",
+    "./semantic": "./src/semantic.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*"
