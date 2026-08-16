@@ -39,7 +39,7 @@ const watch: WatchRegistration = {
 function evaluate(object: ReturnType<typeof makeEconomicObject>, nowMs = NOW) {
   const verification = verifyEconomicObject(object, {
     nowMs,
-    maxEvidenceAgeMs: mandate.maxEvidenceAgeMs
+    maxEvidenceAgeMs: mandate.maxEvidenceAgeMs!
   });
   const decision = evaluateMandate(object, verification, mandate, { nowMs });
   return { verification, decision };
