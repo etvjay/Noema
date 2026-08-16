@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/registry-live.yml'
       - 'tests/integrity/registry-live-trace.test.ts'
+      - 'tests/integrity/registry-live-history.test.ts'
       - 'tools/live-registry-fixture.ts'
       - 'contracts/src/NoemaRegistry.sol'
   workflow_dispatch:
@@ -19,6 +20,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       NOEMA_XLAYER_RPC_URL: https://testrpc.xlayer.tech/terigon
+      NOEMA_XLAYER_EXPECTED_CHAIN_ID: '1952'
       NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY: ${{ secrets.NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY }}
       NOEMA_QA_OUT: artifacts/qa
     steps:
@@ -45,6 +47,11 @@ jobs:
         run: |
           if [ -z "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" ]; then
             echo "::error::Missing repository secret NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY. Live registry proof cannot be simulated or skipped."
+            exit 2
+          fi
+          CHAIN_ID=$(cast chain-id --rpc-url "$NOEMA_XLAYER_RPC_URL")
+          if [ "$CHAIN_ID" != "$NOEMA_XLAYER_EXPECTED_CHAIN_ID" ]; then
+            echo "::error::Unexpected X Layer chain ID: $CHAIN_ID"
             exit 2
           fi
           ADDRESS=$(cast wallet address --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY")
@@ -111,25 +118,67 @@ jobs:
           echo "Registration transaction: $TX_HASH"
           echo "NOEMA_XLAYER_TRACE_TX_HASH=$TX_HASH" >> "$GITHUB_ENV"
 
-      - name: Verify tx, event, roots, version, and onchain readback
+      - name: Verify register tx, event, roots, version, and readback
         run: pnpm exec vitest run tests/integrity/registry-live-trace.test.ts
+
+      - name: Append version 2 for immutable-history proof
+        shell: bash
+        run: |
+          V2_OBJECT_ROOT=$(cast keccak "noema-registry-history-v2-object")
+          V2_EVIDENCE_ROOT=$(cast keccak "noema-registry-history-v2-evidence")
+          cat > /tmp/noema-history-v2.json <<JSON
+          {
+            "fixtureKind": "LIVE_REGISTRY_HISTORY_MECHANICS_FIXTURE",
+            "objectId": "$NOEMA_XLAYER_TRACE_OBJECT_ID",
+            "previousVersion": 1,
+            "version": 2,
+            "objectRoot": "$V2_OBJECT_ROOT",
+            "evidenceRoot": "$V2_EVIDENCE_ROOT"
+          }
+          JSON
+          jq . /tmp/noema-history-v2.json
+          UPDATE_JSON=$(cast send "$NOEMA_XLAYER_REGISTRY_ADDRESS" \
+            "updateObject(bytes32,uint64,bytes32,bytes32)" \
+            "$NOEMA_XLAYER_TRACE_OBJECT_ID" \
+            1 \
+            "$V2_OBJECT_ROOT" \
+            "$V2_EVIDENCE_ROOT" \
+            --rpc-url "$NOEMA_XLAYER_RPC_URL" \
+            --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" \
+            --json)
+          echo "$UPDATE_JSON" > /tmp/noema-update-v2.json
+          UPDATE_TX=$(echo "$UPDATE_JSON" | jq -r '.transactionHash // .transaction_hash // empty')
+          if [ -z "$UPDATE_TX" ] || [ "$UPDATE_TX" = "null" ]; then
+            echo "::error::Could not parse updateObject transaction hash."
+            jq . /tmp/noema-update-v2.json || true
+            exit 2
+          fi
+          echo "Version 2 transaction: $UPDATE_TX"
+          echo "NOEMA_XLAYER_HISTORY_UPDATE_TX_HASH=$UPDATE_TX" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_HISTORY_V2_OBJECT_ROOT=$V2_OBJECT_ROOT" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_HISTORY_V2_EVIDENCE_ROOT=$V2_EVIDENCE_ROOT" >> "$GITHUB_ENV"
+
+      - name: Verify append-only v1 and v2 history onchain
+        run: pnpm exec vitest run tests/integrity/registry-live-history.test.ts
 
       - name: Preserve live proof bundle
         if: always()
         shell: bash
         run: |
-          mkdir -p artifacts/qa/registry-live-trace
+          mkdir -p artifacts/qa/registry-live-trace artifacts/qa/registry-live-history
           cp /tmp/noema-live-fixture.json artifacts/qa/registry-live-trace/input-fixture.json 2>/dev/null || true
           cp /tmp/noema-deploy.json artifacts/qa/registry-live-trace/deployment.json 2>/dev/null || true
           cp /tmp/noema-register.json artifacts/qa/registry-live-trace/registration.json 2>/dev/null || true
+          cp /tmp/noema-history-v2.json artifacts/qa/registry-live-history/input-v2.json 2>/dev/null || true
+          cp /tmp/noema-update-v2.json artifacts/qa/registry-live-history/update-v2.json 2>/dev/null || true
 
-      - name: Upload registry live-trace receipt
+      - name: Upload registry live proof bundle
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: noema-registry-live-trace-${{ github.sha }}
-          path: artifacts/qa/registry-live-trace/*
+          name: noema-registry-live-proof-${{ github.sha }}
+          path: |
+            artifacts/qa/registry-live-trace/*
+            artifacts/qa/registry-live-history/*
           if-no-files-found: warn
           retention-days: 30
-
-# Triggered after funding the dedicated X Layer testnet signer.
