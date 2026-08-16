@@ -15,13 +15,14 @@ import { verifyEconomicObject } from "../../verification/src/index.js";
 import { evaluateMandate } from "../../noema-core/src/mandate.js";
 
 describe("SchemaRegistry fail-closed decoding", () => {
-  it("registers the six canonical artifact schemas at schema version 1", () => {
+  it("registers the seven canonical artifact schemas at schema version 1", () => {
     expect(noemaSchemaRegistry.isSupported(SCHEMA_IDS.ECONOMIC_OBJECT, 1)).toBe(true);
     expect(noemaSchemaRegistry.isSupported(SCHEMA_IDS.EVIDENCE, 1)).toBe(true);
     expect(noemaSchemaRegistry.isSupported(SCHEMA_IDS.SOURCE_SNAPSHOT, 1)).toBe(true);
     expect(noemaSchemaRegistry.isSupported(SCHEMA_IDS.ATTESTATION, 1)).toBe(true);
     expect(noemaSchemaRegistry.isSupported(SCHEMA_IDS.VERIFICATION_RECEIPT, 1)).toBe(true);
     expect(noemaSchemaRegistry.isSupported(SCHEMA_IDS.DECISION_RECEIPT, 1)).toBe(true);
+    expect(noemaSchemaRegistry.isSupported(SCHEMA_IDS.MIGRATION_RECEIPT, 1)).toBe(true);
   });
 
   it("decodes an in-band stamped EconomicObject", () => {
@@ -61,12 +62,25 @@ describe("SchemaRegistry fail-closed decoding", () => {
     expect(() => noemaSchemaRegistry.decode(object)).toThrow(SchemaValidationError);
   });
 
-  it("rejects duplicate version registration on the same registry instance", () => {
+  it("tolerates re-registering the same schema and version on the same registry instance", () => {
     const registry = new SchemaRegistry()
       .register(versionedFromZod("schema:test", 1, evidenceSchema))
       .register(versionedFromZod("schema:test", 1, evidenceSchema));
     expect(registry.isSupported("schema:test", 1)).toBe(true);
     expect(registry.supportedVersions("schema:test")).toEqual([1]);
+  });
+
+  it("rejects artifacts carrying unrecognized fields (strict schemas)", () => {
+    const object = makeEconomicObject();
+    expect(() =>
+      noemaSchemaRegistry.decode({ ...object, unrecognizedField: true })
+    ).toThrow(SchemaValidationError);
+    expect(() =>
+      noemaSchemaRegistry.decode({
+        ...object,
+        claims: [{ ...object.claims[0], extraClaimField: 1 }]
+      })
+    ).toThrow(SchemaValidationError);
   });
 
   it("decodes verification and decision receipts produced by the deterministic pipeline", () => {

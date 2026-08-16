@@ -12,7 +12,9 @@ independently replayed.
 - Current object domain: `noema:economic-object:v2`.
 - Current evidence leaf domain: `noema:evidence-leaf:v2`.
 - Merkle domain: `noema:evidence-merkle:v1` (unchanged; the merkle container
-  only commits to child digests and never changes shape).
+  only commits to child digests and never changes shape). Merkle node payloads
+  are version-directed through an explicit `hashingVersion` field, so a v1
+  tree and a v2 tree over the same evidence are never conflated.
 
 The implementation must reject values that cannot be represented as valid JSON
 and must never use arbitrary JSON.stringify output as canonical JSON.
@@ -112,10 +114,11 @@ the domain is `noema:evidence-leaf:v1`.
 
 Evidence leaves are sorted lexicographically by their digest. A pair is formed
 by sorting the two child digests lexicographically and hashing the canonical
-object with domain, left, and right fields. An odd final node is duplicated.
-An empty evidence set hashes the canonical object with the domain and an empty
-leaves array. The merkle domain is `noema:evidence-merkle:v1` for every
-hashing version.
+object with the `domain`, `hashingVersion`, `left`, and `right` fields. An odd
+final node is duplicated. An empty evidence set hashes the canonical object with
+the `domain`, `hashingVersion`, and an empty `leaves` array. The merkle domain
+is `noema:evidence-merkle:v1` for every hashing version; the `hashingVersion`
+field distinguishes v1 and v2 merkle commitments.
 
 This is a sorted Merkle commitment: leaf order in the input does not change
 the evidence root, while leaf content and metadata remain committed.

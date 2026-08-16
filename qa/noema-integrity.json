@@ -161,17 +161,37 @@
     {
       "id": "schema-versioning",
       "phase": "watch",
-      "description": "In-band schemaId/schemaVersion freeze every canonical artifact: fail-closed decode rejects unstamped/unknown/future-versioned state, nested schema identity is bound, v1 hashing replays legacy commitments byte-for-byte, and v2 binds schema identity and fails closed when it is missing.",
+      "description": "In-band schemaId/schemaVersion freeze every canonical artifact: fail-closed decode rejects unstamped/unknown/future-versioned state, nested schema identity is bound, v1 hashing replays legacy commitments byte-for-byte, and v2 binds schema identity and fails closed when it is missing. The gate also executes the executed schema-family suites proving strict schema behavior, migration safety, adversarial migration cases, and that action-critical semantics derive from typed fields/enums/references rather than generic metadata/JSON blobs.",
       "kind": "command",
       "requires": [
-        "tests/integrity/schema-versioning.test.ts"
+        "tests/integrity/schema-versioning.test.ts",
+        "tests/integrity/schema-migration.test.ts",
+        "tests/integrity/schema-semantics.test.ts"
       ],
       "command": "pnpm",
       "args": [
         "exec",
         "vitest",
         "run",
-        "tests/integrity/schema-versioning.test.ts"
+        "tests/integrity/schema-versioning.test.ts",
+        "tests/integrity/schema-migration.test.ts",
+        "tests/integrity/schema-semantics.test.ts"
+      ]
+    },
+    {
+      "id": "schema-migration",
+      "phase": "watch",
+      "description": "Explicit forward-only schema migration is deterministic and provenance-preserving: source is validated before migration, every intermediate and final result validates against its exact registered target schema, downgrades/unknown schemas/missing paths/ambiguous registrations/cycles/chain gaps/malformed intermediate output fail closed, test-only schemas stay in isolated registries, and the historical source artifact and its recorded hash/root are never rewritten.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/schema-migration.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/schema-migration.test.ts"
       ]
     },
     {
