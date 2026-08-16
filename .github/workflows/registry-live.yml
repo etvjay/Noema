@@ -1,0 +1,133 @@
+name: NoemaRegistry Live Trace
+
+on:
+  push:
+    branches:
+      - agent/noema-integration-lab
+    paths:
+      - '.github/workflows/registry-live.yml'
+      - 'tests/integrity/registry-live-trace.test.ts'
+      - 'tools/live-registry-fixture.ts'
+      - 'contracts/src/NoemaRegistry.sol'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  registry-live-trace:
+    runs-on: ubuntu-24.04
+    env:
+      NOEMA_XLAYER_RPC_URL: https://testrpc.xlayer.tech/terigon
+      NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY: ${{ secrets.NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY }}
+      NOEMA_QA_OUT: artifacts/qa
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Install workspace
+        run: pnpm install --frozen-lockfile
+
+      - name: Require funded X Layer signer
+        shell: bash
+        run: |
+          if [ -z "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" ]; then
+            echo "::error::Missing repository secret NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY. Live registry proof cannot be simulated or skipped."
+            exit 2
+          fi
+          ADDRESS=$(cast wallet address --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY")
+          BALANCE=$(cast balance "$ADDRESS" --rpc-url "$NOEMA_XLAYER_RPC_URL")
+          echo "Signer address: $ADDRESS"
+          echo "Signer balance (wei): $BALANCE"
+          if [ "$BALANCE" = "0" ]; then
+            echo "::error::Configured X Layer signer has zero testnet OKB and cannot produce the required live transaction."
+            exit 2
+          fi
+
+      - name: Generate canonical Noema commitment
+        shell: bash
+        run: |
+          node tools/live-registry-fixture.ts > /tmp/noema-live-fixture.json
+          jq . /tmp/noema-live-fixture.json
+          echo "NOEMA_XLAYER_TRACE_OBJECT_ID=$(jq -r .objectId /tmp/noema-live-fixture.json)" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_TRACE_OBJECT_ROOT=$(jq -r .objectRoot /tmp/noema-live-fixture.json)" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_TRACE_EVIDENCE_ROOT=$(jq -r .evidenceRoot /tmp/noema-live-fixture.json)" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_TRACE_VERSION=$(jq -r .version /tmp/noema-live-fixture.json)" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_TRACE_KIND=REGISTER" >> "$GITHUB_ENV"
+
+      - name: Deploy NoemaRegistry on X Layer testnet
+        shell: bash
+        run: |
+          cd contracts
+          forge install foundry-rs/forge-std
+          DEPLOY_JSON=$(forge create src/NoemaRegistry.sol:NoemaRegistry \
+            --rpc-url "$NOEMA_XLAYER_RPC_URL" \
+            --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" \
+            --broadcast \
+            --json)
+          echo "$DEPLOY_JSON" > /tmp/noema-deploy.json
+          REGISTRY=$(echo "$DEPLOY_JSON" | jq -r '.deployedTo // .deployed_to // empty')
+          DEPLOY_TX=$(echo "$DEPLOY_JSON" | jq -r '.transactionHash // .transaction_hash // empty')
+          if [ -z "$REGISTRY" ] || [ "$REGISTRY" = "null" ]; then
+            echo "::error::Could not parse deployed registry address from forge create output."
+            jq . /tmp/noema-deploy.json || true
+            exit 2
+          fi
+          echo "Registry address: $REGISTRY"
+          echo "Deployment transaction: $DEPLOY_TX"
+          echo "NOEMA_XLAYER_REGISTRY_ADDRESS=$REGISTRY" >> "$GITHUB_ENV"
+          echo "NOEMA_XLAYER_DEPLOY_TX_HASH=$DEPLOY_TX" >> "$GITHUB_ENV"
+
+      - name: Register canonical object and evidence roots
+        shell: bash
+        run: |
+          REGISTER_JSON=$(cast send "$NOEMA_XLAYER_REGISTRY_ADDRESS" \
+            "registerObject(bytes32,bytes32,bytes32)" \
+            "$NOEMA_XLAYER_TRACE_OBJECT_ID" \
+            "$NOEMA_XLAYER_TRACE_OBJECT_ROOT" \
+            "$NOEMA_XLAYER_TRACE_EVIDENCE_ROOT" \
+            --rpc-url "$NOEMA_XLAYER_RPC_URL" \
+            --private-key "$NOEMA_XLAYER_PUBLISHER_PRIVATE_KEY" \
+            --json)
+          echo "$REGISTER_JSON" > /tmp/noema-register.json
+          TX_HASH=$(echo "$REGISTER_JSON" | jq -r '.transactionHash // .transaction_hash // empty')
+          if [ -z "$TX_HASH" ] || [ "$TX_HASH" = "null" ]; then
+            echo "::error::Could not parse registerObject transaction hash."
+            jq . /tmp/noema-register.json || true
+            exit 2
+          fi
+          echo "Registration transaction: $TX_HASH"
+          echo "NOEMA_XLAYER_TRACE_TX_HASH=$TX_HASH" >> "$GITHUB_ENV"
+
+      - name: Verify tx, event, roots, version, and onchain readback
+        run: pnpm exec vitest run tests/integrity/registry-live-trace.test.ts
+
+      - name: Preserve live proof bundle
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p artifacts/qa/registry-live-trace
+          cp /tmp/noema-live-fixture.json artifacts/qa/registry-live-trace/input-fixture.json 2>/dev/null || true
+          cp /tmp/noema-deploy.json artifacts/qa/registry-live-trace/deployment.json 2>/dev/null || true
+          cp /tmp/noema-register.json artifacts/qa/registry-live-trace/registration.json 2>/dev/null || true
+
+      - name: Upload registry live-trace receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: noema-registry-live-trace-${{ github.sha }}
+          path: artifacts/qa/registry-live-trace/*
+          if-no-files-found: warn
+          retention-days: 30
