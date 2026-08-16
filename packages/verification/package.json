@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@noema/canonicalization": "workspace:*",
-    "@noema/economic-kernel": "workspace:*"
+    "@noema/economic-kernel": "workspace:*",
+    "viem": "^2.33.0"
   }
 }
