@@ -34,6 +34,7 @@ Usage index: `packages/noema-core/usage/README.md`
  | watch workers, notification orchestration | idempotent material-change re-evaluation and semantic events | `packages/noema-core/usage/watch/README.md` |
 | Machine surfaces | `@noema/noema-core/surfaces` | REST, SDK, MCP, frontend data loaders | canonical read projection shared across machine interfaces | `packages/noema-core/usage/surfaces/README.md` |
 | UI view model | `@noema/noema-core/ui` | frontend/UI only | presentation-safe canonical Noema view model | `packages/noema-core/usage/ui/README.md` |
+| Representation identity & lineage | `@noema/noema-core/representation` | backend/core orchestration, representation/venue modeling (#58) | structural representation identity, immutable lineage tracing, deterministic equivalence/evidence boundaries | `packages/noema-core/usage/representation/README.md` |
 | Registry commitment model | `@noema/noema-core/commitment` | backend registry service, E2E integrity tests | deterministic offchain mirror of NoemaRegistry commitment/version semantics | `packages/noema-core/usage/commitment/README.md` |
 
 ## @noema/schemas

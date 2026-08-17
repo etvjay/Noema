@@ -20,7 +20,8 @@
     "./mcp": "./src/mcp.ts",
     "./explain": "./src/explain.ts",
     "./telegram": "./src/telegram.ts",
-    "./telegram-inbound": "./src/telegram-inbound.ts"
+    "./telegram-inbound": "./src/telegram-inbound.ts",
+    "./representation": "./src/representation.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*",

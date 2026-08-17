@@ -395,6 +395,23 @@
         "run",
         "tests/integrity/terminal-cross-surface.test.ts"
       ]
+    },
+    {
+      "id": "representation-lineage",
+      "phase": "watch",
+      "description": "Representation identity, lineage, and equivalence boundaries (#58): structural identity never derived from ticker/name/symbol; same object across chains is SAME_ECONOMIC_CLAIM without implying bridge mechanics; bridge/wrapper require explicit lineage evidence; distinct share classes never collapse; supersession creates immutable lineage; ambiguous lineage emits canonical exceptions; AI-proposed links remain proposals until deterministic evidence accepts them.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/representation-lineage.test.ts",
+        "packages/noema-core/usage/representation/README.md"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/representation-lineage.test.ts"
+      ]
     }
   ],
   "liveGates": [
