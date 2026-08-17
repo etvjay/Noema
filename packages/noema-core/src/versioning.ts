@@ -1,4 +1,5 @@
 import type { EconomicObject } from "@noema/economic-kernel";
+import { noemaSchemaRegistry } from "@noema/schemas";
 
 export interface EconomicObjectVersionRecord {
   object: EconomicObject;
@@ -72,6 +73,7 @@ export function initializeVersionHistory(
   object: EconomicObject,
   changeId = "initial"
 ): EconomicObjectVersionRecord[] {
+  noemaSchemaRegistry.decode(object);
   return [
     {
       object: structuredClone(object),
@@ -86,6 +88,7 @@ export function appendEconomicObjectChange(
   candidate: EconomicObject,
   changeId: string
 ): VersionAppendResult {
+  noemaSchemaRegistry.decode(candidate);
   const previousRecord = history.at(-1);
   if (previousRecord === undefined) {
     const initialized = initializeVersionHistory(candidate, changeId);

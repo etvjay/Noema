@@ -175,6 +175,22 @@
       ]
     },
     {
+      "id": "schema-versioning",
+      "phase": "watch",
+      "description": "In-band schemaId/schemaVersion freeze every canonical artifact: fail-closed decode rejects unstamped/unknown/future-versioned state, nested schema identity is bound, v1 hashing replays legacy commitments byte-for-byte, and v2 binds schema identity and fails closed when it is missing.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/schema-versioning.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/schema-versioning.test.ts"
+      ]
+    },
+    {
       "id": "registry-contract",
       "phase": "commit",
       "description": "NoemaRegistry contract behavior passes its deterministic Foundry tests.",

@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Attestation } from "@noema/economic-kernel";
 import { reduceEconomicObject } from "@noema/noema-core";
+import { SCHEMA_IDS, SCHEMA_VERSIONS } from "@noema/schemas";
 import {
   NOEMA_ATTESTATION_TYPES,
+  NOEMA_ATTESTATION_TYPES_V1,
+  NOEMA_ATTESTATION_TYPES_V2,
   noemaAttestationTypedData,
   verifyAttestationAuthority,
   verifyEconomicObject,
@@ -21,7 +24,7 @@ const OTHER_ATTESTOR = "0x3333333333333333333333333333333333333333";
 const INVALID_SIGNATURE = `0x${"11".repeat(65)}`;
 const TEST_ONLY_PRIVATE_KEY = `0x${"01".repeat(32)}` as `0x${string}`;
 
-const authorityPolicy: AttestationAuthorityPolicy = {
+const legacyAuthorityPolicy: AttestationAuthorityPolicy = {
   domain: {
     name: "Noema",
     version: "1",
@@ -32,9 +35,22 @@ const authorityPolicy: AttestationAuthorityPolicy = {
   trustedAttestors: new Set([TRUSTED_ATTESTOR.toLowerCase()])
 };
 
+const authorityPolicy: AttestationAuthorityPolicy = {
+  domain: {
+    name: "Noema",
+    version: "2",
+    chainId: 1952,
+    verifyingContract: "0x1111111111111111111111111111111111111111"
+  },
+  schema: "noema:attestation:v2",
+  trustedAttestors: new Set([TRUSTED_ATTESTOR.toLowerCase()])
+};
+
 function makeAttestation(overrides: Partial<Attestation> = {}): Attestation {
   return {
     id: "attestation:fixture:authority",
+    schemaId: SCHEMA_IDS.ATTESTATION,
+    schemaVersion: SCHEMA_VERSIONS.ATTESTATION,
     subject: "object:fixture",
     claimRef: "claim:fixture:identity",
     schema: authorityPolicy.schema,
@@ -58,7 +74,19 @@ describe("Noema deterministic verification boundary", () => {
 
     expect(second).toEqual(first);
     expect(first.overallStatus).toBe("PASS");
-    expect(first.hashingVersion).toBe("noema-hashing-v1");
+    expect(first.hashingVersion).toBe("noema-hashing-v2");
+  });
+
+  it("replays legacy commitments under explicit v1 hashing without mutating current behavior", () => {
+    const object = makeEconomicObject();
+    const context = { nowMs: NOW, maxEvidenceAgeMs: 3_600_000 };
+
+    const legacy = verifyEconomicObject(object, context, "noema-hashing-v1");
+    const current = verifyEconomicObject(object, context, "noema-hashing-v2");
+
+    expect(legacy.hashingVersion).toBe("noema-hashing-v1");
+    expect(current.hashingVersion).toBe("noema-hashing-v2");
+    expect(legacy.objectRoot).not.toBe(current.objectRoot);
   });
 
   it("never promotes an inferred claim to verified state", () => {
@@ -224,7 +252,7 @@ describe("Noema deterministic verification boundary", () => {
     expect(invalidSignature.reason).toContain("EIP-712");
   });
 
-  it("binds a real EIP-712 signature to the exact Noema domain, schema, and payload", async () => {
+  it("binds a real EIP-712 signature to the exact Noema domain, schema, and payload under the current v2 scheme", async () => {
     const signer = eip712TestSignerAddress(TEST_ONLY_PRIVATE_KEY);
     const signedPolicy: AttestationAuthorityPolicy = {
       ...authorityPolicy,
@@ -235,10 +263,11 @@ describe("Noema deterministic verification boundary", () => {
       signature: INVALID_SIGNATURE
     });
     const typedData = noemaAttestationTypedData(unsigned, signedPolicy.domain);
+    expect(typedData.types).toBe(NOEMA_ATTESTATION_TYPES_V2);
     const signed = await signEip712TestVector({
       privateKey: TEST_ONLY_PRIVATE_KEY,
       domain: typedData.domain,
-      types: NOEMA_ATTESTATION_TYPES,
+      types: typedData.types,
       primaryType: typedData.primaryType,
       message: typedData.message
     });
@@ -276,14 +305,26 @@ describe("Noema deterministic verification boundary", () => {
     expect(payloadMutation.result).toBe("FAIL");
     expect(payloadMutation.reason).toContain("EIP-712");
 
+    const schemaIdentityMutation = await verifyAttestationAuthority(
+      {
+        ...validAttestation,
+        schemaId: "noema:attestation:forged",
+        schemaVersion: 99
+      },
+      signedPolicy,
+      { nowMs: NOW }
+    );
+    expect(schemaIdentityMutation.result).toBe("FAIL");
+    expect(schemaIdentityMutation.reason).toContain("EIP-712");
+
     const cryptographicSchemaMutation = await verifyAttestationAuthority(
       {
         ...validAttestation,
-        schema: "noema:attestation:v2"
+        schema: "noema:attestation:v3"
       },
       {
         ...signedPolicy,
-        schema: "noema:attestation:v2"
+        schema: "noema:attestation:v3"
       },
       { nowMs: NOW }
     );
@@ -303,5 +344,45 @@ describe("Noema deterministic verification boundary", () => {
     expect(secondReceipt).toEqual(firstReceipt);
     expect(firstReceipt.overallStatus).toBe("PASS");
     expect(firstReceipt.checks.some((check) => check.type === "ATTESTATION_AUTHORITY" && check.result === "PASS")).toBe(true);
+  });
+
+  it("replays legacy v1-scheme attestations under a v1 policy and fails closed cross-version", async () => {
+    const signer = eip712TestSignerAddress(TEST_ONLY_PRIVATE_KEY);
+    const legacyPolicy: AttestationAuthorityPolicy = {
+      ...legacyAuthorityPolicy,
+      trustedAttestors: new Set([signer.toLowerCase()])
+    };
+    const unsigned = makeAttestation({
+      attestor: signer,
+      signature: INVALID_SIGNATURE,
+      schema: legacyPolicy.schema
+    });
+    const legacyTypedData = noemaAttestationTypedData(unsigned, legacyPolicy.domain);
+    expect(legacyTypedData.types).toBe(NOEMA_ATTESTATION_TYPES_V1);
+    const legacySigned = await signEip712TestVector({
+      privateKey: TEST_ONLY_PRIVATE_KEY,
+      domain: legacyTypedData.domain,
+      types: legacyTypedData.types,
+      primaryType: legacyTypedData.primaryType,
+      message: legacyTypedData.message
+    });
+    const legacyAttestation: Attestation = {
+      ...unsigned,
+      signature: legacySigned.signature
+    };
+
+    const legacyValid = await verifyAttestationAuthority(legacyAttestation, legacyPolicy, { nowMs: NOW });
+    expect(legacyValid.result).toBe("PASS");
+
+    const crossVersion = await verifyAttestationAuthority(legacyAttestation, authorityPolicy, { nowMs: NOW });
+    expect(crossVersion.result).toBe("FAIL");
+
+    const v2Attestation = await verifyAttestationAuthority(
+      legacyAttestation,
+      legacyPolicy,
+      { nowMs: NOW }
+    );
+    expect(v2Attestation.result).toBe("PASS");
+    expect(NOEMA_ATTESTATION_TYPES).toBe(NOEMA_ATTESTATION_TYPES_V2);
   });
 });

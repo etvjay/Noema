@@ -10,9 +10,7 @@
     "./events": "./src/events.ts"
   },
   "dependencies": {
+    "@noema/economic-kernel": "workspace:*",
     "zod": "^4.0.5"
-  },
-  "devDependencies": {
-    "@noema/economic-kernel": "workspace:*"
   }
 }

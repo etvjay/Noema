@@ -22,6 +22,8 @@ const INPUT: ExplainInput = { runId: "run:explain:1", nowMs: NOW };
 function baseObject(version: number, overrides: Partial<EconomicObject> = {}): EconomicObject {
   return {
     id: "object:explain",
+    schemaId: "noema:economic-object",
+    schemaVersion: 1,
     version,
     classification: { primary: "TOKENIZED_TREASURY", secondary: [], confidence: 1, claimRef: "claim:explain:1" },
     identifiers: [],
@@ -48,6 +50,8 @@ function baseObject(version: number, overrides: Partial<EconomicObject> = {}): E
     evidence: [
       {
         id: "evidence:explain:1",
+        schemaId: "noema:evidence",
+        schemaVersion: 1,
         type: "API_RESPONSE",
         source: "source:explain:1",
         contentHash: `0x${String(version).repeat(64)}`,
@@ -188,7 +192,7 @@ describe("explanation surface", () => {
     const blockVerification = verifyEconomicObject(blockObject, { nowMs: NOW, maxEvidenceAgeMs: 3_600_000 });
     const blockDecision = evaluateMandate(blockObject, blockVerification, mandate, { nowMs: NOW });
     const explanation = explainMandateChange(INPUT, blockDecision, decision, {
-      schemaVersion: "noema-semantic-event-v1",
+    schemaVersion: "noema-semantic-event-v1",
       eventId: "event:explain:material-1",
       eventType: "MATERIAL_CHANGE",
       correlationId: "correlation:explain:1",
@@ -253,6 +257,8 @@ describe("explanation surface", () => {
       evidence: [
         {
           id: "evidence:explain:1",
+          schemaId: "noema:evidence",
+          schemaVersion: 1,
           type: "API_RESPONSE",
           source: "source:explain:1",
           contentHash: "0x1111111111111111111111111111111111111111111111111111111111111111",
@@ -264,6 +270,8 @@ describe("explanation surface", () => {
         },
         {
           id: "evidence:explain:2",
+          schemaId: "noema:evidence",
+          schemaVersion: 1,
           type: "API_RESPONSE",
           source: "source:explain:2",
           contentHash: "0x2222222222222222222222222222222222222222222222222222222222222222",
@@ -292,6 +300,8 @@ describe("explanation surface", () => {
         ...baseObject(2).evidence,
         {
           id: "evidence:explain:3",
+          schemaId: "noema:evidence",
+          schemaVersion: 1,
           type: "ORACLE",
           source: "source:explain:3",
           contentHash: "0x3333333333333333333333333333333333333333333333333333333333333333",
@@ -368,6 +378,8 @@ describe("explanation surface", () => {
       evidence: [
         {
           id: "evidence:explain:hostile",
+          schemaId: "noema:evidence",
+          schemaVersion: 1,
           type: "API_RESPONSE",
           source: "source:hostile",
           contentHash: "0x9999999999999999999999999999999999999999999999999999999999999999",

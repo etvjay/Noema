@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Attestation, Evidence, SourceSnapshot } from "@noema/economic-kernel";
+import { SCHEMA_IDS, SCHEMA_VERSIONS } from "@noema/schemas";
 import {
   traceClaimLineage,
   validateEconomicObjectLineage
@@ -15,6 +16,8 @@ function makeSourceSnapshot(overrides: Partial<SourceSnapshot> = {}): SourceSnap
 
   return {
     id: evidence.source,
+    schemaId: SCHEMA_IDS.SOURCE_SNAPSHOT,
+    schemaVersion: SCHEMA_VERSIONS.SOURCE_SNAPSHOT,
     sourceId: "issuer:fixture",
     uri: "https://issuer.example/evidence.json",
     contentType: "application/json",
@@ -30,6 +33,8 @@ function makeSourceSnapshot(overrides: Partial<SourceSnapshot> = {}): SourceSnap
 function makeAttestation(overrides: Partial<Attestation> = {}): Attestation {
   return {
     id: "attestation:fixture:1",
+    schemaId: SCHEMA_IDS.ATTESTATION,
+    schemaVersion: SCHEMA_VERSIONS.ATTESTATION,
     subject: "object:fixture",
     claimRef: "claim:fixture:identity",
     schema: "noema:test:v1",

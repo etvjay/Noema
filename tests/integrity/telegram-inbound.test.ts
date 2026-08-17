@@ -57,6 +57,8 @@ describe("Telegram inbound boundary (#48)", () => {
       contentType: "text/plain",
       makeSnapshot: (input) => ({
         id: `snapshot:${input.sourceId}`,
+        schemaId: "noema:source-snapshot",
+        schemaVersion: 1,
         sourceId: input.sourceId,
         uri: input.uri,
         contentType: input.contentType,

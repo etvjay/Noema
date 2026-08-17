@@ -1,5 +1,7 @@
 {
   "id": "snapshot:issuer:1",
+  "schemaId": "noema:source-snapshot",
+  "schemaVersion": 1,
   "sourceId": "issuer:1",
   "uri": "https://issuer.example/nav.json",
   "contentType": "application/json",

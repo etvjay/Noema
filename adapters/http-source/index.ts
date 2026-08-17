@@ -1,3 +1,4 @@
+import { SCHEMA_IDS, SCHEMA_VERSIONS } from "@noema/schemas";
 import { isIP } from "node:net";
 import type { Ref, SourceSnapshot, UnixMillis } from "@noema/economic-kernel";
 import {
@@ -165,6 +166,8 @@ export async function captureHttpSource(
   const contentHash = hashBytes(response.body);
   const snapshot: SourceSnapshot = {
     id: `snapshot:${input.sourceId}:${contentHash}`,
+    schemaId: SCHEMA_IDS.SOURCE_SNAPSHOT,
+    schemaVersion: SCHEMA_VERSIONS.SOURCE_SNAPSHOT,
     sourceId: input.sourceId,
     uri: response.url,
     contentType: contentType.split(";", 1)[0]?.trim().toLowerCase() ?? contentType,

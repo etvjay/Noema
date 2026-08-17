@@ -3,6 +3,8 @@
   "label": "DEMO_FIXTURE",
   "sourceSnapshot": {
     "id": "source-snapshot:arcadia-treasury:class-a:v1",
+    "schemaId": "noema:source-snapshot",
+    "schemaVersion": 1,
     "sourceId": "issuer:arcadia-treasury-spv-i",
     "uri": "https://issuer.example/arcadia-treasury/class-a/terms",
     "contentType": "text/plain",
@@ -14,6 +16,8 @@
   },
   "evidence": {
     "id": "evidence:arcadia-treasury:class-a:terms",
+    "schemaId": "noema:evidence",
+    "schemaVersion": 1,
     "type": "DOCUMENT",
     "source": "source-snapshot:arcadia-treasury:class-a:v1",
     "contentHash": "0xcf55ae8b68f9db54d78946a4985e5f5bbef5eaf8cfd1ba4f2e24d6d09352bc7a",

@@ -21,6 +21,8 @@ const REPO_STATE = "repository:state:sdk";
 function baseObject(version: number, overrides: Partial<EconomicObject> = {}): EconomicObject {
   return {
     id: "object:sdk",
+    schemaId: "noema:economic-object",
+    schemaVersion: 1,
     version,
     classification: { primary: "TOKENIZED_TREASURY", secondary: [], confidence: 1, claimRef: "claim:sdk:1" },
     identifiers: [],
@@ -35,6 +37,8 @@ function baseObject(version: number, overrides: Partial<EconomicObject> = {}): E
     evidence: [
       {
         id: `evidence:sdk:${version}`,
+        schemaId: "noema:evidence",
+        schemaVersion: 1,
         type: "API_RESPONSE",
         source: "source:sdk",
         contentHash: `0x${String(version).repeat(64)}`,
@@ -85,7 +89,7 @@ const decisionV2: DecisionReceipt = evaluateMandate(objectV2, verificationV2, ma
 
 const events: SemanticEvent[] = [
   semanticEventSchema.parse({
-    schemaVersion: "noema-semantic-event-v1",
+  schemaVersion: "noema-semantic-event-v1",
     eventId: "event:sdk:material-1",
     eventType: "MATERIAL_CHANGE",
     correlationId: "correlation:sdk:1",
@@ -208,7 +212,7 @@ describe("typed SDK", () => {
   it("watches.create validates event filters and delivery destinations without embedding secrets", async () => {
     const secret = "super-secret-destination-token";
     const subscription: WatchSubscription = {
-      schemaVersion: "noema-watch-subscription-v1",
+    schemaVersion: "noema-watch-subscription-v1",
       subscriptionId: "subscription:sdk:1",
       watchId: "watch:sdk:1",
       objectId: "object:sdk",
@@ -232,7 +236,7 @@ describe("typed SDK", () => {
 
   it("rejects watch subscriptions that would embed destination secrets", () => {
     const subscription: WatchSubscription = {
-      schemaVersion: "noema-watch-subscription-v1",
+    schemaVersion: "noema-watch-subscription-v1",
       subscriptionId: "subscription:sdk:leak",
       watchId: "watch:sdk:leak",
       objectId: "object:sdk",
@@ -251,7 +255,7 @@ describe("typed SDK", () => {
 
   it("watches.get/list/delete round-trip canonical subscriptions", async () => {
     const subscription: WatchSubscription = {
-      schemaVersion: "noema-watch-subscription-v1",
+    schemaVersion: "noema-watch-subscription-v1",
       subscriptionId: "subscription:sdk:2",
       watchId: "watch:sdk:2",
       objectId: "object:sdk",
@@ -367,7 +371,7 @@ describe("typed SDK example integration (latest -> evaluate -> watch -> inspect 
     expect(decision.value.objectVersion).toBe(selectedVersion);
 
     const watch: WatchSubscription = {
-      schemaVersion: "noema-watch-subscription-v1",
+    schemaVersion: "noema-watch-subscription-v1",
       subscriptionId: "subscription:sdk:flow",
       watchId: "watch:sdk:flow",
       objectId: "object:sdk",

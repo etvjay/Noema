@@ -18,6 +18,8 @@ const REPO_STATE = "repository:state:sdk-integrity";
 function baseObject(version: number): EconomicObject {
   return {
     id: "object:sdk:integrity",
+    schemaId: "noema:economic-object",
+    schemaVersion: 1,
     version,
     classification: { primary: "TOKENIZED_TREASURY", secondary: [], confidence: 1, claimRef: "claim:sdk:1" },
     identifiers: [],
@@ -32,6 +34,8 @@ function baseObject(version: number): EconomicObject {
     evidence: [
       {
         id: `evidence:sdk:integrity:${version}`,
+        schemaId: "noema:evidence",
+        schemaVersion: 1,
         type: "API_RESPONSE",
         source: "source:sdk:integrity",
         contentHash: `0x${String(version).repeat(64)}`,
@@ -171,7 +175,7 @@ describe("typed SDK parity with REST and machine surfaces (#50)", () => {
   it("SDK watch creation exposes filters and destinations without embedding secrets", async () => {
     const secret = "integrity-destination-secret";
     const subscription: WatchSubscription = {
-      schemaVersion: "noema-watch-subscription-v1",
+    schemaVersion: "noema-watch-subscription-v1",
       subscriptionId: "subscription:sdk:integrity:1",
       watchId: "watch:sdk:integrity:1",
       objectId: "object:sdk:integrity",

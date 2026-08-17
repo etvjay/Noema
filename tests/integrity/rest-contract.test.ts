@@ -21,6 +21,8 @@ const REPO_STATE = "repository:state:integrity-49";
 function version(v: number): EconomicObject {
   return {
     id: "object:rest:integrity",
+    schemaId: "noema:economic-object",
+    schemaVersion: 1,
     version: v,
     classification: { primary: "TOKENIZED_TREASURY", secondary: [], confidence: 1, claimRef: "claim:rest" },
     identifiers: [],
