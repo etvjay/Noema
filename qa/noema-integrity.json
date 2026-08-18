@@ -412,6 +412,23 @@
         "run",
         "tests/integrity/representation-lineage.test.ts"
       ]
+    },
+    {
+      "id": "attestation-envelope",
+      "phase": "watch",
+      "description": "Scoped venue economic attestation envelope (#59): venues may only attest within a registered role; propositions are bounded by venue role scope; an attestation cannot self-authorize an unheld role or out-of-scope proposition; signature validity is necessary but never sufficient for action authority; stale/revoked/expired/superseded attestations never remain active; conflicting valid attestations stay visible as conflicts rather than recency-winning; binding and exact evidence/source-state checks bind the attestation to its subject; same observation replay reproduces the same attestation identity; pending evidence is not finality-safe under finalization policy.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/attestation-envelope.test.ts",
+        "packages/noema-core/usage/attestation/README.md"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/attestation-envelope.test.ts"
+      ]
     }
   ],
   "liveGates": [
