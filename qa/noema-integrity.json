@@ -429,6 +429,23 @@
         "run",
         "tests/integrity/attestation-envelope.test.ts"
       ]
+    },
+    {
+      "id": "observation-finality",
+      "phase": "watch",
+      "description": "Cross-chain finality, reorg, ordering, and replay semantics (#61): EVM observations structurally preserve chain ID, block height/hash, address, locator, value, and finality; non-EVM chains keep slot/state identity without EVM semantics; a reorg cannot silently mutate historical evidence (displaced observations become REORGED with lineage); pending/unfinalized observations never satisfy a finalized policy; same observation replay reproduces the same identity; RPC retries/provider changes do not create new observations when canonical chain state is identical; provider disagreement surfaces as conflicting.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/observation-finality.test.ts",
+        "packages/noema-core/usage/observation/README.md"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/observation-finality.test.ts"
+      ]
     }
   ],
   "liveGates": [

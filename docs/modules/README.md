@@ -36,6 +36,7 @@ Usage index: `packages/noema-core/usage/README.md`
 | UI view model | `@noema/noema-core/ui` | frontend/UI only | presentation-safe canonical Noema view model | `packages/noema-core/usage/ui/README.md` |
 | Representation identity & lineage | `@noema/noema-core/representation` | backend/core orchestration, representation/venue modeling (#58) | structural representation identity, immutable lineage tracing, deterministic equivalence/evidence boundaries | `packages/noema-core/usage/representation/README.md` |
 | Scoped venue attestation envelope | `@noema/noema-core/attestation` | backend/core orchestration, venue attestation intake & verification (#59) | scope-bounded economic attestation envelopes, role/proposition scope validation, signature-necessary-but-not-sufficient authority, deterministic attestation set resolution | `packages/noema-core/usage/attestation/README.md` |
+| Cross-chain observation finality & replay | `@noema/noema-core/observation` | backend/core orchestration, synchronizers, chain observation intake (#61) | structural EVM/non-EVM observation provenance, finality policy gating, reorg-with-lineage semantics, deterministic replay identity and duplicate detection, provider-disagreement conflicts | `packages/noema-core/usage/observation/README.md` |
 | Registry commitment model | `@noema/noema-core/commitment` | backend registry service, E2E integrity tests | deterministic offchain mirror of NoemaRegistry commitment/version semantics | `packages/noema-core/usage/commitment/README.md` |
 
 ## @noema/schemas

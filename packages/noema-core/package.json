@@ -22,7 +22,8 @@
     "./telegram": "./src/telegram.ts",
     "./telegram-inbound": "./src/telegram-inbound.ts",
     "./representation": "./src/representation.ts",
-    "./attestation": "./src/attestation.ts"
+    "./attestation": "./src/attestation.ts",
+    "./observation": "./src/observation.ts"
   },
   "dependencies": {
     "@noema/economic-kernel": "workspace:*",

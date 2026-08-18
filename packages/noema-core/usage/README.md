@@ -25,6 +25,7 @@ Before consuming a module, read its usage contract here. Source files alone are 
 - `@noema/noema-core/mcp` → `usage/mcp/README.md`
 - `@noema/noema-core/webhook` → `usage/webhook/README.md`
 - `@noema/noema-core/attestation` → `usage/attestation/README.md`
+- `@noema/noema-core/observation` → `usage/observation/README.md`
 
 ## Frontend consumption order
 
