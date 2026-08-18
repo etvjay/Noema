@@ -446,6 +446,23 @@
         "run",
         "tests/integrity/observation-finality.test.ts"
       ]
+    },
+    {
+      "id": "synchronizer-reconciliation",
+      "phase": "watch",
+      "description": "Asynchronous multi-venue economic synchronizer (#60): same logical input set yields the same canonical result regardless of delivery order; duplicate deliveries are idempotent and cannot create extra object versions; late but canonically relevant evidence affects current interpretation while historical versions are preserved; conflicting authoritative propositions remain explicit conflict state until deterministic policy/evidence resolves them; a venue update only mutates propositions within its accepted authority scope; one logical material change produces exactly one new object version; immaterial/no-op observations do not create spurious versions; temporal skew is inspectable in provenance/verification output; replaying the same admitted observations reproduces identical object/evidence roots and version lineage; permuted order and injected duplicates reproduce the canonical result.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/synchronizer.test.ts",
+        "packages/noema-core/usage/synchronizer/README.md"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/synchronizer.test.ts"
+      ]
     }
   ],
   "liveGates": [
