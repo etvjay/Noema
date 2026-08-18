@@ -1,0 +1,67 @@
+{
+  "kind": "attestation-transport-measurement",
+  "version": "noema-attestation-transport-measurement-v1",
+  "observedAt": "2026-08-18T16:10:09.310Z",
+  "rpc": "https://testrpc.xlayer.tech/terigon",
+  "gasPriceWei": "20000001",
+  "gasPriceError": null,
+  "operations": [
+    {
+      "transport": "A:registry",
+      "operation": "registerObject",
+      "calldataBytes": 100,
+      "calldataGas": "1600",
+      "estimatedTotalGas": "22600",
+      "estCostWei": "452000022600"
+    },
+    {
+      "transport": "A:registry",
+      "operation": "attestClaim",
+      "calldataBytes": 100,
+      "calldataGas": "1600",
+      "estimatedTotalGas": "22600",
+      "estCostWei": "452000022600"
+    },
+    {
+      "transport": "A:registry",
+      "operation": "revokeAttestation",
+      "calldataBytes": 100,
+      "calldataGas": "1600",
+      "estimatedTotalGas": "22600",
+      "estCostWei": "452000022600"
+    },
+    {
+      "transport": "B:envelope-anchored",
+      "operation": "anchorEnvelope",
+      "calldataBytes": 100,
+      "calldataGas": "1600",
+      "estimatedTotalGas": "22600",
+      "estCostWei": "452000022600"
+    },
+    {
+      "transport": "B:envelope-anchored",
+      "operation": "revokeEnvelope",
+      "calldataBytes": 100,
+      "calldataGas": "1600",
+      "estimatedTotalGas": "22600",
+      "estCostWei": "452000022600"
+    },
+    {
+      "transport": "C:eas",
+      "operation": "registerSchema",
+      "calldataBytes": 229,
+      "calldataGas": "2080",
+      "estimatedTotalGas": "23080",
+      "estCostWei": "461600023080"
+    },
+    {
+      "transport": "C:eas",
+      "operation": "attestEnvelope",
+      "calldataBytes": 292,
+      "calldataGas": "2020",
+      "estimatedTotalGas": "23020",
+      "estCostWei": "460400023020"
+    }
+  ],
+  "note": "calldataGas uses EIP-2028 costs (16/4 gas per non-zero/zero byte) plus 21000 base. estCostWei is estimatedTotalGas x live gas price; no transaction was broadcast."
+}

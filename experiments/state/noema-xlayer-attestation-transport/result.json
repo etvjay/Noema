@@ -1,0 +1,50 @@
+{
+  "experimentId": "noema-xlayer-attestation-transport",
+  "protocolVersion": "noema-xlayer-attestation-transport-protocol-v1",
+  "fixtureVersion": "noema-xlayer-attestation-transport-measurement-v1",
+  "issue": "#62",
+  "status": "DECISION-RECORDED",
+  "startedAt": "2026-08-18T15:31:00.000Z",
+  "rawRunFiles": [
+    "raw-eas-predeploy-probe.json",
+    "raw-xlayer-probe.json",
+    "raw-measurement.json"
+  ],
+  "derivedMetrics": {
+    "registryRegisterObject": { "calldataBytes": 100, "calldataGas": 1600, "estimatedTotalGas": 22600 },
+    "registryAttestClaim": { "calldataBytes": 100, "calldataGas": 1600, "estimatedTotalGas": 22600 },
+    "envelopeAnchor": { "calldataBytes": 100, "calldataGas": 1600, "estimatedTotalGas": 22600 },
+    "easRegisterSchema": { "calldataBytes": 229, "calldataGas": 2080, "estimatedTotalGas": 23080 },
+    "easAttest": { "calldataBytes": 292, "calldataGas": 2020, "estimatedTotalGas": 23020 },
+    "calldataSavingEasVsRegistryPct": 0
+  },
+  "promotionThresholds": {
+    "liveWriteRoundtripRequired": true,
+    "liveWriteRoundtripRecorded": false,
+    "easOfficialSupportRequiredForAdoption": true,
+    "easOfficialSupportObserved": false
+  },
+  "result": "PASS",
+  "validity": {
+    "evidenceLevel": "X1-OFFLINE-FIXTURE + observed-runtime read-only probe",
+    "limitations": [
+      "Experiment Foundry runtime not installed; protocol and raw observations committed for replay",
+      "No live transaction broadcast; publisher key on X Layer testnet not funded",
+      "Live write roundtrip still required before production transport claims"
+    ]
+  },
+  "decision": {
+    "selected": ["A:registry-commitment", "B:envelope-anchored"],
+    "rejected": [
+      {
+        "transport": "C:eas",
+        "reason": "EAS predeploys exist on X Layer but are operator-deployed genuine EAS code not listed in EAS official deployment registry; no cost or privacy benefit over A+B; duplicates schema/revocation state and creates vendor lock-in"
+      }
+    ],
+    "adr": "docs/adr/0010-xlayer-attestation-transport.md"
+  },
+  "claimUpdate": {
+    "adoptedClaim": "Transport = Noema-native registry commitment + signed offchain envelopes anchored by onchain root/history hashing",
+    "previously": "noema-xlayer-attestation-transport claim not previously recorded"
+  }
+}

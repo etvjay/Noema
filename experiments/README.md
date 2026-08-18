@@ -89,6 +89,12 @@ Claim to test: NoemaRegistry can commit canonical roots on X Layer testnet and a
 
 Target X3.
 
+### `noema-xlayer-attestation-transport`
+
+Claim to test: the correct X Layer transport for Noema attestations and version commitments is the native registry commitment plus signed offchain envelopes anchored by root/history hashing — not EAS — because it preserves product semantics, keeps correlation explicit, and avoids vendor lock-in without cost or privacy benefit.
+
+State: `DECISION-RECORDED` (X1 offline measurement + read-only runtime probes; live write roundtrip still required). See `state/noema-xlayer-attestation-transport/` for protocol, raw observations, and result. EAS predeploys exist on X Layer testnet 1952 but are operator-deployed code not listed in EAS-org deployments; EAS is rejected absent official support.
+
 ### `noema-watch-revaluation`
 
 Claim to test: a material evidence change or revocation produces vN+1, re-verification, mandate re-evaluation, semantic event, and notification without mutating history.

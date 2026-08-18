@@ -1,0 +1,33 @@
+{
+  "kind": "xlayer",
+  "version": "0.2.0",
+  "observedAt": "2026-08-18T15:34:18.502Z",
+  "rpc": "https://testrpc.xlayer.tech/terigon",
+  "chainId": 1952,
+  "expectedChainId": 1952,
+  "chainIdPass": true,
+  "latestBlock": 38608413,
+  "clientVersion": "reth/v2.3.0-81573d2/x86_64-unknown-linux-gnu/xlayer/v0.0.7",
+  "predeploys": {
+    "L1Block": {
+      "address": "0x4200000000000000000000000000000000000015",
+      "hasCode": true,
+      "codeBytes": 2059
+    },
+    "GasPriceOracle": {
+      "address": "0x420000000000000000000000000000000000000F",
+      "hasCode": true,
+      "codeBytes": 2059
+    },
+    "SchemaRegistry": {
+      "address": "0x4200000000000000000000000000000000000020",
+      "hasCode": true,
+      "codeBytes": 2059
+    },
+    "EAS": {
+      "address": "0x4200000000000000000000000000000000000021",
+      "hasCode": true,
+      "codeBytes": 2059
+    }
+  }
+}

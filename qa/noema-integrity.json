@@ -463,6 +463,25 @@
         "run",
         "tests/integrity/synchronizer.test.ts"
       ]
+    },
+    {
+      "id": "attestation-transport",
+      "phase": "watch",
+      "description": "X Layer attestation and commitment transport decision (#62): registry commitment + signed envelope anchoring are the adopted transport; EAS is rejected absent official support; registry/envelope operations carry fixed 100-byte calldata; EAS schema registration (229 bytes) and attestation (292 bytes) offer no cost advantage; only 32-byte canonical roots/envelope hashes and lifecycle signals are placed onchain; decision record, protocol, and raw observations are committed for replay; live write roundtrip is still required before production transport claims.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/attestation-transport.test.ts",
+        "docs/adr/0010-xlayer-attestation-transport.md",
+        "experiments/state/noema-xlayer-attestation-transport/result.json",
+        "tools/attestation-transport-core.mjs"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/attestation-transport.test.ts"
+      ]
     }
   ],
   "liveGates": [

@@ -17,6 +17,9 @@ are required before an E0 capability becomes demonstrated.
 | Foundry | https://www.getfoundry.sh/ | E2 | Forge is the contract build/test/deploy toolchain. |
 | OpenAI API | https://developers.openai.com/api/docs | E2 | AI is a proposal-only layer and cannot write verified state. |
 | MCP | https://modelcontextprotocol.io/specification/2026-07-28 | E2 | Streamable HTTP and current SDK conformance are required before claiming MCP support. |
+| X Layer EAS predeploys (testnet 1952) | observed runtime (live `eth_getCode` probe, no vendor claim) | observed runtime | EAS (`0x4200000000000000000000000000000000000021`) and SchemaRegistry (`0x4200000000000000000000000000000000000020`) OP-Stack predeploys are present with code (2059 bytes each); versions read back `1.4.1-beta.3` / `1.3.1-beta.2`. These are operator-deployed genuine EAS code, not evidence of EAS-org-supported X Layer integration. |
+| EAS deployment registry | https://docs.attest.sh/docs/deployments--addresses (EAS org) | E2 | X Layer is **not** listed in the EAS official deployment registry. Do not adopt EAS by assumption for X Layer; treat predeploy presence as operator-deployed code until EAS-org support is demonstrated. |
+| X Layer attestation transport cost | measurement harness `tools/attestation-transport-measurement.mjs` (EIP-2028 + live gas price, no broadcast) | observed runtime (offline measurement) | Registry `registerObject`/`attestClaim` and envelope anchor/revoke are 100 calldata bytes (~1600 calldata gas); EAS `registerSchema` is 229 bytes and `attest` 292 bytes. EAS offers no calldata/cost advantage; adopted transport is native registry commitment + signed envelope anchoring (ADR 0010, experiment `noema-xlayer-attestation-transport`). |
 
 ## Runtime contradiction register
 

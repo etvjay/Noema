@@ -1,0 +1,19 @@
+{
+  "kind": "eas",
+  "version": "0.2.0",
+  "observedAt": "2026-08-18T15:34:07.208Z",
+  "rpc": "https://testrpc.xlayer.tech/terigon",
+  "mode": "read-only-predeploy-probe",
+  "results": {
+    "SchemaRegistry": {
+      "address": "0x4200000000000000000000000000000000000020",
+      "hasCode": true,
+      "codeBytes": 2059
+    },
+    "EAS": {
+      "address": "0x4200000000000000000000000000000000000021",
+      "hasCode": true,
+      "codeBytes": 2059
+    }
+  }
+}
