@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it, beforeAll } from "vitest";
@@ -421,7 +422,7 @@ describe("adversarial multi-venue economic synchrony benchmark (#64)", () => {
     const replayDeliveries = (counterexample.failingOrdering as string[]).map((id) => byId.get(id));
     expect(replayDeliveries.every((d) => d !== undefined)).toBe(true);
 
-    const tmpPath = resolve("/tmp/opencode/counterexample-replay.json");
+    const tmpPath = resolve(tmpdir(), "noema-counterexample-replay.json");
     writeFileSync(
       tmpPath,
       JSON.stringify(
