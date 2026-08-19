@@ -1,0 +1,254 @@
+{
+  "protocolVersion": "noema-terminal-convergence-protocol-v1",
+  "fixtureVersion": "noema-terminal-convergence-v1",
+  "gitCommit": "d5f78aa75406b8c7fa417a0425cee9d63b27dd71",
+  "times": [
+    {
+      "venueId": "venue:issuer",
+      "observedAt": 1700000001000,
+      "receivedAt": 1700000001050
+    },
+    {
+      "venueId": "venue:oracle",
+      "observedAt": 1700000002000,
+      "receivedAt": 1700000002050
+    },
+    {
+      "venueId": "venue:chain-observer",
+      "observedAt": 1700000003000,
+      "receivedAt": 1700000003050
+    },
+    {
+      "venueId": "venue:fund-admin",
+      "observedAt": 1700000004000,
+      "receivedAt": 1700000004050
+    }
+  ],
+  "ingestions": [
+    {
+      "status": "INGESTED",
+      "snapshotId": "source:issuer:primary",
+      "evidenceId": "evidence:ingested:source:issuer:primary"
+    },
+    {
+      "status": "INGESTED",
+      "snapshotId": "source:issuer",
+      "evidenceId": "evidence:ingested:source:issuer"
+    },
+    {
+      "status": "INGESTED",
+      "snapshotId": "source:fund-admin",
+      "evidenceId": "evidence:ingested:source:fund-admin"
+    },
+    {
+      "status": "INGESTED",
+      "snapshotId": "source:oracle",
+      "evidenceId": "evidence:ingested:source:oracle"
+    },
+    {
+      "status": "INGESTED",
+      "snapshotId": "source:chain-observer",
+      "evidenceId": "evidence:ingested:source:chain-observer"
+    }
+  ],
+  "baseLineageValid": true,
+  "representationLineage": {
+    "nodes": [
+      "representation:rwa:fund-share",
+      "representation:xlayer:wrapped"
+    ],
+    "edges": [
+      {
+        "from": "representation:xlayer:wrapped",
+        "kind": "WRAPPED_REPRESENTATION_OF",
+        "evidenceRefs": [
+          "evidence:rwa:onchain",
+          "evidence:rwa:issuance"
+        ]
+      }
+    ],
+    "cycles": [],
+    "ambiguous": []
+  },
+  "v1": {
+    "version": 1,
+    "objectRoot": "0x989744b221efa3e282ce21a3f723fad1eb9b0d9bbef382115034e1b31c6e959d",
+    "decision": "BLOCK"
+  },
+  "vN": {
+    "version": 2,
+    "objectRoot": "0xac6b7b6a67a2af536e00e413fb9afeb08b365b187dc4bf5ecbae2e404bdfc1ed",
+    "evidenceRoot": "0x9314d20c82cb40499b70b9859c9c5a60e76fa06d1a297afd319660981625b8dc",
+    "verification": "PASS",
+    "decision": "ALLOW",
+    "admissions": [
+      {
+        "deliveryId": "delivery:issuer:1",
+        "venueId": "venue:issuer",
+        "status": "ADMITTED",
+        "reasonCodes": []
+      },
+      {
+        "deliveryId": "delivery:oracle:1",
+        "venueId": "venue:oracle",
+        "status": "ADMITTED",
+        "reasonCodes": []
+      },
+      {
+        "deliveryId": "delivery:chain-observer:1",
+        "venueId": "venue:chain-observer",
+        "status": "ADMITTED",
+        "reasonCodes": []
+      },
+      {
+        "deliveryId": "delivery:fund-admin:1",
+        "venueId": "venue:fund-admin",
+        "status": "ADMITTED",
+        "reasonCodes": []
+      }
+    ],
+    "observationTimes": [
+      1700000003000,
+      1700000004000,
+      1700000002000,
+      1700000001000
+    ]
+  },
+  "aiProposal": {
+    "proposalId": "proposal:terminal:nav-projection",
+    "proposalHash": "0x35f40ab785b0fbbfca93516815691f01aa51dd31b432bc42cb4d9d74c3e7c73a",
+    "outcome": "ACCEPT_AS_INFERRED",
+    "reasonCodes": [
+      "EXPLICIT_AI_INFERENCE"
+    ],
+    "verification": "UNRESOLVED",
+    "decision": "CONDITIONAL",
+    "canonicalObjectUnchanged": true
+  },
+  "vN1": {
+    "version": 3,
+    "objectRoot": "0xb84a309e88cecde986b97c18fe2e7e67ebe98f9c8b871fde1cd4825055dd6208",
+    "evidenceRoot": "0x9314d20c82cb40499b70b9859c9c5a60e76fa06d1a297afd319660981625b8dc",
+    "verification": "PASS",
+    "decision": "BLOCK",
+    "navClaimState": "OBSERVED",
+    "lateSkewMs": 1004000
+  },
+  "noOp": {
+    "created": false,
+    "version": 3
+  },
+  "reorg": {
+    "status": "REJECTED",
+    "created": false
+  },
+  "revocation": {
+    "verification": "FAIL",
+    "decision": "BLOCK",
+    "revokedAttestationId": "attestation:venue-fund-admin:NAV:2",
+    "revokedDeliveryStatus": "REJECTED"
+  },
+  "watch": {
+    "changed": true,
+    "eventId": "event:watch:terminal:change:terminal:late-nav",
+    "oldVersion": 2,
+    "newVersion": 3,
+    "oldDecision": "ALLOW",
+    "newDecision": "BLOCK",
+    "notifications": [
+      "WEBHOOK",
+      "DISCORD"
+    ]
+  },
+  "registry": {
+    "commitments": [
+      {
+        "version": 1,
+        "objectRoot": "0x989744b221efa3e282ce21a3f723fad1eb9b0d9bbef382115034e1b31c6e959d",
+        "evidenceRoot": "0x9314d20c82cb40499b70b9859c9c5a60e76fa06d1a297afd319660981625b8dc"
+      },
+      {
+        "version": 2,
+        "objectRoot": "0xac6b7b6a67a2af536e00e413fb9afeb08b365b187dc4bf5ecbae2e404bdfc1ed",
+        "evidenceRoot": "0x9314d20c82cb40499b70b9859c9c5a60e76fa06d1a297afd319660981625b8dc"
+      },
+      {
+        "version": 3,
+        "objectRoot": "0xb84a309e88cecde986b97c18fe2e7e67ebe98f9c8b871fde1cd4825055dd6208",
+        "evidenceRoot": "0x9314d20c82cb40499b70b9859c9c5a60e76fa06d1a297afd319660981625b8dc"
+      }
+    ],
+    "events": [
+      {
+        "type": "ObjectRegistered",
+        "objectId": "object:rwa:treasury-fund",
+        "version": 1,
+        "objectRoot": "0x989744b221efa3e282ce21a3f723fad1eb9b0d9bbef382115034e1b31c6e959d",
+        "evidenceRoot": "0x9314d20c82cb40499b70b9859c9c5a60e76fa06d1a297afd319660981625b8dc"
+      },
+      {
+        "type": "ObjectUpdated",
+        "objectId": "object:rwa:treasury-fund",
+        "previousVersion": 1,
+        "newVersion": 2,
+        "objectRoot": "0xac6b7b6a67a2af536e00e413fb9afeb08b365b187dc4bf5ecbae2e404bdfc1ed",
+        "evidenceRoot": "0x9314d20c82cb40499b70b9859c9c5a60e76fa06d1a297afd319660981625b8dc"
+      },
+      {
+        "type": "ObjectUpdated",
+        "objectId": "object:rwa:treasury-fund",
+        "previousVersion": 2,
+        "newVersion": 3,
+        "objectRoot": "0xb84a309e88cecde986b97c18fe2e7e67ebe98f9c8b871fde1cd4825055dd6208",
+        "evidenceRoot": "0x9314d20c82cb40499b70b9859c9c5a60e76fa06d1a297afd319660981625b8dc"
+      }
+    ]
+  },
+  "transport": [
+    {
+      "step": "register:vN",
+      "calldata": "0x90d97399fb18e95fc1a196946a8fa23911f8b0d1c94d4225ec88f430772a2374a6b91c84ac6b7b6a67a2af536e00e413fb9afeb08b365b187dc4bf5ecbae2e404bdfc1ed9314d20c82cb40499b70b9859c9c5a60e76fa06d1a297afd319660981625b8dc",
+      "gas": 22588
+    },
+    {
+      "step": "attest:venue:issuer",
+      "calldata": "0xba5e7169fb18e95fc1a196946a8fa23911f8b0d1c94d4225ec88f430772a2374a6b91c848f66e83581aad9263c9296380fa8046b4eb1f4dc3f9281d33f4897de8323721e7502a73bfc8401fe74c191d3289c61f4f83c414ccec5036e8322122a05e80eb6",
+      "gas": 22600
+    },
+    {
+      "step": "anchor:venue:issuer",
+      "calldata": "0xba5e7169fb18e95fc1a196946a8fa23911f8b0d1c94d4225ec88f430772a2374a6b91c848f66e83581aad9263c9296380fa8046b4eb1f4dc3f9281d33f4897de8323721e7502a73bfc8401fe74c191d3289c61f4f83c414ccec5036e8322122a05e80eb6",
+      "gas": 22600
+    },
+    {
+      "step": "attest:venue:oracle",
+      "calldata": "0xba5e7169fb18e95fc1a196946a8fa23911f8b0d1c94d4225ec88f430772a2374a6b91c84a82d3d7a170e2f91e0e4acc96db24453d07ab227032d099a85206c340f1e344e43a070b5e278de58d64a5bf53830a1fe84951c4f61401166538b438b881c84f5",
+      "gas": 22600
+    },
+    {
+      "step": "anchor:venue:oracle",
+      "calldata": "0xba5e7169fb18e95fc1a196946a8fa23911f8b0d1c94d4225ec88f430772a2374a6b91c84a82d3d7a170e2f91e0e4acc96db24453d07ab227032d099a85206c340f1e344e43a070b5e278de58d64a5bf53830a1fe84951c4f61401166538b438b881c84f5",
+      "gas": 22600
+    },
+    {
+      "step": "attest:venue:chain-observer",
+      "calldata": "0xba5e7169fb18e95fc1a196946a8fa23911f8b0d1c94d4225ec88f430772a2374a6b91c847c210c350b18e613deeef718ac15d58d3f27ea351adb36d97da3e3e310d73ceae763cacd9201e2fd2446f43b05607f73bb5f6eaf09858b3193f89c86a8832e9d",
+      "gas": 22600
+    },
+    {
+      "step": "anchor:venue:chain-observer",
+      "calldata": "0xba5e7169fb18e95fc1a196946a8fa23911f8b0d1c94d4225ec88f430772a2374a6b91c847c210c350b18e613deeef718ac15d58d3f27ea351adb36d97da3e3e310d73ceae763cacd9201e2fd2446f43b05607f73bb5f6eaf09858b3193f89c86a8832e9d",
+      "gas": 22600
+    },
+    {
+      "step": "attest:venue:fund-admin",
+      "calldata": "0xba5e7169fb18e95fc1a196946a8fa23911f8b0d1c94d4225ec88f430772a2374a6b91c8489029422e1f33921b362d4cab975d4b63096be58a101edab9c8e72c6c59daedc5b364364487cdc639849421bff22c444fd5bb2e49237f6e93201eb366575f7cb",
+      "gas": 22600
+    },
+    {
+      "step": "anchor:venue:fund-admin",
+      "calldata": "0xba5e7169fb18e95fc1a196946a8fa23911f8b0d1c94d4225ec88f430772a2374a6b91c8489029422e1f33921b362d4cab975d4b63096be58a101edab9c8e72c6c59daedc5b364364487cdc639849421bff22c444fd5bb2e49237f6e93201eb366575f7cb",
+      "gas": 22600
+    }
+  ]
+}

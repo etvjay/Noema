@@ -1,0 +1,484 @@
+{
+  "scenarioVersion": "noema-terminal-replay-v1",
+  "fixtureVersion": "noema-terminal-convergence-v1",
+  "frozenAt": "2026-08-19T18:00:00Z",
+  "replay": "deterministic",
+  "object": {
+    "id": "object:rwa:treasury-fund",
+    "version": 1,
+    "schemaId": "noema:economic-object",
+    "schemaVersion": 1,
+    "classification": {
+      "primary": "TOKENIZED_TREASURY",
+      "secondary": [],
+      "confidence": 0.99,
+      "claimRef": "claim:rwa:classification"
+    },
+    "identifiers": [
+      {
+        "scheme": "ISIN",
+        "value": "US1234567890",
+        "source": "source:issuer:primary",
+        "status": "SOURCED"
+      }
+    ],
+    "representations": [
+      {
+        "id": "representation:xlayer:fund-share",
+        "environment": "EVM",
+        "network": "xlayer-testnet",
+        "contract": "0x00000000000000000000000000000000000000AA",
+        "tokenStandard": "ERC20",
+        "identifiers": [
+          {
+            "scheme": "CONTRACT",
+            "value": "0x00000000000000000000000000000000000000AA",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "relationshipToObject": "claim:rwa:represents",
+        "status": "ACTIVE",
+        "evidence": [
+          "evidence:rwa:registration"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel:rwa:represents",
+        "subject": "representation:xlayer:fund-share",
+        "predicate": "REPRESENTS",
+        "object": "object:rwa:treasury-fund",
+        "state": "SOURCED",
+        "evidence": [
+          "evidence:rwa:registration"
+        ],
+        "attestations": [],
+        "observedAt": 1700000000000
+      }
+    ],
+    "parties": [
+      {
+        "id": "party:issuer",
+        "role": "ISSUER",
+        "name": "Arcadia Treasury SPV I",
+        "identifiers": [
+          {
+            "scheme": "ISSUER",
+            "value": "arcadia-treasury-spv-i",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "claimRefs": [
+          "claim:rwa:classification"
+        ]
+      }
+    ],
+    "rights": [
+      {
+        "id": "right:redemption",
+        "type": "REDEMPTION",
+        "terms": {
+          "windowMs": 86400000,
+          "asset": "USD"
+        },
+        "claimRefs": [
+          "claim:rwa:redemption"
+        ]
+      }
+    ],
+    "obligations": [],
+    "restrictions": [
+      {
+        "id": "restriction:eligible",
+        "type": "ELIGIBLE_INVESTORS_ONLY",
+        "scope": "INVESTOR",
+        "claimRefs": [
+          "claim:rwa:restrictions"
+        ],
+        "evidenceRefs": [
+          "evidence:rwa:registration"
+        ]
+      }
+    ],
+    "economics": {
+      "asOf": 1700000000000,
+      "values": {
+        "navPerShare": "1.000000",
+        "totalAum": "100000000"
+      },
+      "claimRefs": [
+        "claim:rwa:nav"
+      ]
+    },
+    "claims": [
+      {
+        "id": "claim:rwa:classification",
+        "subject": "object:rwa:treasury-fund",
+        "property": "assetClass",
+        "value": "TOKENIZED_TREASURY",
+        "state": "SOURCED",
+        "sourceRefs": [
+          "source:issuer:primary"
+        ],
+        "evidenceRefs": [
+          "evidence:rwa:registration"
+        ],
+        "attestationRefs": [],
+        "createdAt": 1700000000000
+      },
+      {
+        "id": "claim:rwa:nav",
+        "subject": "object:rwa:treasury-fund",
+        "property": "navPerShare",
+        "value": "1.000000",
+        "state": "OBSERVED",
+        "sourceRefs": [
+          "source:fund-admin"
+        ],
+        "evidenceRefs": [
+          "evidence:rwa:nav"
+        ],
+        "attestationRefs": [],
+        "createdAt": 1700000000000
+      },
+      {
+        "id": "claim:rwa:redemption",
+        "subject": "right:redemption",
+        "property": "redemptionWindow",
+        "value": "1_BUSINESS_DAY",
+        "state": "SOURCED",
+        "sourceRefs": [
+          "source:issuer:primary"
+        ],
+        "evidenceRefs": [
+          "evidence:rwa:registration"
+        ],
+        "attestationRefs": [],
+        "createdAt": 1700000000000
+      }
+    ],
+    "evidence": [
+      {
+        "id": "evidence:rwa:registration",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "FILING",
+        "source": "source:issuer:primary",
+        "contentHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "observedAt": 1700000000000,
+        "fetchedAt": 1700000000000,
+        "authority": "PRIMARY_SOURCE",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      },
+      {
+        "id": "evidence:rwa:issuance",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "FILING",
+        "source": "source:issuer",
+        "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+        "observedAt": 1700000001000,
+        "fetchedAt": 1700000001000,
+        "authority": "PRIMARY_SOURCE",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      },
+      {
+        "id": "evidence:rwa:nav",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "API_RESPONSE",
+        "source": "source:fund-admin",
+        "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+        "observedAt": 1700000004000,
+        "fetchedAt": 1700000004000,
+        "authority": "PRIMARY_SOURCE",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      },
+      {
+        "id": "evidence:rwa:price",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "API_RESPONSE",
+        "source": "source:oracle",
+        "contentHash": "0x3333333333333333333333333333333333333333333333333333333333333333",
+        "observedAt": 1700000002000,
+        "fetchedAt": 1700000002000,
+        "authority": "MARKET_DATA",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      },
+      {
+        "id": "evidence:rwa:onchain",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "ONCHAIN_STATE",
+        "source": "source:chain-observer",
+        "contentHash": "0x4444444444444444444444444444444444444444444444444444444444444444",
+        "observedAt": 1700000003000,
+        "fetchedAt": 1700000003000,
+        "authority": "ONCHAIN_STATE",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      }
+    ],
+    "attestations": [
+      {
+        "id": "attestation:venue-issuer:SHARE_CLASS_DEFINITION",
+        "schemaId": "noema:attestation",
+        "schemaVersion": 1,
+        "subject": "object:rwa:treasury-fund",
+        "claimRef": "claim:issuer:share-class",
+        "schema": "noema:venue-economic-attestation",
+        "attestor": "0x6666666666666666666666666666666666666666",
+        "evidenceRoot": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "signature": "0x97ec21f6e4cac854bc530fa0630372ee3b567910d4d05bf8c1bf1cd178228504",
+        "issuedAt": 1700000001000,
+        "state": "ACTIVE"
+      },
+      {
+        "id": "attestation:venue-oracle:OBSERVED_PRICE",
+        "schemaId": "noema:attestation",
+        "schemaVersion": 1,
+        "subject": "object:rwa:treasury-fund",
+        "claimRef": "claim:oracle:price",
+        "schema": "noema:venue-economic-attestation",
+        "attestor": "0x2222222222222222222222222222222222222222",
+        "evidenceRoot": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "signature": "0x7383934d68ea1131b3c0b01b59fd5f21c60434d9f9831f734fa5ba1e4cdd6c81",
+        "issuedAt": 1700000002000,
+        "state": "ACTIVE"
+      },
+      {
+        "id": "attestation:venue-chain-observer:BALANCE",
+        "schemaId": "noema:attestation",
+        "schemaVersion": 1,
+        "subject": "object:rwa:treasury-fund",
+        "claimRef": "claim:chain-observer:balance",
+        "schema": "noema:venue-economic-attestation",
+        "attestor": "0x5555555555555555555555555555555555555555",
+        "evidenceRoot": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "signature": "0x79cfd156c20c650c4d012e9ef718367efae9e4c31b1ac6c70d673220377760a4",
+        "issuedAt": 1700000003000,
+        "state": "ACTIVE"
+      },
+      {
+        "id": "attestation:venue-fund-admin:NAV",
+        "schemaId": "noema:attestation",
+        "schemaVersion": 1,
+        "subject": "object:rwa:treasury-fund",
+        "claimRef": "claim:fund-admin:nav",
+        "schema": "noema:venue-economic-attestation",
+        "attestor": "0x1111111111111111111111111111111111111111",
+        "evidenceRoot": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "signature": "0x011e1039aba0bb34fbcab54c8fe20c11389252cd67deb30fb27eff8892c09233",
+        "issuedAt": 1700000004000,
+        "state": "ACTIVE"
+      }
+    ],
+    "exceptions": [],
+    "provenance": {
+      "edges": [
+        {
+          "id": "edge:rwa:1",
+          "from": "source:issuer:primary",
+          "to": "evidence:rwa:registration",
+          "relation": "CAPTURED"
+        },
+        {
+          "id": "edge:rwa:classification",
+          "from": "claim:rwa:classification",
+          "to": "evidence:rwa:registration",
+          "relation": "SUPPORTED_BY"
+        },
+        {
+          "id": "edge:rwa:nav",
+          "from": "claim:rwa:nav",
+          "to": "evidence:rwa:nav",
+          "relation": "SUPPORTED_BY"
+        },
+        {
+          "id": "edge:rwa:redemption",
+          "from": "claim:rwa:redemption",
+          "to": "evidence:rwa:registration",
+          "relation": "SUPPORTED_BY"
+        }
+      ]
+    },
+    "verification": {
+      "status": "UNRESOLVED",
+      "verifierVersion": "pending",
+      "checks": []
+    },
+    "status": "RESOLVED",
+    "createdAt": 1700000000000,
+    "updatedAt": 1700000000000
+  },
+  "deliveries": [
+    {
+      "deliveryId": "delivery:fund-admin:2",
+      "venueId": "venue:fund-admin",
+      "attestation": {
+        "schemaId": "noema:venue-attestation",
+        "schemaVersion": 1,
+        "attestationId": "attestation:venue-fund-admin:NAV:2",
+        "venueId": "venue:fund-admin",
+        "attestor": "0x1111111111111111111111111111111111111111",
+        "authorityScope": {
+          "role": "FUND_ADMINISTRATOR",
+          "propositions": [
+            "NAV",
+            "VALUATION"
+          ]
+        },
+        "binding": {
+          "subjectRef": "object:rwa:treasury-fund",
+          "objectRef": "object:rwa:treasury-fund",
+          "objectVersion": 1
+        },
+        "evidenceRefs": [
+          "evidence:rwa:nav"
+        ],
+        "sourceRefs": [
+          "source:fund-admin"
+        ],
+        "provenance": {
+          "chainId": "eip155:1952",
+          "finality": "FINALIZED",
+          "observedAt": 1700000000000,
+          "fetchedAt": 1700000000100
+        },
+        "nonce": 2,
+        "issuedAt": 1700000000000,
+        "signatureScheme": "EIP-712",
+        "signatureDomainVersion": "noema-venue-attestation-v1",
+        "signature": "0xfcd5d300589fce86e59a5b1f5ad40f12bde85fbd9f6477208c5008f8d9238dba",
+        "status": "ACTIVE",
+        "reasonCodes": []
+      },
+      "observations": [],
+      "claims": [
+        {
+          "proposition": "NAV",
+          "subject": "object:rwa:treasury-fund",
+          "value": "1.000000",
+          "observedAt": 1700000000000,
+          "evidenceRefs": [
+            "evidence:rwa:nav"
+          ]
+        }
+      ],
+      "receivedAt": 1700001004000
+    }
+  ],
+  "policy": {
+    "venueCapabilities": {
+      "venue:issuer": "ISSUER",
+      "venue:fund-admin": "FUND_ADMINISTRATOR",
+      "venue:oracle": "ORACLE",
+      "venue:chain-observer": "CHAIN_OBSERVER"
+    },
+    "trustedAttestors": [
+      "0x6666666666666666666666666666666666666666",
+      "0x1111111111111111111111111111111111111111",
+      "0x2222222222222222222222222222222222222222",
+      "0x5555555555555555555555555555555555555555"
+    ],
+    "nowMs": 1700002504000,
+    "maxEvidenceAgeMs": 3600000,
+    "lateEvidenceThresholdMs": 100000,
+    "requireFinalizedObservations": true,
+    "evidenceIndex": {
+      "evidence:rwa:registration": {
+        "id": "evidence:rwa:registration",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "FILING",
+        "source": "source:issuer:primary",
+        "contentHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "observedAt": 1700000000000,
+        "fetchedAt": 1700000000000,
+        "authority": "PRIMARY_SOURCE",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      },
+      "evidence:rwa:issuance": {
+        "id": "evidence:rwa:issuance",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "FILING",
+        "source": "source:issuer",
+        "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+        "observedAt": 1700000001000,
+        "fetchedAt": 1700000001000,
+        "authority": "PRIMARY_SOURCE",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      },
+      "evidence:rwa:nav": {
+        "id": "evidence:rwa:nav",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "API_RESPONSE",
+        "source": "source:fund-admin",
+        "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+        "observedAt": 1700000004000,
+        "fetchedAt": 1700000004000,
+        "authority": "PRIMARY_SOURCE",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      },
+      "evidence:rwa:price": {
+        "id": "evidence:rwa:price",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "API_RESPONSE",
+        "source": "source:oracle",
+        "contentHash": "0x3333333333333333333333333333333333333333333333333333333333333333",
+        "observedAt": 1700000002000,
+        "fetchedAt": 1700000002000,
+        "authority": "MARKET_DATA",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      },
+      "evidence:rwa:onchain": {
+        "id": "evidence:rwa:onchain",
+        "schemaId": "noema:evidence",
+        "schemaVersion": 1,
+        "type": "ONCHAIN_STATE",
+        "source": "source:chain-observer",
+        "contentHash": "0x4444444444444444444444444444444444444444444444444444444444444444",
+        "observedAt": 1700000003000,
+        "fetchedAt": 1700000003000,
+        "authority": "ONCHAIN_STATE",
+        "freshness": "FRESH",
+        "metadata": {
+          "fixtureRole": "terminal-convergence"
+        }
+      }
+    }
+  }
+}

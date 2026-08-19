@@ -521,6 +521,25 @@
         "run",
         "tests/integrity/economic-synchrony-benchmark.test.ts"
       ]
+    },
+    {
+      "id": "terminal-convergence",
+      "phase": "system",
+      "description": "Representation & synchrony terminal gate (#65): one multi-venue RWA economic object is proven end to end across venue/source observations -> SourceSnapshots -> Evidence -> scoped venue economic attestations -> representation lineage -> Noema AI proposals -> deterministic promotion -> EconomicObject vN -> asynchronous venue changes -> finality/scope validation -> vN+1 or explicit conflict/no-op -> VerificationReceipt -> Mandate reevaluation -> SemanticEvent -> X Layer commitment/attestation history; admission provenance and scopes are explicit for every admitted source/attestation; representation lineage is evidence-derived (ticker/name/symbol basis is rejected); at least three venue observations preserve distinct observation times without fabricated simultaneity; delivery-order permutation and CLI replay reproduce the same canonical result or the same explicit unresolved result; duplicates/no-ops create no extra object versions; revoked/reorged/superseded state is historically preserved and no longer action-authoritative; AI proposals remain proposal-only with traversable deterministic promotion reason codes; EconomicObject/VerificationReceipt/DecisionReceipt roots and version lineage are reproducible; the transport preserves the exact commitment/attestation history without overclaiming truth; the #64 adversarial synchrony benchmark PASSes at the exact terminal commit; the CLI replays and verifies the terminal artifact; and the terminal evidence bundle contains no secrets.",
+      "kind": "command",
+      "requires": [
+        "fixtures/terminal/terminal-rwa-v1.json",
+        "fixtures/terminal/scenario",
+        "experiments/state/noema-terminal-convergence/result.json",
+        "tests/integrity/terminal-convergence.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/terminal-convergence.test.ts"
+      ]
     }
   ],
   "liveGates": [

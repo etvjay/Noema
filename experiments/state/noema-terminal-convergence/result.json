@@ -1,0 +1,37 @@
+{
+  "experimentId": "noema-terminal-convergence",
+  "protocolVersion": "noema-terminal-convergence-protocol-v1",
+  "fixtureVersion": "noema-terminal-convergence-v1",
+  "gitCommit": "d5f78aa75406b8c7fa417a0425cee9d63b27dd71",
+  "status": "PASS",
+  "validity": {
+    "multiVenueFormation": true,
+    "distinctObservationTimes": true,
+    "representationLineageValid": true,
+    "lineageEvidenceDerived": true,
+    "noTickerBasis": true,
+    "aiProposalOnly": true,
+    "lateNotActionAuthoritative": true,
+    "noOpNoExtraVersion": true,
+    "reorgRejected": true,
+    "revocationBlocks": true,
+    "historyPreserved": true,
+    "rootsReproducible": true,
+    "transportHistoryPreserved": true,
+    "noTransportOverclaim": true,
+    "watchEventEmitted": true
+  },
+  "result": {
+    "canonicalVersion": 2,
+    "finalVersion": 3,
+    "vNDecision": "ALLOW",
+    "vN1Decision": "BLOCK",
+    "aiDecision": "CONDITIONAL",
+    "revokedDecision": "BLOCK",
+    "registryCommitments": [
+      1,
+      2,
+      3
+    ]
+  }
+}

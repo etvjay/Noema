@@ -107,6 +107,12 @@ Claim to test: the canonical venue synchronizer preserves conflict visibility, o
 
 State: `PASS` (X1 offline fixture). See `state/noema-synchrony-benchmark/` for protocol, raw baseline/candidate runs, and result. Versioned frozen corpus: `fixtures/synchrony/benchmark-v1.json`; deterministic CLI replay artifacts: `fixtures/synchrony/replay/`. Live multi-venue roundtrips remain required before live release claims (#65).
 
+### `noema-terminal-convergence`
+
+Claim to test: one multi-venue RWA economic object converges deterministically across the full terminal trace — venue/source observations -> SourceSnapshots -> Evidence -> scoped venue economic attestations -> representation lineage -> Noema AI proposals -> deterministic promotion -> EconomicObject vN -> asynchronous venue changes -> finality/scope validation -> vN+1 or explicit conflict/no-op -> VerificationReceipt -> Mandate reevaluation -> SemanticEvent -> X Layer commitment/attestation history.
+
+State: `PASS` (X1 offline fixture). See `state/noema-terminal-convergence/` for protocol, raw trace, and result; the machine-readable terminal evidence bundle is `artifacts/terminal/noema-terminal-convergence/bundle.json` and the CLI-replayable scenarios are `fixtures/terminal/scenario/`. Live multi-venue and live X Layer write roundtrips remain required before live release claims.
+
 ## Useful commands
 
 ```bash
