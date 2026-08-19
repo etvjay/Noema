@@ -8,6 +8,7 @@
     "node": ">=24.19.0 <25"
   },
   "scripts": {
+    "noema": "node apps/cli/bin/noema.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --exclude tests/integrity/registry-live-trace.test.ts --exclude tests/integrity/registry-live-history.test.ts",
     "test:watch": "vitest",

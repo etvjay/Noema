@@ -1,0 +1,20 @@
+{
+  "name": "@noema/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "noema": "./bin/noema.mjs"
+  },
+  "dependencies": {
+    "@noema/canonicalization": "workspace:*",
+    "@noema/economic-kernel": "workspace:*",
+    "@noema/noema-core": "workspace:*",
+    "@noema/schemas": "workspace:*",
+    "@noema/verification": "workspace:*",
+    "viem": "^2.55.13"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

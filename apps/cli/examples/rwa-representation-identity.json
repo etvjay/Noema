@@ -1,0 +1,30 @@
+{
+  "schemaId": "noema:representation-identity",
+  "schemaVersion": 1,
+  "representationId": "representation:xlayer:fund-share",
+  "economicObjectRef": "object:rwa:treasury-fund",
+  "locator": {
+    "environment": "EVM",
+    "chainId": "eip155:1952",
+    "network": "xlayer-testnet",
+    "contract": "0x00000000000000000000000000000000000000AA",
+    "tokenStandard": "ERC20"
+  },
+  "shareClass": "class-a",
+  "generation": 1,
+  "lineage": [],
+  "issuerRef": "party:issuer",
+  "identifiers": [
+    {
+      "scheme": "CONTRACT",
+      "value": "0x00000000000000000000000000000000000000AA",
+      "source": "source:issuer:primary",
+      "status": "SOURCED"
+    }
+  ],
+  "evidenceRefs": [
+    "evidence:rwa:registration"
+  ],
+  "attestationRefs": [],
+  "status": "ACTIVE"
+}

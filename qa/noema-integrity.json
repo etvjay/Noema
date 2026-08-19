@@ -482,6 +482,25 @@
         "run",
         "tests/integrity/attestation-transport.test.ts"
       ]
+    },
+    {
+      "id": "cli-conformance",
+      "phase": "watch",
+      "description": "Noema conformance & tooling CLI (#63): the CLI consumes only canonical modules and never implements parallel business logic; roots computed by the CLI are byte-for-byte identical to the canonical library; synchrony replay proves deterministic convergence across orderings; attestation sign/verify paths never print or persist private keys; exit codes distinguish VALID/INVALID/UNRESOLVED/SOURCE_FAILURE/VERIFICATION_FAILURE/UNSUPPORTED_VERSION/USAGE/INTERNAL; doctor reports schema/runtime/module compatibility and external prerequisites without claiming live proof; both human-readable and machine-readable (--format=json) output modes are covered.",
+      "kind": "command",
+      "requires": [
+        "tests/integrity/cli-conformance.test.ts",
+        "apps/cli/src/index.ts",
+        "apps/cli/bin/noema.mjs",
+        "apps/cli/usage/README.md"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/cli-conformance.test.ts"
+      ]
     }
   ],
   "liveGates": [

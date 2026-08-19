@@ -40,6 +40,15 @@ Usage index: `packages/noema-core/usage/README.md`
 | Async multi-venue economic synchronizer | `@noema/noema-core/synchronizer` | backend/core orchestration, venue delivery intake & reconciliation (#60) | deterministic reconciliation of asynchronous venue observations into versioned EconomicObject state, order-independent roots, idempotent duplicates, explicit conflict state, authority-scoped mutation, inspectable temporal skew | `packages/noema-core/usage/synchronizer/README.md` |
 | Registry commitment model | `@noema/noema-core/commitment` | backend registry service, E2E integrity tests | deterministic offchain mirror of NoemaRegistry commitment/version semantics | `packages/noema-core/usage/commitment/README.md` |
 
+## @noema/cli
+
+Source package: `apps/cli/`
+Usage index: `apps/cli/usage/README.md`
+
+| Module | Import path | Intended consumers | Responsibility | Usage contract |
+|---|---|---|---|---|
+| Noema conformance & tooling CLI | `@noema/cli` (`noema`) | integrators, developers, judges, coding agents, QA/terminal surfaces | deterministic command-line validation, inspection, replay, and verification of Noema economic artifacts using only canonical modules (no parallel business logic) | `apps/cli/usage/README.md` |
+
 ## @noema/schemas
 
 Source package: `packages/schemas/`

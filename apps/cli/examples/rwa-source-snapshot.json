@@ -1,0 +1,12 @@
+{
+  "id": "snapshot:venue-a:1",
+  "schemaId": "noema:source-snapshot",
+  "schemaVersion": 1,
+  "sourceId": "venue:a",
+  "uri": "https://venue-a.example/nav.json",
+  "contentType": "application/json",
+  "contentHash": "0x307be79317301fd36a86fbb44c7e7e6461e3ac27307a0edae2211e9514b0bfb6",
+  "fetchedAt": 1700000000100,
+  "httpStatus": 200,
+  "bodyStorageRef": "storage:venue-a:1"
+}

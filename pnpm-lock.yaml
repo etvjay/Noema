@@ -33,6 +33,27 @@ importers:
         specifier: ^3.2.4
         version: 3.2.7(@types/node@24.13.3)
 
+  apps/cli:
+    dependencies:
+      '@noema/canonicalization':
+        specifier: workspace:*
+        version: link:../../packages/canonicalization
+      '@noema/economic-kernel':
+        specifier: workspace:*
+        version: link:../../packages/economic-kernel
+      '@noema/noema-core':
+        specifier: workspace:*
+        version: link:../../packages/noema-core
+      '@noema/schemas':
+        specifier: workspace:*
+        version: link:../../packages/schemas
+      '@noema/verification':
+        specifier: workspace:*
+        version: link:../../packages/verification
+      viem:
+        specifier: ^2.55.13
+        version: 2.55.13(typescript@5.9.3)(zod@4.4.3)
+
   packages/canonicalization:
     dependencies:
       '@noema/economic-kernel':

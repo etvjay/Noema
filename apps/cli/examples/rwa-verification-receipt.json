@@ -1,0 +1,14 @@
+{
+  "id": "verification:rwa:v1",
+  "schemaId": "noema:verification-receipt",
+  "schemaVersion": 1,
+  "objectId": "object:rwa:treasury-fund",
+  "objectVersion": 1,
+  "verifierVersion": "noema-verifier-v1",
+  "hashingVersion": "noema-hashing-v2",
+  "evidenceRoot": "0xd01b82424cf13af6fda46efc3b191e6cb011453343955cff5c282bfd7cedad92",
+  "objectRoot": "0x30b9697459e7e694a653be6d05cb235af1ce41f2ec727becf3ec0e9d9b726e89",
+  "checks": [],
+  "overallStatus": "PASS",
+  "createdAt": 1700000000000
+}

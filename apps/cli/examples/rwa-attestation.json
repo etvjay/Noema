@@ -1,0 +1,54 @@
+{
+  "envelope": {
+    "schemaId": "noema:venue-attestation",
+    "schemaVersion": 1,
+    "attestationId": "attestation:venue-a:nav:1",
+    "venueId": "venue:a",
+    "attestor": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "authorityScope": {
+      "role": "FUND_ADMINISTRATOR",
+      "propositions": [
+        "NAV",
+        "VALUATION"
+      ]
+    },
+    "binding": {
+      "subjectRef": "object:rwa:treasury-fund",
+      "objectRef": "object:rwa:treasury-fund",
+      "objectVersion": 1
+    },
+    "evidenceRefs": [
+      "evidence:rwa:nav"
+    ],
+    "sourceRefs": [
+      "source:venue-a"
+    ],
+    "provenance": {
+      "chainId": "eip155:1952",
+      "finality": "FINALIZED",
+      "observedAt": 1700000000000
+    },
+    "nonce": 1,
+    "issuedAt": 1700000000000,
+    "signatureScheme": "EIP-712",
+    "signatureDomainVersion": "noema-venue-attestation-v1",
+    "signature": "0x",
+    "status": "ACTIVE",
+    "reasonCodes": []
+  },
+  "domain": {
+    "name": "Noema",
+    "version": "1",
+    "chainId": 1952,
+    "verifyingContract": "0x0000000000000000000000000000000000000000"
+  },
+  "policy": {
+    "venueCapabilities": {
+      "venue:a": "FUND_ADMINISTRATOR"
+    },
+    "trustedAttestors": [
+      "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+    ],
+    "nowMs": 1700000001000
+  }
+}
