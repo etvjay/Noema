@@ -65,6 +65,8 @@ noema receipt verify apps/cli/examples/rwa-verification-receipt.json apps/cli/ex
 
 # Replay an adversarial multi-venue scenario and prove deterministic convergence
 noema synchrony replay apps/cli/examples/adversarial-multi-venue-scenario.json
+# Replay a preserved benchmark counterexample permutation (fixtures/synchrony/replay/)
+noema synchrony replay fixtures/synchrony/replay/out-of-order-agreement-permutation.json
 
 # Sign and verify a venue attestation envelope
 NOEMA_ATTESTER_KEY=<hex> noema attestation sign apps/cli/examples/rwa-attestation.json

@@ -501,6 +501,26 @@
         "run",
         "tests/integrity/cli-conformance.test.ts"
       ]
+    },
+    {
+      "id": "synchrony-benchmark",
+      "phase": "watch",
+      "description": "Adversarial multi-venue economic synchrony benchmark (#64): the canonical venue synchronizer preserves conflict visibility, order invariance, duplicate idempotency, scope/revocation/staleness/finality gating, and append-only versioning across the versioned frozen corpus (fixtures/synchrony/benchmark-v1.json); a deliberately degraded baseline is detectably caught on order invariance, deterministic replay, scope promotion, spurious versions, staleness, revocation, and reorg handling; failures preserve the exact minimal counterexample/permutation; the CLI (synchrony replay) replays preserved scenarios and counterexample permutations deterministically to the recorded synchronization root; raw per-permutation runs stay separate from aggregate metrics.",
+      "kind": "command",
+      "requires": [
+        "fixtures/synchrony/benchmark-v1.json",
+        "fixtures/synchrony/replay",
+        "tools/synchrony-benchmark-core.mjs",
+        "experiments/state/noema-synchrony-benchmark/result.json",
+        "tests/integrity/economic-synchrony-benchmark.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/economic-synchrony-benchmark.test.ts"
+      ]
     }
   ],
   "liveGates": [

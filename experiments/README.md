@@ -101,6 +101,12 @@ Claim to test: a material evidence change or revocation produces vN+1, re-verifi
 
 Start X1/X2; target X3 once external change detection is live.
 
+### `noema-synchrony-benchmark`
+
+Claim to test: the canonical venue synchronizer preserves conflict visibility, order invariance, duplicate idempotency, scope/revocation/staleness/finality gating, and append-only versioning across an adversarial multi-venue corpus, and a deliberately degraded baseline is detectably caught; preserved counterexample permutations replay deterministically through the CLI.
+
+State: `PASS` (X1 offline fixture). See `state/noema-synchrony-benchmark/` for protocol, raw baseline/candidate runs, and result. Versioned frozen corpus: `fixtures/synchrony/benchmark-v1.json`; deterministic CLI replay artifacts: `fixtures/synchrony/replay/`. Live multi-venue roundtrips remain required before live release claims (#65).
+
 ## Useful commands
 
 ```bash

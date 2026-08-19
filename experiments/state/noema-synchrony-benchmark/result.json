@@ -1,0 +1,59 @@
+{
+  "experimentId": "noema-synchrony-benchmark",
+  "protocolVersion": "noema-synchrony-benchmark-protocol-v1",
+  "fixtureVersion": "noema-synchrony-benchmark-v1",
+  "baselineRun": "raw-baseline.json",
+  "candidateRun": "raw-candidate.json",
+  "derivedMetrics": {
+    "caseCount": 14,
+    "orderInvarianceRate": 1,
+    "deterministicReplayRate": 1,
+    "duplicateIdempotencyRate": 1,
+    "silentConflictLossRate": 0,
+    "unauthorizedScopePromotionRate": 0,
+    "spuriousVersionRate": 0,
+    "staleHandledRate": 1,
+    "revocationHandledRate": 1,
+    "reorgHandledRate": 1,
+    "lateVisibleRate": 1,
+    "supersededHandledRate": 1
+  },
+  "promotionThresholds": {
+    "caseCountMin": 10,
+    "orderInvarianceRateMin": 1,
+    "deterministicReplayRateMin": 1,
+    "duplicateIdempotencyRateMin": 1,
+    "silentConflictLossRateMax": 0,
+    "unauthorizedScopePromotionRateMax": 0,
+    "spuriousVersionRateMax": 0,
+    "staleHandledRateMin": 1,
+    "revocationHandledRateMin": 1,
+    "reorgHandledRateMin": 1,
+    "lateVisibleRateMin": 1,
+    "supersededHandledRateMin": 1
+  },
+  "baselineMetrics": {
+    "caseCount": 14,
+    "orderInvarianceRate": 0,
+    "deterministicReplayRate": 0.6363636363636364,
+    "duplicateIdempotencyRate": 0,
+    "silentConflictLossRate": 1,
+    "unauthorizedScopePromotionRate": 1,
+    "spuriousVersionRate": 1,
+    "staleHandledRate": 0,
+    "revocationHandledRate": 0,
+    "reorgHandledRate": 0,
+    "lateVisibleRate": 0,
+    "supersededHandledRate": 1
+  },
+  "result": "PASS",
+  "validity": {
+    "level": "X1_OFFLINE_FIXTURE",
+    "limitations": [
+      "Deterministic offline replay of the versioned fixture corpus; no live RPC/model dependency.",
+      "PASS authorizes the canonical synchronizer for this fixture corpus only.",
+      "Live multi-venue roundtrips remain required before live release claims (#65)."
+    ]
+  },
+  "claimUpdate": "The canonical venue synchronizer preserves conflict visibility, idempotency, order invariance, scope/revocation/staleness/finality gating, and append-only versioning across the adversarial corpus; a deliberately degraded baseline is detectably caught."
+}

@@ -1,0 +1,4250 @@
+{
+  "fixtureVersion": "noema-synchrony-benchmark-v1",
+  "frozenAt": "2026-08-19T15:00:00Z",
+  "protocolVersion": "noema-synchrony-benchmark-protocol-v1",
+  "description": "Adversarial multi-venue economic synchrony benchmark corpus (#64)",
+  "attestors": {
+    "venue:fund-admin": "0x1111111111111111111111111111111111111111",
+    "venue:fund-admin-2": "0x7777777777777777777777777777777777777777",
+    "venue:oracle-a": "0x2222222222222222222222222222222222222222",
+    "venue:oracle-b": "0x3333333333333333333333333333333333333333",
+    "venue:transfer-agent": "0x4444444444444444444444444444444444444444",
+    "venue:chain-observer": "0x5555555555555555555555555555555555555555",
+    "venue:issuer": "0x6666666666666666666666666666666666666666"
+  },
+  "cases": [
+    {
+      "id": "out-of-order-agreement",
+      "label": "out-of-order-observations",
+      "description": "Three venues report agreeing NAV/price values in conflicting arrival order",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:fund-admin:1",
+          "venueId": "venue:fund-admin",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin:NAV",
+            "venueId": "venue:fund-admin",
+            "attestor": "0x1111111111111111111111111111111111111111",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:fund-admin"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000200
+        },
+        {
+          "deliveryId": "delivery:oracle-a:1",
+          "venueId": "venue:oracle-a",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-oracle-a:OBSERVED_PRICE",
+            "venueId": "venue:oracle-a",
+            "attestor": "0x2222222222222222222222222222222222222222",
+            "authorityScope": {
+              "role": "ORACLE",
+              "propositions": [
+                "OBSERVED_PRICE",
+                "MARKET_DATA"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:oracle-a"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-oracle-a:OBSERVED_PRICE-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "OBSERVED_PRICE",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        },
+        {
+          "deliveryId": "delivery:oracle-b:1",
+          "venueId": "venue:oracle-b",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-oracle-b:OBSERVED_PRICE",
+            "venueId": "venue:oracle-b",
+            "attestor": "0x3333333333333333333333333333333333333333",
+            "authorityScope": {
+              "role": "ORACLE",
+              "propositions": [
+                "OBSERVED_PRICE",
+                "MARKET_DATA"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:oracle-b"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-oracle-b:OBSERVED_PRICE-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "OBSERVED_PRICE",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000300
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:fund-admin": "FUND_ADMINISTRATOR",
+          "venue:oracle-a": "ORACLE",
+          "venue:oracle-b": "ORACLE"
+        },
+        "trustedAttestors": [
+          "0x1111111111111111111111111111111111111111",
+          "0x2222222222222222222222222222222222222222",
+          "0x3333333333333333333333333333333333333333"
+        ],
+        "nowMs": 1700000001000
+      },
+      "permute": true,
+      "expect": {
+        "admitted": 3,
+        "conflicts": 0,
+        "orderInvariant": true,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "conflicting-authoritative",
+      "label": "conflicting-authoritative-attestations",
+      "description": "Two authoritative fund administrator venues attest different NAV values for the same subject/proposition",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:fund-admin:1",
+          "venueId": "venue:fund-admin",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin:NAV",
+            "venueId": "venue:fund-admin",
+            "attestor": "0x1111111111111111111111111111111111111111",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:fund-admin"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        },
+        {
+          "deliveryId": "delivery:fund-admin-2:1",
+          "venueId": "venue:fund-admin-2",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin-2:NAV",
+            "venueId": "venue:fund-admin-2",
+            "attestor": "0x7777777777777777777777777777777777777777",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:fund-admin-2"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin-2:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.100000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:fund-admin": "FUND_ADMINISTRATOR",
+          "venue:fund-admin-2": "FUND_ADMINISTRATOR"
+        },
+        "trustedAttestors": [
+          "0x1111111111111111111111111111111111111111",
+          "0x7777777777777777777777777777777777777777"
+        ],
+        "nowMs": 1700000001000
+      },
+      "permute": true,
+      "expect": {
+        "admitted": 2,
+        "conflicts": 1,
+        "orderInvariant": true,
+        "silentConflictLoss": false,
+        "finalStatus": "CONFLICTING"
+      }
+    },
+    {
+      "id": "duplicate-delivery",
+      "label": "duplicate-delivery",
+      "description": "The identical venue delivery is delivered twice (retry/replay); must be idempotent",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:fund-admin:1",
+          "venueId": "venue:fund-admin",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin:NAV",
+            "venueId": "venue:fund-admin",
+            "attestor": "0x1111111111111111111111111111111111111111",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:fund-admin"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        },
+        {
+          "deliveryId": "delivery:fund-admin:1",
+          "venueId": "venue:fund-admin",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin:NAV",
+            "venueId": "venue:fund-admin",
+            "attestor": "0x1111111111111111111111111111111111111111",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:fund-admin"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:fund-admin": "FUND_ADMINISTRATOR"
+        },
+        "trustedAttestors": [
+          "0x1111111111111111111111111111111111111111"
+        ],
+        "nowMs": 1700000001000
+      },
+      "permute": false,
+      "expect": {
+        "admitted": 2,
+        "duplicatesDropped": 1,
+        "conflicts": 0,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "late-authoritative-evidence",
+      "label": "late-authoritative-evidence",
+      "description": "Authoritative evidence arrives with skew beyond lateEvidenceThresholdMs",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:fund-admin:1",
+          "venueId": "venue:fund-admin",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin:NAV",
+            "venueId": "venue:fund-admin",
+            "attestor": "0x1111111111111111111111111111111111111111",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:fund-admin"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000002000
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:fund-admin": "FUND_ADMINISTRATOR"
+        },
+        "trustedAttestors": [
+          "0x1111111111111111111111111111111111111111"
+        ],
+        "nowMs": 1700000001000,
+        "lateEvidenceThresholdMs": 500
+      },
+      "permute": false,
+      "expect": {
+        "admitted": 1,
+        "conflicts": 0,
+        "lateVisible": true,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "stale-evidence",
+      "label": "stale-evidence",
+      "description": "Venue delivery references evidence older than the policy maxEvidenceAgeMs",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:fund-admin:1",
+          "venueId": "venue:fund-admin",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin:NAV",
+            "venueId": "venue:fund-admin",
+            "attestor": "0x1111111111111111111111111111111111111111",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "sourceRefs": [
+              "source:venue:fund-admin"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": [
+                "evidence:rwa:nav"
+              ]
+            }
+          ],
+          "receivedAt": 1700000000100
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:fund-admin": "FUND_ADMINISTRATOR"
+        },
+        "trustedAttestors": [
+          "0x1111111111111111111111111111111111111111"
+        ],
+        "nowMs": 1700000001000,
+        "maxEvidenceAgeMs": 1
+      },
+      "evidenceIndex": {
+        "evidence:rwa:nav": {
+          "observedAt": 1700000000000
+        }
+      },
+      "permute": false,
+      "expect": {
+        "admitted": 0,
+        "rejected": [
+          "delivery:fund-admin:1"
+        ],
+        "staleHandled": true,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "revoked-attestation",
+      "label": "expired-revoked-attestation",
+      "description": "A venue attestation envelope is REVOKED and must not be admitted",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:fund-admin:1",
+          "venueId": "venue:fund-admin",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin:NAV",
+            "venueId": "venue:fund-admin",
+            "attestor": "0x1111111111111111111111111111111111111111",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:fund-admin"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "REVOKED",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:fund-admin": "FUND_ADMINISTRATOR"
+        },
+        "trustedAttestors": [
+          "0x1111111111111111111111111111111111111111"
+        ],
+        "nowMs": 1700000001000
+      },
+      "permute": false,
+      "expect": {
+        "admitted": 0,
+        "rejected": [
+          "delivery:fund-admin:1"
+        ],
+        "revocationHandled": true,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "wrong-scope-attestation",
+      "label": "valid-but-wrong-scope-attestation",
+      "description": "A trusted ORACLE venue attempts to attest NAV (out of scope for ORACLE)",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:oracle-a:1",
+          "venueId": "venue:oracle-a",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-oracle-a:NAV",
+            "venueId": "venue:oracle-a",
+            "attestor": "0x2222222222222222222222222222222222222222",
+            "authorityScope": {
+              "role": "ORACLE",
+              "propositions": [
+                "NAV"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:oracle-a"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-oracle-a:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:oracle-a": "ORACLE"
+        },
+        "trustedAttestors": [
+          "0x2222222222222222222222222222222222222222"
+        ],
+        "nowMs": 1700000001000
+      },
+      "permute": false,
+      "expect": {
+        "admitted": 0,
+        "rejected": [
+          "delivery:oracle-a:1"
+        ],
+        "unauthorizedScopePromotion": false,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "share-class-mismatch",
+      "label": "representation-share-class-mismatch",
+      "description": "Representation identities whose share classes differ must not be equivalent",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "profile": {
+        "left": {
+          "shareClass": "A",
+          "issuerClaim": "arcadia-treasury-spv-i"
+        },
+        "right": {
+          "shareClass": "B",
+          "issuerClaim": "arcadia-treasury-spv-i"
+        }
+      },
+      "deliveries": [],
+      "policy": {
+        "venueCapabilities": {},
+        "trustedAttestors": [],
+        "nowMs": 1700000001000
+      },
+      "permute": false,
+      "expect": {
+        "equivalence": false,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "bridge-wrapper-ambiguity",
+      "label": "bridge-wrapper-ambiguity",
+      "description": "A wrapped representation lacks explicit bridge lineage, so equivalence is unsupported",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "profile": {
+        "left": {
+          "shareClass": "A",
+          "issuerClaim": "arcadia-treasury-spv-i"
+        },
+        "right": {
+          "shareClass": "A",
+          "issuerClaim": "arcadia-treasury-spv-i"
+        },
+        "linkType": "WRAPPED_REPRESENTATION_OF"
+      },
+      "deliveries": [],
+      "policy": {
+        "venueCapabilities": {},
+        "trustedAttestors": [],
+        "nowMs": 1700000001000
+      },
+      "permute": false,
+      "expect": {
+        "equivalence": false,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "chain-reorg-superseded",
+      "label": "chain-reorg-superseded-block",
+      "description": "Venue chain observation is PENDING/REORGED and the policy requires finalized observations",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:chain-observer:1",
+          "venueId": "venue:chain-observer",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:chain-observer:balance",
+            "venueId": "venue:chain-observer",
+            "attestor": "0x5555555555555555555555555555555555555555",
+            "authorityScope": {
+              "role": "CHAIN_OBSERVER",
+              "propositions": [
+                "BALANCE",
+                "ONCHAIN_EVENT"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:chain-observer"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xchain-observer:balance-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [
+            {
+              "schemaId": "noema:chain-observation",
+              "schemaVersion": 1,
+              "observationId": "observation:chain-observer:1",
+              "sourceId": "source:venue:chain-observer",
+              "provenance": {
+                "chainId": "eip155:1952",
+                "chainKind": "EVM",
+                "height": "12345",
+                "stateId": "0x7777777777777777777777777777777777777777777777777777777777777777",
+                "locator": "0x00000000000000000000000000000000000000AA",
+                "value": "100000000",
+                "finality": "PENDING",
+                "observedAt": 1700000000000,
+                "fetchedAt": 1700000000100,
+                "confirmationPolicy": "noema-chain-finality-v1"
+              },
+              "contentHash": "0x8888888888888888888888888888888888888888888888888888888888888888",
+              "metadata": {}
+            }
+          ],
+          "claims": [
+            {
+              "proposition": "BALANCE",
+              "subject": "representation:xlayer:fund-share",
+              "value": "100000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:chain-observer": "CHAIN_OBSERVER"
+        },
+        "trustedAttestors": [
+          "0x5555555555555555555555555555555555555555"
+        ],
+        "nowMs": 1700000001000,
+        "requireFinalizedObservations": true
+      },
+      "permute": false,
+      "expect": {
+        "admitted": 0,
+        "rejected": [
+          "delivery:chain-observer:1"
+        ],
+        "reorgHandled": true,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "provider-disagreement",
+      "label": "provider-disagreement",
+      "description": "Two independent oracles attest conflicting observed prices",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:oracle-a:1",
+          "venueId": "venue:oracle-a",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-oracle-a:OBSERVED_PRICE",
+            "venueId": "venue:oracle-a",
+            "attestor": "0x2222222222222222222222222222222222222222",
+            "authorityScope": {
+              "role": "ORACLE",
+              "propositions": [
+                "OBSERVED_PRICE",
+                "MARKET_DATA"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:oracle-a"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-oracle-a:OBSERVED_PRICE-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "OBSERVED_PRICE",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        },
+        {
+          "deliveryId": "delivery:oracle-b:1",
+          "venueId": "venue:oracle-b",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-oracle-b:OBSERVED_PRICE",
+            "venueId": "venue:oracle-b",
+            "attestor": "0x3333333333333333333333333333333333333333",
+            "authorityScope": {
+              "role": "ORACLE",
+              "propositions": [
+                "OBSERVED_PRICE",
+                "MARKET_DATA"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:oracle-b"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-oracle-b:OBSERVED_PRICE-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "OBSERVED_PRICE",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.050000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:oracle-a": "ORACLE",
+          "venue:oracle-b": "ORACLE"
+        },
+        "trustedAttestors": [
+          "0x2222222222222222222222222222222222222222",
+          "0x3333333333333333333333333333333333333333"
+        ],
+        "nowMs": 1700000001000
+      },
+      "permute": true,
+      "expect": {
+        "admitted": 2,
+        "conflicts": 1,
+        "orderInvariant": true,
+        "silentConflictLoss": false,
+        "finalStatus": "CONFLICTING"
+      }
+    },
+    {
+      "id": "no-op-vs-material",
+      "label": "no-op-vs-material-change",
+      "description": "Re-delivering the already-applied authoritative NAV is a no-op that must not create a version",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "phases": [
+        [
+          {
+            "deliveryId": "delivery:fund-admin:1",
+            "venueId": "venue:fund-admin",
+            "attestation": {
+              "schemaId": "noema:venue-attestation",
+              "schemaVersion": 1,
+              "attestationId": "attestation:venue-fund-admin:NAV",
+              "venueId": "venue:fund-admin",
+              "attestor": "0x1111111111111111111111111111111111111111",
+              "authorityScope": {
+                "role": "FUND_ADMINISTRATOR",
+                "propositions": [
+                  "NAV",
+                  "VALUATION"
+                ]
+              },
+              "binding": {
+                "subjectRef": "object:rwa:treasury-fund",
+                "objectRef": "object:rwa:treasury-fund",
+                "objectVersion": 1
+              },
+              "evidenceRefs": [],
+              "sourceRefs": [
+                "source:venue:fund-admin"
+              ],
+              "provenance": {
+                "chainId": "eip155:1952",
+                "finality": "FINALIZED",
+                "observedAt": 1700000000000
+              },
+              "nonce": 1,
+              "issuedAt": 1700000000000,
+              "signatureScheme": "EIP-712",
+              "signatureDomainVersion": "noema-venue-attestation-v1",
+              "signature": "0xvenue-fund-admin:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "ACTIVE",
+              "reasonCodes": []
+            },
+            "observations": [],
+            "claims": [
+              {
+                "proposition": "NAV",
+                "subject": "object:rwa:treasury-fund",
+                "value": "1.000000",
+                "observedAt": 1700000000000,
+                "evidenceRefs": []
+              }
+            ],
+            "receivedAt": 1700000000100
+          }
+        ],
+        [
+          {
+            "deliveryId": "delivery:fund-admin:2",
+            "venueId": "venue:fund-admin",
+            "attestation": {
+              "schemaId": "noema:venue-attestation",
+              "schemaVersion": 1,
+              "attestationId": "attestation:venue-fund-admin:NAV",
+              "venueId": "venue:fund-admin",
+              "attestor": "0x1111111111111111111111111111111111111111",
+              "authorityScope": {
+                "role": "FUND_ADMINISTRATOR",
+                "propositions": [
+                  "NAV",
+                  "VALUATION"
+                ]
+              },
+              "binding": {
+                "subjectRef": "object:rwa:treasury-fund",
+                "objectRef": "object:rwa:treasury-fund",
+                "objectVersion": 1
+              },
+              "evidenceRefs": [],
+              "sourceRefs": [
+                "source:venue:fund-admin"
+              ],
+              "provenance": {
+                "chainId": "eip155:1952",
+                "finality": "FINALIZED",
+                "observedAt": 1700000000000
+              },
+              "nonce": 2,
+              "issuedAt": 1700000000000,
+              "signatureScheme": "EIP-712",
+              "signatureDomainVersion": "noema-venue-attestation-v1",
+              "signature": "0xvenue-fund-admin:NAV-2aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "ACTIVE",
+              "reasonCodes": []
+            },
+            "observations": [],
+            "claims": [
+              {
+                "proposition": "NAV",
+                "subject": "object:rwa:treasury-fund",
+                "value": "1.000000",
+                "observedAt": 1700000000000,
+                "evidenceRefs": []
+              }
+            ],
+            "receivedAt": 1700000000200
+          }
+        ]
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:fund-admin": "FUND_ADMINISTRATOR"
+        },
+        "trustedAttestors": [
+          "0x1111111111111111111111111111111111111111"
+        ],
+        "nowMs": 1700000001000
+      },
+      "permute": false,
+      "expect": {
+        "admitted": 1,
+        "conflicts": 0,
+        "phasesCreated": [
+          true,
+          false
+        ],
+        "spuriousVersion": false,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "event-retry-replay",
+      "label": "event-retry-replay",
+      "description": "An identical authoritative NAV event is re-delivered; replay must be deterministic and conflict-free",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "deliveries": [
+        {
+          "deliveryId": "delivery:fund-admin:1",
+          "venueId": "venue:fund-admin",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin:NAV",
+            "venueId": "venue:fund-admin",
+            "attestor": "0x1111111111111111111111111111111111111111",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:fund-admin"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 1,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin:NAV-1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000100
+        },
+        {
+          "deliveryId": "delivery:fund-admin:2",
+          "venueId": "venue:fund-admin",
+          "attestation": {
+            "schemaId": "noema:venue-attestation",
+            "schemaVersion": 1,
+            "attestationId": "attestation:venue-fund-admin:NAV",
+            "venueId": "venue:fund-admin",
+            "attestor": "0x1111111111111111111111111111111111111111",
+            "authorityScope": {
+              "role": "FUND_ADMINISTRATOR",
+              "propositions": [
+                "NAV",
+                "VALUATION"
+              ]
+            },
+            "binding": {
+              "subjectRef": "object:rwa:treasury-fund",
+              "objectRef": "object:rwa:treasury-fund",
+              "objectVersion": 1
+            },
+            "evidenceRefs": [],
+            "sourceRefs": [
+              "source:venue:fund-admin"
+            ],
+            "provenance": {
+              "chainId": "eip155:1952",
+              "finality": "FINALIZED",
+              "observedAt": 1700000000000
+            },
+            "nonce": 2,
+            "issuedAt": 1700000000000,
+            "signatureScheme": "EIP-712",
+            "signatureDomainVersion": "noema-venue-attestation-v1",
+            "signature": "0xvenue-fund-admin:NAV-2aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "ACTIVE",
+            "reasonCodes": []
+          },
+          "observations": [],
+          "claims": [
+            {
+              "proposition": "NAV",
+              "subject": "object:rwa:treasury-fund",
+              "value": "1.000000",
+              "observedAt": 1700000000000,
+              "evidenceRefs": []
+            }
+          ],
+          "receivedAt": 1700000000200
+        }
+      ],
+      "policy": {
+        "venueCapabilities": {
+          "venue:fund-admin": "FUND_ADMINISTRATOR"
+        },
+        "trustedAttestors": [
+          "0x1111111111111111111111111111111111111111"
+        ],
+        "nowMs": 1700000001000
+      },
+      "permute": true,
+      "expect": {
+        "admitted": 2,
+        "conflicts": 0,
+        "orderInvariant": true,
+        "supersededHandled": true,
+        "finalStatus": "RESOLVED"
+      }
+    },
+    {
+      "id": "false-equivalence-ai",
+      "label": "false-equivalence-ai-proposal",
+      "description": "AI proposes ECONOMICALLY_EQUIVALENT_TO on basis that cannot establish equivalence; must be rejected",
+      "object": {
+        "id": "object:rwa:treasury-fund",
+        "version": 1,
+        "schemaId": "noema:economic-object",
+        "schemaVersion": 1,
+        "classification": {
+          "primary": "TOKENIZED_TREASURY",
+          "secondary": [],
+          "confidence": 0.99,
+          "claimRef": "claim:rwa:classification"
+        },
+        "identifiers": [
+          {
+            "scheme": "ISIN",
+            "value": "US1234567890",
+            "source": "source:issuer:primary",
+            "status": "SOURCED"
+          }
+        ],
+        "representations": [
+          {
+            "id": "representation:xlayer:fund-share",
+            "environment": "EVM",
+            "network": "xlayer-testnet",
+            "contract": "0x00000000000000000000000000000000000000AA",
+            "tokenStandard": "ERC20",
+            "identifiers": [
+              {
+                "scheme": "CONTRACT",
+                "value": "0x00000000000000000000000000000000000000AA",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "relationshipToObject": "claim:rwa:represents",
+            "status": "ACTIVE",
+            "evidence": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "id": "rel:rwa:represents",
+            "subject": "representation:xlayer:fund-share",
+            "predicate": "REPRESENTS",
+            "object": "object:rwa:treasury-fund",
+            "state": "SOURCED",
+            "evidence": [
+              "evidence:rwa:registration"
+            ],
+            "attestations": [],
+            "observedAt": 1700000000000
+          }
+        ],
+        "parties": [
+          {
+            "id": "party:issuer",
+            "role": "ISSUER",
+            "name": "Arcadia Treasury SPV I",
+            "identifiers": [
+              {
+                "scheme": "ISSUER",
+                "value": "arcadia-treasury-spv-i",
+                "source": "source:issuer:primary",
+                "status": "SOURCED"
+              }
+            ],
+            "claimRefs": [
+              "claim:rwa:classification"
+            ]
+          }
+        ],
+        "rights": [
+          {
+            "id": "right:redemption",
+            "type": "REDEMPTION",
+            "terms": {
+              "windowMs": 86400000,
+              "asset": "USD"
+            },
+            "claimRefs": [
+              "claim:rwa:redemption"
+            ]
+          }
+        ],
+        "obligations": [],
+        "restrictions": [
+          {
+            "id": "restriction:eligible",
+            "type": "ELIGIBLE_INVESTORS_ONLY",
+            "scope": "INVESTOR",
+            "claimRefs": [
+              "claim:rwa:restrictions"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ]
+          }
+        ],
+        "economics": {
+          "asOf": 1700000000000,
+          "values": {
+            "navPerShare": "1.000000",
+            "totalAum": "100000000"
+          },
+          "claimRefs": [
+            "claim:rwa:nav"
+          ]
+        },
+        "claims": [
+          {
+            "id": "claim:rwa:classification",
+            "subject": "object:rwa:treasury-fund",
+            "property": "assetClass",
+            "value": "TOKENIZED_TREASURY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:nav",
+            "subject": "object:rwa:treasury-fund",
+            "property": "navPerShare",
+            "value": "1.000000",
+            "state": "OBSERVED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:nav"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          },
+          {
+            "id": "claim:rwa:redemption",
+            "subject": "right:redemption",
+            "property": "redemptionWindow",
+            "value": "1_BUSINESS_DAY",
+            "state": "SOURCED",
+            "sourceRefs": [
+              "source:issuer:primary"
+            ],
+            "evidenceRefs": [
+              "evidence:rwa:registration"
+            ],
+            "attestationRefs": [],
+            "createdAt": 1700000000000
+          }
+        ],
+        "evidence": [
+          {
+            "id": "evidence:rwa:nav",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "API_RESPONSE",
+            "source": "source:issuer:primary",
+            "contentHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          },
+          {
+            "id": "evidence:rwa:registration",
+            "schemaId": "noema:evidence",
+            "schemaVersion": 1,
+            "type": "FILING",
+            "source": "source:issuer:primary",
+            "contentHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+            "observedAt": 1700000000000,
+            "fetchedAt": 1700000000100,
+            "authority": "PRIMARY_SOURCE",
+            "freshness": "FRESH",
+            "metadata": {
+              "fixtureStatus": "DEMO_FIXTURE"
+            }
+          }
+        ],
+        "attestations": [],
+        "exceptions": [],
+        "provenance": {
+          "edges": [
+            {
+              "id": "edge:rwa:1",
+              "from": "source:issuer:primary",
+              "to": "evidence:rwa:registration",
+              "relation": "CAPTURED"
+            }
+          ]
+        },
+        "verification": {
+          "status": "UNRESOLVED",
+          "verifierVersion": "pending",
+          "checks": []
+        },
+        "status": "RESOLVED",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      },
+      "aiProposal": {
+        "relationship": {
+          "predicate": "ECONOMICALLY_EQUIVALENT_TO",
+          "subject": "representation:xlayer:fund-share",
+          "object": "representation:xlayer:fund-share-2",
+          "evidence": [],
+          "comparedDimensions": [
+            "issuer"
+          ]
+        }
+      },
+      "deliveries": [],
+      "policy": {
+        "venueCapabilities": {},
+        "trustedAttestors": [],
+        "nowMs": 1700000001000
+      },
+      "permute": false,
+      "expect": {
+        "equivalence": false,
+        "aiPromotionHandled": true,
+        "finalStatus": "RESOLVED"
+      }
+    }
+  ]
+}

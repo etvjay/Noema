@@ -59,7 +59,14 @@ export async function synchronyReplay(path: string, options: { shuffle?: boolean
       requireFinalizedObservations: Boolean(input.policy["requireFinalizedObservations"]),
       lateEvidenceThresholdMs: typeof input.policy["lateEvidenceThresholdMs"] === "number"
         ? input.policy["lateEvidenceThresholdMs"]
-        : undefined
+        : undefined,
+      maxEvidenceAgeMs: typeof input.policy["maxEvidenceAgeMs"] === "number"
+        ? input.policy["maxEvidenceAgeMs"]
+        : undefined,
+      ...(typeof input.policy["evidenceIndex"] === "object" &&
+      input.policy["evidenceIndex"] !== null
+        ? { evidenceIndex: input.policy["evidenceIndex"] as Record<string, unknown> }
+        : {})
     };
 
     const ordered = synchronizeEconomicObject({

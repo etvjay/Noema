@@ -1,0 +1,988 @@
+{
+  "protocolVersion": "noema-synchrony-benchmark-protocol-v1",
+  "fixtureVersion": "noema-synchrony-benchmark-v1",
+  "generatedAt": "2026-08-19T15:00:00Z",
+  "runs": [
+    {
+      "caseId": "out-of-order-agreement",
+      "deliveryOrder": [
+        "delivery:fund-admin:1",
+        "delivery:oracle-a:1",
+        "delivery:oracle-b:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1",
+            "delivery:oracle-a:1",
+            "delivery:oracle-b:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0x657552a039b0822dc49e3a05eda11d189e5661d80660aa466b0f66e15c2e243c",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 3,
+          "rejectedCount": 0,
+          "appliedCount": 3,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0x657552a039b0822dc49e3a05eda11d189e5661d80660aa466b0f66e15c2e243c",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 3,
+      "rejected": 0,
+      "applied": 3,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "out-of-order-agreement",
+      "deliveryOrder": [
+        "delivery:oracle-b:1",
+        "delivery:oracle-a:1",
+        "delivery:fund-admin:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:oracle-b:1",
+            "delivery:oracle-a:1",
+            "delivery:fund-admin:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0x152481a4f809a911299d8442b2d07243e1b2662565ae9245c76e8e793a01f195",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 3,
+          "rejectedCount": 0,
+          "appliedCount": 3,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0x152481a4f809a911299d8442b2d07243e1b2662565ae9245c76e8e793a01f195",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 3,
+      "rejected": 0,
+      "applied": 3,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "out-of-order-agreement",
+      "deliveryOrder": [
+        "delivery:oracle-a:1",
+        "delivery:oracle-b:1",
+        "delivery:fund-admin:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:oracle-a:1",
+            "delivery:oracle-b:1",
+            "delivery:fund-admin:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xb50eada0020fb4e4197469b55528651662682b00ebfca354b815e599adb605f2",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 3,
+          "rejectedCount": 0,
+          "appliedCount": 3,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0xb50eada0020fb4e4197469b55528651662682b00ebfca354b815e599adb605f2",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 3,
+      "rejected": 0,
+      "applied": 3,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "conflicting-authoritative",
+      "deliveryOrder": [
+        "delivery:fund-admin:1",
+        "delivery:fund-admin-2:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1",
+            "delivery:fund-admin-2:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xde89fd039ad1691e9c2d76727994cfca8c790d2f8dd14134d2cb3f75035229a7",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 2,
+          "rejectedCount": 0,
+          "appliedCount": 2,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0xde89fd039ad1691e9c2d76727994cfca8c790d2f8dd14134d2cb3f75035229a7",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 2,
+      "rejected": 0,
+      "applied": 2,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "conflicting-authoritative",
+      "deliveryOrder": [
+        "delivery:fund-admin-2:1",
+        "delivery:fund-admin:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin-2:1",
+            "delivery:fund-admin:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0x5e406cd243a48ba57a41297b72c3a9b691b0cb287034dbbf8dae060851806ec3",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 2,
+          "rejectedCount": 0,
+          "appliedCount": 2,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0x5e406cd243a48ba57a41297b72c3a9b691b0cb287034dbbf8dae060851806ec3",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 2,
+      "rejected": 0,
+      "applied": 2,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "duplicate-delivery",
+      "deliveryOrder": [
+        "delivery:fund-admin:1",
+        "delivery:fund-admin:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1",
+            "delivery:fund-admin:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xfea4b88f646d2c1c78b13807bba6f0ce742d07792606a4910dd0e083a96f423b",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 2,
+          "rejectedCount": 0,
+          "appliedCount": 2,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0xfea4b88f646d2c1c78b13807bba6f0ce742d07792606a4910dd0e083a96f423b",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 2,
+      "rejected": 0,
+      "applied": 2,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "late-authoritative-evidence",
+      "deliveryOrder": [
+        "delivery:fund-admin:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xc7581edef14d8e4a2cf9f0a6df171bcdd5794eb673f14a3feeff999119c0be6e",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 1,
+          "rejectedCount": 0,
+          "appliedCount": 1,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0xc7581edef14d8e4a2cf9f0a6df171bcdd5794eb673f14a3feeff999119c0be6e",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 1,
+      "rejected": 0,
+      "applied": 1,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "stale-evidence",
+      "deliveryOrder": [
+        "delivery:fund-admin:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xc7581edef14d8e4a2cf9f0a6df171bcdd5794eb673f14a3feeff999119c0be6e",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 1,
+          "rejectedCount": 0,
+          "appliedCount": 1,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0xc7581edef14d8e4a2cf9f0a6df171bcdd5794eb673f14a3feeff999119c0be6e",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 1,
+      "rejected": 0,
+      "applied": 1,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "revoked-attestation",
+      "deliveryOrder": [
+        "delivery:fund-admin:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xc7581edef14d8e4a2cf9f0a6df171bcdd5794eb673f14a3feeff999119c0be6e",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 1,
+          "rejectedCount": 0,
+          "appliedCount": 1,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0xc7581edef14d8e4a2cf9f0a6df171bcdd5794eb673f14a3feeff999119c0be6e",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 1,
+      "rejected": 0,
+      "applied": 1,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "wrong-scope-attestation",
+      "deliveryOrder": [
+        "delivery:oracle-a:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:oracle-a:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0x95f696d062110d4044fe17fa298d306815d460ceb5b9bc4873390d1481ea2a46",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 1,
+          "rejectedCount": 0,
+          "appliedCount": 1,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0x95f696d062110d4044fe17fa298d306815d460ceb5b9bc4873390d1481ea2a46",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 1,
+      "rejected": 0,
+      "applied": 1,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "chain-reorg-superseded",
+      "deliveryOrder": [
+        "delivery:chain-observer:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:chain-observer:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xf2eb10c4e2aa2a1ba6c12e3a86949475353735a58b7d46e5e7b6dd3d92e2bfe1",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 1,
+          "rejectedCount": 0,
+          "appliedCount": 1,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0xf2eb10c4e2aa2a1ba6c12e3a86949475353735a58b7d46e5e7b6dd3d92e2bfe1",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 1,
+      "rejected": 0,
+      "applied": 1,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "provider-disagreement",
+      "deliveryOrder": [
+        "delivery:oracle-a:1",
+        "delivery:oracle-b:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:oracle-a:1",
+            "delivery:oracle-b:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xeee5aa262ff21b6e4622663a0acdf782a0b8a45ef44efd496cbbf8156f701151",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 2,
+          "rejectedCount": 0,
+          "appliedCount": 2,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0xeee5aa262ff21b6e4622663a0acdf782a0b8a45ef44efd496cbbf8156f701151",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 2,
+      "rejected": 0,
+      "applied": 2,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "provider-disagreement",
+      "deliveryOrder": [
+        "delivery:oracle-b:1",
+        "delivery:oracle-a:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:oracle-b:1",
+            "delivery:oracle-a:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0x330d26eee339ba883e93c6f92444109432f68945238d3e1385c0db1f0d64c0e4",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 2,
+          "rejectedCount": 0,
+          "appliedCount": 2,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0x330d26eee339ba883e93c6f92444109432f68945238d3e1385c0db1f0d64c0e4",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 2,
+      "rejected": 0,
+      "applied": 2,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "no-op-vs-material",
+      "deliveryOrder": [
+        "delivery:fund-admin:1",
+        "delivery:fund-admin:2"
+      ],
+      "phaseCount": 2,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xc7581edef14d8e4a2cf9f0a6df171bcdd5794eb673f14a3feeff999119c0be6e",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 1,
+          "rejectedCount": 0,
+          "appliedCount": 1,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        },
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:2"
+          ],
+          "created": true,
+          "synchronizationRoot": "0x191ef3227eb0a8b0fad933f01674b667a80d981cdb7c62ce491719dfce1e6786",
+          "finalVersion": 3,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 1,
+          "rejectedCount": 0,
+          "appliedCount": 1,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0x191ef3227eb0a8b0fad933f01674b667a80d981cdb7c62ce491719dfce1e6786",
+      "finalVersion": 3,
+      "finalStatus": "RESOLVED",
+      "admitted": 1,
+      "rejected": 0,
+      "applied": 1,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "event-retry-replay",
+      "deliveryOrder": [
+        "delivery:fund-admin:1",
+        "delivery:fund-admin:2"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1",
+            "delivery:fund-admin:2"
+          ],
+          "created": true,
+          "synchronizationRoot": "0xdc7baf96c36487c033259c3980b89cce014c43568fd39aa4ace2332c77a3fa5a",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 2,
+          "rejectedCount": 0,
+          "appliedCount": 2,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0xdc7baf96c36487c033259c3980b89cce014c43568fd39aa4ace2332c77a3fa5a",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 2,
+      "rejected": 0,
+      "applied": 2,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    },
+    {
+      "caseId": "event-retry-replay",
+      "deliveryOrder": [
+        "delivery:fund-admin:2",
+        "delivery:fund-admin:1"
+      ],
+      "phaseCount": 1,
+      "phases": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:2",
+            "delivery:fund-admin:1"
+          ],
+          "created": true,
+          "synchronizationRoot": "0x7554358f5cb936ad656c23c4579de81a0198b7bfc9f349d001447cecaeec80a2",
+          "finalVersion": 2,
+          "finalStatus": "RESOLVED",
+          "admittedCount": 2,
+          "rejectedCount": 0,
+          "appliedCount": 2,
+          "conflicts": 0,
+          "duplicatesDropped": 0,
+          "appliedStates": [
+            "ATTESTED",
+            "ATTESTED"
+          ],
+          "reasonCodes": []
+        }
+      ],
+      "created": true,
+      "synchronizationRoot": "0x7554358f5cb936ad656c23c4579de81a0198b7bfc9f349d001447cecaeec80a2",
+      "finalVersion": 2,
+      "finalStatus": "RESOLVED",
+      "admitted": 2,
+      "rejected": 0,
+      "applied": 2,
+      "conflicts": 0,
+      "duplicatesDropped": 0,
+      "appliedStates": [
+        "ATTESTED",
+        "ATTESTED"
+      ],
+      "reasonCodes": []
+    }
+  ],
+  "metrics": {
+    "caseCount": 14,
+    "orderInvarianceRate": 0,
+    "deterministicReplayRate": 0.6363636363636364,
+    "duplicateIdempotencyRate": 0,
+    "silentConflictLossRate": 1,
+    "unauthorizedScopePromotionRate": 1,
+    "spuriousVersionRate": 1,
+    "staleHandledRate": 0,
+    "revocationHandledRate": 0,
+    "reorgHandledRate": 0,
+    "lateVisibleRate": 0,
+    "supersededHandledRate": 1
+  },
+  "counterexamples": [
+    {
+      "caseId": "out-of-order-agreement",
+      "fixtureVersion": "noema-synchrony-benchmark-v1",
+      "failingOrdering": [
+        "delivery:fund-admin:1",
+        "delivery:oracle-a:1",
+        "delivery:oracle-b:1"
+      ],
+      "observed": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1",
+            "delivery:oracle-a:1",
+            "delivery:oracle-b:1"
+          ],
+          "admitted": 3,
+          "applied": 3,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0x657552a039b0822dc49e3a05eda11d189e5661d80660aa466b0f66e15c2e243c",
+          "finalStatus": "RESOLVED"
+        },
+        {
+          "deliveryOrder": [
+            "delivery:oracle-b:1",
+            "delivery:oracle-a:1",
+            "delivery:fund-admin:1"
+          ],
+          "admitted": 3,
+          "applied": 3,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0x152481a4f809a911299d8442b2d07243e1b2662565ae9245c76e8e793a01f195",
+          "finalStatus": "RESOLVED"
+        },
+        {
+          "deliveryOrder": [
+            "delivery:oracle-a:1",
+            "delivery:oracle-b:1",
+            "delivery:fund-admin:1"
+          ],
+          "admitted": 3,
+          "applied": 3,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0xb50eada0020fb4e4197469b55528651662682b00ebfca354b815e599adb605f2",
+          "finalStatus": "RESOLVED"
+        }
+      ]
+    },
+    {
+      "caseId": "conflicting-authoritative",
+      "fixtureVersion": "noema-synchrony-benchmark-v1",
+      "failingOrdering": [
+        "delivery:fund-admin:1",
+        "delivery:fund-admin-2:1"
+      ],
+      "observed": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1",
+            "delivery:fund-admin-2:1"
+          ],
+          "admitted": 2,
+          "applied": 2,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0xde89fd039ad1691e9c2d76727994cfca8c790d2f8dd14134d2cb3f75035229a7",
+          "finalStatus": "RESOLVED"
+        },
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin-2:1",
+            "delivery:fund-admin:1"
+          ],
+          "admitted": 2,
+          "applied": 2,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0x5e406cd243a48ba57a41297b72c3a9b691b0cb287034dbbf8dae060851806ec3",
+          "finalStatus": "RESOLVED"
+        }
+      ]
+    },
+    {
+      "caseId": "stale-evidence",
+      "fixtureVersion": "noema-synchrony-benchmark-v1",
+      "failingOrdering": [
+        "delivery:fund-admin:1"
+      ],
+      "observed": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1"
+          ],
+          "admitted": 1,
+          "applied": 1,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0xc7581edef14d8e4a2cf9f0a6df171bcdd5794eb673f14a3feeff999119c0be6e",
+          "finalStatus": "RESOLVED"
+        }
+      ]
+    },
+    {
+      "caseId": "revoked-attestation",
+      "fixtureVersion": "noema-synchrony-benchmark-v1",
+      "failingOrdering": [
+        "delivery:fund-admin:1"
+      ],
+      "observed": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1"
+          ],
+          "admitted": 1,
+          "applied": 1,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0xc7581edef14d8e4a2cf9f0a6df171bcdd5794eb673f14a3feeff999119c0be6e",
+          "finalStatus": "RESOLVED"
+        }
+      ]
+    },
+    {
+      "caseId": "wrong-scope-attestation",
+      "fixtureVersion": "noema-synchrony-benchmark-v1",
+      "failingOrdering": [
+        "delivery:oracle-a:1"
+      ],
+      "observed": [
+        {
+          "deliveryOrder": [
+            "delivery:oracle-a:1"
+          ],
+          "admitted": 1,
+          "applied": 1,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0x95f696d062110d4044fe17fa298d306815d460ceb5b9bc4873390d1481ea2a46",
+          "finalStatus": "RESOLVED"
+        }
+      ]
+    },
+    {
+      "caseId": "chain-reorg-superseded",
+      "fixtureVersion": "noema-synchrony-benchmark-v1",
+      "failingOrdering": [
+        "delivery:chain-observer:1"
+      ],
+      "observed": [
+        {
+          "deliveryOrder": [
+            "delivery:chain-observer:1"
+          ],
+          "admitted": 1,
+          "applied": 1,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0xf2eb10c4e2aa2a1ba6c12e3a86949475353735a58b7d46e5e7b6dd3d92e2bfe1",
+          "finalStatus": "RESOLVED"
+        }
+      ]
+    },
+    {
+      "caseId": "provider-disagreement",
+      "fixtureVersion": "noema-synchrony-benchmark-v1",
+      "failingOrdering": [
+        "delivery:oracle-a:1",
+        "delivery:oracle-b:1"
+      ],
+      "observed": [
+        {
+          "deliveryOrder": [
+            "delivery:oracle-a:1",
+            "delivery:oracle-b:1"
+          ],
+          "admitted": 2,
+          "applied": 2,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0xeee5aa262ff21b6e4622663a0acdf782a0b8a45ef44efd496cbbf8156f701151",
+          "finalStatus": "RESOLVED"
+        },
+        {
+          "deliveryOrder": [
+            "delivery:oracle-b:1",
+            "delivery:oracle-a:1"
+          ],
+          "admitted": 2,
+          "applied": 2,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0x330d26eee339ba883e93c6f92444109432f68945238d3e1385c0db1f0d64c0e4",
+          "finalStatus": "RESOLVED"
+        }
+      ]
+    },
+    {
+      "caseId": "no-op-vs-material",
+      "fixtureVersion": "noema-synchrony-benchmark-v1",
+      "failingOrdering": [
+        "delivery:fund-admin:1",
+        "delivery:fund-admin:2"
+      ],
+      "observed": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1",
+            "delivery:fund-admin:2"
+          ],
+          "admitted": 1,
+          "applied": 1,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0x191ef3227eb0a8b0fad933f01674b667a80d981cdb7c62ce491719dfce1e6786",
+          "finalStatus": "RESOLVED"
+        }
+      ]
+    },
+    {
+      "caseId": "event-retry-replay",
+      "fixtureVersion": "noema-synchrony-benchmark-v1",
+      "failingOrdering": [
+        "delivery:fund-admin:1",
+        "delivery:fund-admin:2"
+      ],
+      "observed": [
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:1",
+            "delivery:fund-admin:2"
+          ],
+          "admitted": 2,
+          "applied": 2,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0xdc7baf96c36487c033259c3980b89cce014c43568fd39aa4ace2332c77a3fa5a",
+          "finalStatus": "RESOLVED"
+        },
+        {
+          "deliveryOrder": [
+            "delivery:fund-admin:2",
+            "delivery:fund-admin:1"
+          ],
+          "admitted": 2,
+          "applied": 2,
+          "conflicts": 0,
+          "created": true,
+          "synchronizationRoot": "0x7554358f5cb936ad656c23c4579de81a0198b7bfc9f349d001447cecaeec80a2",
+          "finalStatus": "RESOLVED"
+        }
+      ]
+    }
+  ]
+}
