@@ -444,6 +444,63 @@ export const decisionReceiptSchema = z
   })
   .strict();
 
+export const validationDimensionSchema = z.enum([
+  "issuerIdentity",
+  "vehicleIdentity",
+  "shareClass",
+  "ownershipRights",
+  "redemption",
+  "eligibility",
+  "transferRestrictions",
+  "valuationNav",
+  "backingPortfolio",
+  "custody",
+  "representationLineage",
+  "sourceAuthority",
+  "freshness",
+  "recordAuthority",
+  "obligationTerms",
+  "underlyingReference"
+]);
+
+export const validationDimensionRequirementSchema = z
+  .object({
+    dimension: validationDimensionSchema,
+    required: z.boolean(),
+    claimProperties: z.array(z.string().min(1)).min(1).optional(),
+    acceptableClaimStates: z.array(claimStateSchema).optional(),
+    evidenceTypes: z.array(evidenceTypeSchema).min(1).optional(),
+    minAuthority: evidenceAuthoritySchema.optional(),
+    maxAgeMs: z.number().int().positive().optional(),
+    representationRequired: z.boolean().optional(),
+    relationshipPredicates: z.array(relationshipTypeSchema).optional()
+  })
+  .strict();
+
+export const validationProfileSchema = z
+  .object({
+    schemaId: z.literal(SCHEMA_IDS.VALIDATION_PROFILE),
+    schemaVersion: z.literal(SCHEMA_VERSIONS.VALIDATION_PROFILE),
+    profileId: refSchema,
+    profileVersion: z.number().int().positive(),
+    assetClass: z.string().min(1),
+    resolutionClass: z.enum([
+      "FUND_SHARE",
+      "PRIVATE_FUND_INTEREST",
+      "DEBT_INSTRUMENT",
+      "WRAPPED_REPRESENTATION",
+      "BOOK_ENTRY_MIRROR"
+    ]),
+    description: z.string().min(1),
+    interpretableProperties: z.array(z.string().min(1)).min(1),
+    dimensions: z.array(validationDimensionRequirementSchema).min(1)
+  })
+  .strict();
+
+export type ValidationProfile = z.infer<typeof validationProfileSchema>;
+export type ValidationDimensionRequirement = z.infer<typeof validationDimensionRequirementSchema>;
+export type ValidationDimension = z.infer<typeof validationDimensionSchema>;
+
 export const schemas = {
   claim: claimSchema,
   evidence: evidenceSchema,
@@ -453,6 +510,7 @@ export const schemas = {
   attestation: attestationSchema,
   verificationReceipt: verificationReceiptSchema,
   decisionReceipt: decisionReceiptSchema,
+  validationProfile: validationProfileSchema,
   mandate: mandateSchema
 } as const;
 
@@ -483,4 +541,11 @@ export const noemaSchemaRegistry = new SchemaRegistry()
   )
   .register(
     versionedFromZod(SCHEMA_IDS.DECISION_RECEIPT, SCHEMA_VERSIONS.DECISION_RECEIPT, decisionReceiptSchema)
+  )
+  .register(
+    versionedFromZod(
+      SCHEMA_IDS.VALIDATION_PROFILE,
+      SCHEMA_VERSIONS.VALIDATION_PROFILE,
+      validationProfileSchema
+    )
   );

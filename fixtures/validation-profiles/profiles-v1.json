@@ -1,0 +1,437 @@
+{
+  "fixtureVersion": 1,
+  "frozenAt": 1784750400000,
+  "protocolVersion": "noema-validation-profile-v1",
+  "description": "RWA economic validation profiles (issue #57). Profiles declare evidence-sufficiency dimensions; they do not declare assets legitimate or suitable for investment.",
+  "profiles": [
+    {
+      "schemaId": "noema:validation-profile",
+      "schemaVersion": 1,
+      "profileId": "profile:moneymarket-fund-share",
+      "profileVersion": 1,
+      "assetClass": "TOKENIZED_MONEY_MARKET_FUND",
+      "resolutionClass": "FUND_SHARE",
+      "description": "Registered money-market fund share (BENJI-style onchain fund share): issuer/vehicle identity, share class, rights, redemption, eligibility, transfer restrictions, valuation/NAV, backing, custody, source authority and freshness.",
+      "interpretableProperties": [
+        "issuer",
+        "issuerName",
+        "fundName",
+        "vehicleName",
+        "shareClass",
+        "shareClassName",
+        "ownershipRights",
+        "redemptionWindow",
+        "eligibility",
+        "transferRestrictions",
+        "valuationNav",
+        "navPerShare",
+        "backingPortfolio",
+        "portfolioComposition",
+        "custodyArrangement",
+        "custodian",
+        "sourceLocator",
+        "observedAt",
+        "asOf"
+      ],
+      "dimensions": [
+        {
+          "dimension": "issuerIdentity",
+          "required": true,
+          "claimProperties": ["issuer", "issuerName"],
+          "evidenceTypes": ["DOCUMENT", "FILING", "API_RESPONSE"],
+          "minAuthority": "REFERENCE_DATA"
+        },
+        {
+          "dimension": "vehicleIdentity",
+          "required": true,
+          "claimProperties": ["fundName", "vehicleName"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"],
+          "minAuthority": "REFERENCE_DATA"
+        },
+        {
+          "dimension": "shareClass",
+          "required": true,
+          "claimProperties": ["shareClass", "shareClassName"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "ownershipRights",
+          "required": true,
+          "claimProperties": ["ownershipRights"],
+          "evidenceTypes": ["DOCUMENT", "FILING"]
+        },
+        {
+          "dimension": "redemption",
+          "required": true,
+          "claimProperties": ["redemptionWindow"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "eligibility",
+          "required": true,
+          "claimProperties": ["eligibility"],
+          "evidenceTypes": ["DOCUMENT", "FILING"]
+        },
+        {
+          "dimension": "transferRestrictions",
+          "required": true,
+          "claimProperties": ["transferRestrictions"],
+          "evidenceTypes": ["DOCUMENT", "FILING"]
+        },
+        {
+          "dimension": "valuationNav",
+          "required": true,
+          "claimProperties": ["valuationNav", "navPerShare"],
+          "evidenceTypes": ["API_RESPONSE", "ORACLE"],
+          "maxAgeMs": 86400000
+        },
+        {
+          "dimension": "backingPortfolio",
+          "required": true,
+          "claimProperties": ["backingPortfolio", "portfolioComposition"],
+          "evidenceTypes": ["FILING", "API_RESPONSE"]
+        },
+        {
+          "dimension": "custody",
+          "required": true,
+          "claimProperties": ["custodyArrangement", "custodian"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "sourceAuthority",
+          "required": true,
+          "claimProperties": ["sourceLocator"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "freshness",
+          "required": true,
+          "claimProperties": ["observedAt", "asOf"],
+          "evidenceTypes": ["API_RESPONSE", "ORACLE"],
+          "maxAgeMs": 86400000
+        },
+        {
+          "dimension": "representationLineage",
+          "required": false,
+          "claimProperties": ["representationId", "underlyingReference"],
+          "representationRequired": true,
+          "relationshipPredicates": ["REPRESENTS", "WRAPPED_REPRESENTATION_OF", "BRIDGED_REPRESENTATION_OF"]
+        }
+      ]
+    },
+    {
+      "schemaId": "noema:validation-profile",
+      "schemaVersion": 1,
+      "profileId": "profile:treasury-wrapped-representation",
+      "profileVersion": 1,
+      "assetClass": "TOKENIZED_TREASURY",
+      "resolutionClass": "WRAPPED_REPRESENTATION",
+      "description": "Wrapped/bridged representation of a treasury exposure (OUSG-style): representation lineage, backing relationship, issuer identity, source authority and freshness are required; custody and redemption are optional.",
+      "interpretableProperties": [
+        "issuer",
+        "issuerName",
+        "representationId",
+        "underlyingReference",
+        "backingPortfolio",
+        "sourceLocator",
+        "observedAt",
+        "asOf",
+        "custodyArrangement",
+        "redemptionWindow"
+      ],
+      "dimensions": [
+        {
+          "dimension": "issuerIdentity",
+          "required": true,
+          "claimProperties": ["issuer", "issuerName"],
+          "evidenceTypes": ["DOCUMENT", "FILING"],
+          "minAuthority": "REFERENCE_DATA"
+        },
+        {
+          "dimension": "representationLineage",
+          "required": true,
+          "claimProperties": ["representationId", "underlyingReference"],
+          "evidenceTypes": ["ONCHAIN_STATE", "API_RESPONSE"],
+          "representationRequired": true,
+          "relationshipPredicates": ["REPRESENTS", "WRAPPED_REPRESENTATION_OF", "BRIDGED_REPRESENTATION_OF"]
+        },
+        {
+          "dimension": "backingPortfolio",
+          "required": true,
+          "claimProperties": ["backingPortfolio", "underlyingReference"],
+          "evidenceTypes": ["API_RESPONSE", "FILING"]
+        },
+        {
+          "dimension": "sourceAuthority",
+          "required": true,
+          "claimProperties": ["sourceLocator"],
+          "evidenceTypes": ["API_RESPONSE", "DOCUMENT"]
+        },
+        {
+          "dimension": "freshness",
+          "required": true,
+          "claimProperties": ["observedAt", "asOf"],
+          "evidenceTypes": ["API_RESPONSE"],
+          "maxAgeMs": 86400000
+        },
+        {
+          "dimension": "custody",
+          "required": false,
+          "claimProperties": ["custodyArrangement"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "redemption",
+          "required": false,
+          "claimProperties": ["redemptionWindow"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        }
+      ]
+    },
+    {
+      "schemaId": "noema:validation-profile",
+      "schemaVersion": 1,
+      "profileId": "profile:treasury-debt-instrument",
+      "profileVersion": 1,
+      "assetClass": "TOKENIZED_TREASURY",
+      "resolutionClass": "DEBT_INSTRUMENT",
+      "description": "Tokenized short-term treasury bill / debt instrument (TBILL-style): issuer identity, obligation terms, redemption and source authority/freshness are required; valuation and backing are optional.",
+      "interpretableProperties": [
+        "issuer",
+        "issuerName",
+        "obligationTerms",
+        "coupon",
+        "maturity",
+        "redemptionWindow",
+        "sourceLocator",
+        "observedAt",
+        "asOf",
+        "valuationNav",
+        "navPerShare",
+        "backingPortfolio"
+      ],
+      "dimensions": [
+        {
+          "dimension": "issuerIdentity",
+          "required": true,
+          "claimProperties": ["issuer", "issuerName"],
+          "evidenceTypes": ["DOCUMENT", "FILING"],
+          "minAuthority": "REFERENCE_DATA"
+        },
+        {
+          "dimension": "obligationTerms",
+          "required": true,
+          "claimProperties": ["obligationTerms", "coupon", "maturity"],
+          "evidenceTypes": ["DOCUMENT", "FILING"]
+        },
+        {
+          "dimension": "redemption",
+          "required": true,
+          "claimProperties": ["redemptionWindow", "maturity"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "sourceAuthority",
+          "required": true,
+          "claimProperties": ["sourceLocator"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "freshness",
+          "required": true,
+          "claimProperties": ["observedAt", "asOf"],
+          "evidenceTypes": ["API_RESPONSE"],
+          "maxAgeMs": 86400000
+        },
+        {
+          "dimension": "valuationNav",
+          "required": false,
+          "claimProperties": ["valuationNav", "navPerShare"],
+          "evidenceTypes": ["API_RESPONSE", "ORACLE"]
+        },
+        {
+          "dimension": "backingPortfolio",
+          "required": false,
+          "claimProperties": ["backingPortfolio"],
+          "evidenceTypes": ["FILING", "API_RESPONSE"]
+        }
+      ]
+    },
+    {
+      "schemaId": "noema:validation-profile",
+      "schemaVersion": 1,
+      "profileId": "profile:private-fund-partnership",
+      "profileVersion": 1,
+      "assetClass": "TOKENIZED_PRIVATE_FUND",
+      "resolutionClass": "PRIVATE_FUND_INTEREST",
+      "description": "Tokenized private fund or partnership interest: full dimension set including vehicle identity, share/interest class, rights, redemption, eligibility, transfer restrictions, valuation, custody, source authority and freshness.",
+      "interpretableProperties": [
+        "issuer",
+        "issuerName",
+        "fundName",
+        "vehicleName",
+        "shareClass",
+        "partnershipInterestClass",
+        "ownershipRights",
+        "redemptionWindow",
+        "eligibility",
+        "transferRestrictions",
+        "valuationNav",
+        "navPerShare",
+        "custodyArrangement",
+        "custodian",
+        "sourceLocator",
+        "observedAt",
+        "asOf",
+        "backingPortfolio"
+      ],
+      "dimensions": [
+        {
+          "dimension": "issuerIdentity",
+          "required": true,
+          "claimProperties": ["issuer", "issuerName"],
+          "evidenceTypes": ["DOCUMENT", "FILING"],
+          "minAuthority": "REFERENCE_DATA"
+        },
+        {
+          "dimension": "vehicleIdentity",
+          "required": true,
+          "claimProperties": ["fundName", "vehicleName"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "shareClass",
+          "required": true,
+          "claimProperties": ["shareClass", "partnershipInterestClass"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "ownershipRights",
+          "required": true,
+          "claimProperties": ["ownershipRights"],
+          "evidenceTypes": ["DOCUMENT", "FILING"]
+        },
+        {
+          "dimension": "redemption",
+          "required": true,
+          "claimProperties": ["redemptionWindow"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "eligibility",
+          "required": true,
+          "claimProperties": ["eligibility"],
+          "evidenceTypes": ["DOCUMENT", "FILING"]
+        },
+        {
+          "dimension": "transferRestrictions",
+          "required": true,
+          "claimProperties": ["transferRestrictions"],
+          "evidenceTypes": ["DOCUMENT", "FILING"]
+        },
+        {
+          "dimension": "valuationNav",
+          "required": true,
+          "claimProperties": ["valuationNav", "navPerShare"],
+          "evidenceTypes": ["ORACLE", "API_RESPONSE"],
+          "maxAgeMs": 86400000
+        },
+        {
+          "dimension": "custody",
+          "required": true,
+          "claimProperties": ["custodyArrangement", "custodian"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "sourceAuthority",
+          "required": true,
+          "claimProperties": ["sourceLocator"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "freshness",
+          "required": true,
+          "claimProperties": ["observedAt", "asOf"],
+          "evidenceTypes": ["API_RESPONSE"],
+          "maxAgeMs": 86400000
+        },
+        {
+          "dimension": "backingPortfolio",
+          "required": false,
+          "claimProperties": ["backingPortfolio"],
+          "evidenceTypes": ["FILING", "API_RESPONSE"]
+        }
+      ]
+    },
+    {
+      "schemaId": "noema:validation-profile",
+      "schemaVersion": 1,
+      "profileId": "profile:book-entry-onchain-mirror",
+      "profileVersion": 1,
+      "assetClass": "TOKENIZED_SECURITIES",
+      "resolutionClass": "BOOK_ENTRY_MIRROR",
+      "description": "Book-entry/offchain security with an onchain mirror: issuer identity, record authority, representation lineage, source authority and freshness are required; custody and redemption are optional.",
+      "interpretableProperties": [
+        "issuer",
+        "issuerName",
+        "recordAuthority",
+        "registrar",
+        "representationId",
+        "underlyingReference",
+        "sourceLocator",
+        "observedAt",
+        "asOf",
+        "custodyArrangement",
+        "redemptionWindow"
+      ],
+      "dimensions": [
+        {
+          "dimension": "issuerIdentity",
+          "required": true,
+          "claimProperties": ["issuer", "issuerName"],
+          "evidenceTypes": ["DOCUMENT", "FILING"],
+          "minAuthority": "REFERENCE_DATA"
+        },
+        {
+          "dimension": "recordAuthority",
+          "required": true,
+          "claimProperties": ["recordAuthority", "registrar"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "representationLineage",
+          "required": true,
+          "claimProperties": ["representationId", "underlyingReference"],
+          "evidenceTypes": ["ONCHAIN_STATE", "API_RESPONSE"],
+          "representationRequired": true,
+          "relationshipPredicates": ["REPRESENTS", "BRIDGED_REPRESENTATION_OF"]
+        },
+        {
+          "dimension": "sourceAuthority",
+          "required": true,
+          "claimProperties": ["sourceLocator"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "freshness",
+          "required": true,
+          "claimProperties": ["observedAt", "asOf"],
+          "evidenceTypes": ["API_RESPONSE"],
+          "maxAgeMs": 86400000
+        },
+        {
+          "dimension": "custody",
+          "required": false,
+          "claimProperties": ["custodyArrangement"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        },
+        {
+          "dimension": "redemption",
+          "required": false,
+          "claimProperties": ["redemptionWindow"],
+          "evidenceTypes": ["DOCUMENT", "API_RESPONSE"]
+        }
+      ]
+    }
+  ]
+}

@@ -540,6 +540,23 @@
         "run",
         "tests/integrity/terminal-convergence.test.ts"
       ]
+    },
+    {
+      "id": "validation-profiles",
+      "phase": "system",
+      "description": "RWA economic validation profiles (#57): versioned runtime-validated noema:validation-profile schema; required/optional economic dimensions are explicit and machine-readable; missing required dimensions yield deterministic INSUFFICIENT_EVIDENCE (never invented facts); conflicting/stale evidence yields deterministic unresolved states; profiles distinguish economic resolution from mandate suitability; the same broad asset class (TOKENIZED_TREASURY) contains materially different profiles without forced equivalence; BENJI/OUSG/TBILL candidate classes each map to their own profile and never resolve identically; evaluations emit traceable reason codes and claim/evidence requirements; positive, missing-evidence, conflicting-evidence, and unsupported-profile cases are covered by tests.",
+      "kind": "command",
+      "requires": [
+        "fixtures/validation-profiles/profiles-v1.json",
+        "tests/integrity/validation-profiles.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/validation-profiles.test.ts"
+      ]
     }
   ],
   "liveGates": [
