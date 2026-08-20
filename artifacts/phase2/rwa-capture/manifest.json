@@ -1,0 +1,177 @@
+{
+  "schemaId": "noema:live-rwa-capture-manifest",
+  "schemaVersion": 1,
+  "runId": "run-2026-08-20T17-05-40-194Z",
+  "capturedAt": "2026-08-20T17:05:40.194Z",
+  "tool": "tools/rwa-live-capture.mjs",
+  "sourceAdapterVersion": "noema-source-adapter-v1",
+  "candidates": [
+    {
+      "candidateId": "benji",
+      "label": "BENJI / FOBXX (Franklin OnChain U.S. Government Money Fund)",
+      "classification": "FUND_SHARE",
+      "secondary": "TOKENIZED_MONEY_MARKET_FUND",
+      "profileRef": "profile:moneymarket-fund-share",
+      "chainId": 1,
+      "address": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9"
+    },
+    {
+      "candidateId": "ousg",
+      "label": "OUSG (Ondo Short-Term U.S. Government Bond Fund)",
+      "classification": "WRAPPED_REPRESENTATION",
+      "secondary": "TOKENIZED_TREASURY",
+      "profileRef": "profile:treasury-wrapped-representation",
+      "chainId": 1,
+      "address": "0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92"
+    },
+    {
+      "candidateId": "tbill",
+      "label": "TBILL (OpenEden T-Bills)",
+      "classification": "DEBT_INSTRUMENT",
+      "secondary": "TOKENIZED_TREASURY",
+      "profileRef": "profile:treasury-debt-instrument",
+      "chainId": 1,
+      "address": "0xdd50c053c096cb04a3e3362e2b622529ec5f2e8a"
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "source:benji:ethereum:erc20:name",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "name"
+    },
+    {
+      "sourceId": "source:benji:ethereum:erc20:symbol",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "symbol"
+    },
+    {
+      "sourceId": "source:benji:ethereum:erc20:decimals",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "decimals"
+    },
+    {
+      "sourceId": "source:benji:ethereum:erc20:totalSupply",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "totalSupply"
+    },
+    {
+      "sourceId": "source:benji:sec:nmfp3-primary-doc",
+      "kind": "http",
+      "uri": "https://www.sec.gov/Archives/edgar/data/1786958/000207169126017542/primary_doc.xml",
+      "authority": "PRIMARY_SOURCE",
+      "type": "FILING"
+    },
+    {
+      "sourceId": "source:benji:sec:filing-index",
+      "kind": "http",
+      "uri": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001786958&type=N-MFP&dateb=&owner=include&count=10",
+      "authority": "PRIMARY_SOURCE",
+      "type": "FILING"
+    },
+    {
+      "sourceId": "source:ousg:ethereum:erc20:name",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "name"
+    },
+    {
+      "sourceId": "source:ousg:ethereum:erc20:symbol",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "symbol"
+    },
+    {
+      "sourceId": "source:ousg:ethereum:erc20:decimals",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "decimals"
+    },
+    {
+      "sourceId": "source:ousg:ethereum:erc20:totalSupply",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "totalSupply"
+    },
+    {
+      "sourceId": "source:ousg:ondo:overview",
+      "kind": "http",
+      "uri": "https://docs.ondo.finance/qualified-access-products/ousg/overview",
+      "authority": "PRIMARY_SOURCE",
+      "type": "DOCUMENT"
+    },
+    {
+      "sourceId": "source:ousg:ondo:trust-transparency",
+      "kind": "http",
+      "uri": "https://docs.ondo.finance/qualified-access-products/ousg/trust-and-transparency",
+      "authority": "PRIMARY_SOURCE",
+      "type": "DOCUMENT"
+    },
+    {
+      "sourceId": "source:tbill:ethereum:erc20:name",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "name"
+    },
+    {
+      "sourceId": "source:tbill:ethereum:erc20:symbol",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "symbol"
+    },
+    {
+      "sourceId": "source:tbill:ethereum:erc20:decimals",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "decimals"
+    },
+    {
+      "sourceId": "source:tbill:ethereum:erc20:totalSupply",
+      "kind": "evm",
+      "uri": "https://ethereum-rpc.publicnode.com",
+      "authority": "ONCHAIN_STATE",
+      "type": "ONCHAIN_STATE",
+      "locator": "totalSupply"
+    },
+    {
+      "sourceId": "source:tbill:openeden:introduction",
+      "kind": "http",
+      "uri": "https://docs.openeden.com/tbill/introduction",
+      "authority": "PRIMARY_SOURCE",
+      "type": "DOCUMENT"
+    },
+    {
+      "sourceId": "source:tbill:openeden:contract-addresses",
+      "kind": "http",
+      "uri": "https://docs.openeden.com/tbill/smart-contract-addresses",
+      "authority": "PRIMARY_SOURCE",
+      "type": "DOCUMENT"
+    }
+  ]
+}

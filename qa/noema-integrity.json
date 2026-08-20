@@ -557,6 +557,27 @@
         "run",
         "tests/integrity/validation-profiles.test.ts"
       ]
+    },
+    {
+      "id": "rwa-live-capture",
+      "phase": "system",
+      "description": "Phase 2 live RWA evidence capture (#35): BENJI/OUSG/TBILL live sources captured through the canonical source adapters; each candidate has EVM (ERC-20 name/symbol/decimals/totalSupply with block identity) and first-party HTTP sources; every snapshot is content-addressed and replay reproduces identical content hashes from persisted bodies; evidence is derived only through the shared ingestion normalizer; the capture path never assigns VERIFIED, equivalence, mandate, or object state; source failures remain explicit and never fabricate evidence; manifests and immutable bodies are persisted under experiments/state/noema-live-rwa-capture and artifacts/phase2/rwa-capture.",
+      "kind": "command",
+      "requires": [
+        "experiments/state/noema-live-rwa-capture/manifest.json",
+        "experiments/state/noema-live-rwa-capture/snapshots.json",
+        "experiments/state/noema-live-rwa-capture/evidence.json",
+        "experiments/state/noema-live-rwa-capture/bodies",
+        "artifacts/phase2/rwa-capture/snapshots.json",
+        "tests/integrity/rwa-live-capture.test.ts"
+      ],
+      "command": "pnpm",
+      "args": [
+        "exec",
+        "vitest",
+        "run",
+        "tests/integrity/rwa-live-capture.test.ts"
+      ]
     }
   ],
   "liveGates": [

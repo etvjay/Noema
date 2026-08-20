@@ -1,0 +1,31 @@
+{
+  "runId": "run-2026-08-20T17-05-40-194Z",
+  "capturedAt": "2026-08-20T17:05:40.194Z",
+  "ethereumBlock": "25797713",
+  "ethereumBlockHash": "0xbe1aac0ec4199f717c7ae3de9c514716503e8dd5b594e9e58f12a57d5a1f034d",
+  "candidatesCaptured": 3,
+  "snapshotsCaptured": 18,
+  "evidenceDerived": 18,
+  "sourceFailures": 0,
+  "snapshotIds": [
+    "snapshot:source:benji:ethereum:erc20:name:b5bebc8c1f7e0ea4",
+    "snapshot:source:benji:ethereum:erc20:symbol:64d7527e31002352",
+    "snapshot:source:benji:ethereum:erc20:decimals:7f24091d77bd6f0f",
+    "snapshot:source:benji:ethereum:erc20:totalSupply:2cdec7ab1ffdad1f",
+    "snapshot:source:benji:sec:nmfp3-primary-doc:0x763d0116755049f97f804ca41b05a2f297f000d10229088658ef45a023995c5a",
+    "snapshot:source:benji:sec:filing-index:0xbff58405fd8db1f1a4b286a6f8c7867d253229b554fd41bf35f7c401ee0251c8",
+    "snapshot:source:ousg:ethereum:erc20:name:302895d59910c3e1",
+    "snapshot:source:ousg:ethereum:erc20:symbol:58f53dc23556f275",
+    "snapshot:source:ousg:ethereum:erc20:decimals:3cf37affc4607347",
+    "snapshot:source:ousg:ethereum:erc20:totalSupply:64fb42ccdf43d251",
+    "snapshot:source:ousg:ondo:overview:0x79d33689a3d1acafe3f2322587d9bdbc70cc15684ab64c6ed2d7ab975846d6ba",
+    "snapshot:source:ousg:ondo:trust-transparency:0x61627d00952136e7f20d16e984c1b7a005cb6056af499c59fbfc03fb3f1d5d04",
+    "snapshot:source:tbill:ethereum:erc20:name:111346ad5a0138a7",
+    "snapshot:source:tbill:ethereum:erc20:symbol:d3edd417769ef85c",
+    "snapshot:source:tbill:ethereum:erc20:decimals:75b4e46e4199eabb",
+    "snapshot:source:tbill:ethereum:erc20:totalSupply:cef2218f5cbc58e7",
+    "snapshot:source:tbill:openeden:introduction:0xebf02a6ea3c00f3d6a5da8d8d2fba654761a435b8d1ed468a5357fc95d5d059d",
+    "snapshot:source:tbill:openeden:contract-addresses:0x766856527b54cac0b9f7aa88f1b38e45ddac0fba2f681899eb6935a49fc80969"
+  ],
+  "failureCodes": []
+}

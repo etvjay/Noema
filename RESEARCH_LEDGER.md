@@ -77,6 +77,21 @@ Three candidates for the Phase 2 live release evidence capture (#35, feeds #36/#
 - **TBILL rating**: OpenEden first-party states the TBILL Fund holds an S&P Global `AA+f/S1+` rating and a Moody's `A-bf` fund rating; a third-party aggregator (Portfi) lists "Not rated". Resolution: first-party issuer documentation outranks aggregator summaries.
 - **BENJI token variants**: DefiLlama tracks BENJI plus iBENJI (Ethereum/BNB) and separately gBENJI/sgBENJI; the canonical 1-share mapping is the BENJI token on the primary deployments. Resolution: capture the BENJI deployment(s) that the fund's transfer agent recognizes as official share representation; do not merge variants.
 
+### Phase 2 live capture (E3 observed runtime) — 2026-08-20
+
+The candidate rows above are promoted from E2 (documentation) to E3 (observed runtime) by `tools/rwa-live-capture.mjs` (#35). On-chain EVM observations and first-party HTTP captures for BENJI, OUSG, and TBILL are persisted as content-addressed source snapshots + derived evidence under `experiments/state/noema-live-rwa-capture/` (immutable bodies in `bodies/`) and mirrored under `artifacts/phase2/rwa-capture/`. The tool replays deterministically: content hashes reproduce from persisted bodies (asserted by `tests/integrity/rwa-live-capture.test.ts`).
+
+| Candidate | On-chain address (Ethereum, chainId 1) | On-chain ERC-20 observation | First-party HTTP sources captured |
+| --- | --- | --- | --- |
+| BENJI (FOBXX) | `0x3DDc84940Ab509C11B20B76B466933f40b750dc9` | name = "Franklin OnChain U.S. Government Money Fund", symbol = BENJI, decimals = 18, totalSupply observed | SEC EDGAR N-MFP3 primary_doc.xml (CIK 0001786958) + N-MFP filing index |
+| OUSG | `0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92` | name = "Ondo Short-Term U.S. Government Bond Fund", symbol = OUSG, decimals = 18, totalSupply observed | Ondo docs: overview + trust-and-transparency |
+| TBILL | `0xdd50C053C096CB04A3e3362E2b622529EC5f2e8a` | name = "OpenEden T-Bills", symbol = TBILL, decimals = 6, totalSupply observed | OpenEden docs: introduction + smart-contract-addresses |
+
+Notes:
+- The three addresses above were verified on-chain (Ethereum mainnet, public RPC) by `eth_call` to `name()`/`symbol()`/`decimals()`/`totalSupply()`; each snapshot carries the chain ID, block number, and block hash of the capture block. The block advances between runs, so EVM content hashes are per-run; HTTP content hashes are stable when pages do not change.
+- `digitalassets.franklintempleton.com` (Benji platform) returns HTTP 403 to scripted fetches (WAF). Per #35 policy, this is an explicit AUTH_FAILURE recorded in `failures.json` and never fabricated into evidence; SEC EDGAR filings are the authoritative primary source for FOBXX.
+- TBILL address `0xdd50...` is the OpenEden first-party v2 Vault address (see `docs.openeden.com/tbill/smart-contract-addresses`); the deprecated v1 token `0xad6250f0...` is not used.
+
 ## Evidence policy
 
 Public URLs, source responses, contract receipts, hashes, signatures, and
